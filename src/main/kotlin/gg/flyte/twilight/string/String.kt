@@ -14,11 +14,11 @@ fun String.stripColor(): String {
 }
 
 fun List<String>.translate(): List<String> {
-    return this.stream().apply { translate() }.toList()
+    return stream().apply { translate() }.toList()
 }
 
 fun String.smallText(): String {
-    return this.translate()
+    return translate()
         .replace("Q", "ꞯ")
         .replace("W", "ᴡ")
         .replace("E", "ᴇ")
