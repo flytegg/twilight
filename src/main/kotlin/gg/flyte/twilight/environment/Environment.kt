@@ -3,7 +3,11 @@ package gg.flyte.twilight.environment
 import io.github.cdimascio.dotenv.Dotenv
 
 object Environment {
-    private val dotenv = Dotenv.load()
+    private lateinit var dotenv: Dotenv
+
+    fun env(dotenv: Dotenv) {
+        this.dotenv = dotenv
+    }
 
     fun isDev(): Boolean {
         return get("ENVIRONMENT") == "DEV"
