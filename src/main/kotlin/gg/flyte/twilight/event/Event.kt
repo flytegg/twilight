@@ -5,6 +5,7 @@ import org.bukkit.event.HandlerList
 import java.time.Instant
 
 open class Event : Event() {
+
     val timestamp: Instant = Instant.now()
 
     companion object {
@@ -19,4 +20,5 @@ open class Event : Event() {
     override fun getHandlers(): HandlerList {
         return HANDLERS
     }
+
 }

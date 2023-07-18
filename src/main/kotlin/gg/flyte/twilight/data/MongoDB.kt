@@ -10,6 +10,7 @@ import org.bson.codecs.configuration.CodecRegistries.fromRegistries
 import org.bson.codecs.pojo.PojoCodecProvider
 
 object MongoDB {
+
     private val client = MongoClients.create(Environment.get("MONGO_URI"))
     private val codecRegistry = fromRegistries(
         getDefaultCodecRegistry(),
@@ -28,4 +29,5 @@ object MongoDB {
     fun <T> collection(name: String, `class`: Class<T>): MongoCollection<T> {
         return database.getCollection(name, `class`)
     }
+
 }

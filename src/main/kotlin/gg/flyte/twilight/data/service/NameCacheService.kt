@@ -14,6 +14,7 @@ import java.util.regex.Pattern
 import javax.net.ssl.HttpsURLConnection
 
 object NameCacheService {
+
     private val cache = mutableMapOf<UUID, String>()
     private val mongoCache = MongoDB.collection(Environment.get("NAME_CACHE_COLLECTION"))
 
@@ -97,4 +98,5 @@ object NameCacheService {
             ?: throw MongoException("Unable to save document in MongoDB for '$name' in '${Environment.get("NAME_CACHE_COLLECTION")}', can't find collection.")
         return uuid
     }
+
 }

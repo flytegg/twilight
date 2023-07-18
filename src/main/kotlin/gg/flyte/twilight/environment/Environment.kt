@@ -4,6 +4,7 @@ import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.DotenvBuilder
 
 object Environment {
+
     private lateinit var dotenv: Dotenv
 
     fun env(env: Settings) {
@@ -37,4 +38,5 @@ object Environment {
     class Settings(
         val useDifferentEnvironments: Boolean
     )
+
 }
