@@ -14,6 +14,7 @@ abstract class CustomGUI(
     slots: Int,
     val canMoveItems: Boolean = false
 ) : InventoryHolder {
+
     private val inventory = Bukkit.createInventory(this, slots, title)
 
     override fun getInventory(): Inventory {
@@ -41,4 +42,5 @@ abstract class CustomGUI(
     fun setItem(slots: Array<Int>, item: ItemStack) {
         slots.forEach { inventory.setItem(it, item) }
     }
+
 }
