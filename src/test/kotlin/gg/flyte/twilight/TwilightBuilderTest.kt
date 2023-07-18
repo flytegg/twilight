@@ -10,4 +10,9 @@ lateinit var plugin: JavaPlugin
 
 fun useBuilderTest() {
     Twilight.Builder(plugin)
+        .env {
+            useDifferentEnvironments = true
+            useDifferentEnvironments = false
+        }
 }
+
