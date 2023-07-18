@@ -71,18 +71,18 @@ fun syncTaskTimerTest() {
 
 fun asyncTaskTimerTest() {
     repeat(10, true) {
-        println("I am a sync BukkitRunnable running every 10 ticks")
+        println("I am an async BukkitRunnable running every 10 ticks")
     }
 
     repeat(10, TimeUnit.SECONDS, true) {
-        println("I am a sync BukkitRunnable running every 10 seconds")
+        println("I am an asyncBukkitRunnable running every 10 seconds")
     }
 
     repeat(5, 10, true) {
-        println("I am a sync BukkitRunnable running every 10 ticks, waiting 5 before starting")
+        println("I am an async BukkitRunnable running every 10 ticks, waiting 5 before starting")
     }
 
     repeat(5, 10, TimeUnit.SECONDS, true) {
-        println("I am a sync BukkitRunnable running every 10 seconds, waiting 5 before starting")
+        println("I am an async BukkitRunnable running every 10 seconds, waiting 5 before starting")
     }
 }
