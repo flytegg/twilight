@@ -6,22 +6,22 @@ import org.bukkit.scheduler.BukkitTask
 import java.util.concurrent.TimeUnit
 
 fun sync(runnable: BukkitRunnable.() -> Unit): BukkitTask {
-    return Twilight.plugin.server.scheduler.runTask(Twilight.plugin, createBukkitRunnable(runnable))
+    return createBukkitRunnable(runnable).runTask(Twilight.plugin)
 }
 
 fun async(runnable: BukkitRunnable.() -> Unit): BukkitTask {
-    return Twilight.plugin.server.scheduler.runTaskAsynchronously(Twilight.plugin, createBukkitRunnable(runnable))
+    return createBukkitRunnable(runnable).runTaskAsynchronously(Twilight.plugin)
 }
 
 fun delay(value: Int, unit: TimeUnit = TimeUnit.MILLISECONDS, runnable: BukkitRunnable.() -> Unit): BukkitTask {
-    return Twilight.plugin.server.scheduler.runTaskLater(Twilight.plugin, createBukkitRunnable(runnable), unit.toMillis(value.toLong()) / 50)
+    return createBukkitRunnable(runnable).runTaskLater(Twilight.plugin, unit.toMillis(value.toLong()) / 50)
 }
 
 fun repeat(delay: Int, period: Int, async: Boolean = false, unit: TimeUnit = TimeUnit.MILLISECONDS, runnable: Runnable.() -> Unit): BukkitTask {
     return if (async) {
-        return Twilight.plugin.server.scheduler.runTaskTimerAsynchronously(Twilight.plugin, createBukkitRunnable(runnable), unit.toMillis(delay.toLong()) / 50, unit.toMillis(period.toLong()) / 50)
+        return createBukkitRunnable(runnable).runTaskTimerAsynchronously(Twilight.plugin, unit.toMillis(delay.toLong()) / 50, unit.toMillis(period.toLong()) / 50)
     } else {
-        return Twilight.plugin.server.scheduler.runTaskTimer(Twilight.plugin, createBukkitRunnable(runnable), unit.toMillis(delay.toLong()) / 50, unit.toMillis(period.toLong()) / 50)
+        return createBukkitRunnable(runnable).runTaskTimer(Twilight.plugin, unit.toMillis(delay.toLong()) / 50, unit.toMillis(period.toLong()) / 50)
     }
 }
 
