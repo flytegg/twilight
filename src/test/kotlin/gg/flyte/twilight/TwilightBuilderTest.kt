@@ -9,10 +9,11 @@ fun main() {
 lateinit var plugin: JavaPlugin
 
 fun useBuilderTest() {
-    Twilight.Builder(plugin)
-        .env {
-            useDifferentEnvironments = true
-            useDifferentEnvironments = false
+    val twilight = twilight(plugin) {
+        property = ""
+        events {
+
         }
+    }
 }
 
