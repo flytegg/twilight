@@ -12,13 +12,12 @@ import org.bukkit.inventory.ItemStack
 abstract class CustomGUI(
     title: String,
     slots: Int,
-    val canMoveItems: Boolean = false)
-: InventoryHolder {
-
-    val inventory = Bukkit.createInventory(this, slots, title)
+    val canMoveItems: Boolean = false
+) : InventoryHolder {
+    private val inventory = Bukkit.createInventory(this, slots, title)
 
     override fun getInventory(): Inventory {
-        return inventory;
+        return inventory
     }
 
     abstract fun onOpen(e: InventoryOpenEvent)
@@ -39,8 +38,7 @@ abstract class CustomGUI(
         inventory.setItem(slot, item)
     }
 
-    fun setItems(slots: Array<Int>, item: ItemStack) {
+    fun setItem(slots: Array<Int>, item: ItemStack) {
         slots.forEach { inventory.setItem(it, item) }
     }
-
 }
