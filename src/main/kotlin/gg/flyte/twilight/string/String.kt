@@ -1,5 +1,6 @@
 package gg.flyte.twilight.string
 
+import gg.flyte.twilight.Twilight
 import org.bukkit.ChatColor
 import java.math.BigInteger
 import java.util.*

@@ -1,8 +1,10 @@
 package gg.flyte.twilight
 
 import gg.flyte.twilight.environment.Environment
+import gg.flyte.twilight.inventory.GUIListener
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.DotenvBuilder
+import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
 class Twilight private constructor(
@@ -12,6 +14,7 @@ class Twilight private constructor(
     init {
         plugin = javaPlugin
         Environment.env(envBuilder.load())
+        Bukkit.getPluginManager().registerEvents(GUIListener(), plugin)
     }
 
     companion object {
