@@ -2,19 +2,23 @@ package gg.flyte.twilight
 
 import gg.flyte.twilight.environment.Environment
 import gg.flyte.twilight.inventory.GUIListener
-import io.github.cdimascio.dotenv.Dotenv
-import io.github.cdimascio.dotenv.DotenvBuilder
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
 class Twilight private constructor(
     javaPlugin: JavaPlugin,
-    envBuilder: DotenvBuilder
+    envSettings: Environment.Settings
 ) {
     init {
         plugin = javaPlugin
-        Environment.env(envBuilder.load())
-        Bukkit.getPluginManager().registerEvents(GUIListener(), plugin)
+        Environment.env(envSettings)
+
+        /*
+        Register event listeners
+         */
+        listOf(
+            GUIListener()
+        ).forEach { Bukkit.getPluginManager().registerEvents(it, plugin) }
     }
 
     companion object {
@@ -22,12 +26,12 @@ class Twilight private constructor(
     }
 
     class Builder(private val plugin: JavaPlugin) {
-        private val envBuilder = Dotenv.configure()
+        private var envBuilder = Environment.Builder()
 
-        fun env(fileName: String) = apply {
-            envBuilder.filename(fileName)
+        fun env(envBuilder: Environment.Builder.() -> Unit) = apply {
+            this.envBuilder.envBuilder()
         }
 
-        fun build(): Twilight = Twilight(plugin, envBuilder)
+        fun build() = Twilight(plugin, envBuilder.build())
     }
 }
