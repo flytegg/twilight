@@ -31,7 +31,7 @@ fun String.smallText(translate: Boolean = false): String {
         .replace("O", "ᴏ")
         .replace("P", "ᴘ")
         .replace("A", "ᴀ")
-        .replace("S", "s")
+        .replace("S", "ѕ")
         .replace("D", "ᴅ")
         .replace("F", "ꜰ")
         .replace("G", "ɢ")
