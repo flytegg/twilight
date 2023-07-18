@@ -13,8 +13,16 @@ fun async(runnable: BukkitRunnable.() -> Unit): BukkitTask {
     return createBukkitRunnable(runnable).runTaskAsynchronously(Twilight.plugin)
 }
 
-fun delay(value: Int, unit: TimeUnit = TimeUnit.MILLISECONDS, runnable: BukkitRunnable.() -> Unit): BukkitTask {
-    return createBukkitRunnable(runnable).runTaskLater(Twilight.plugin, unit.toMillis(value.toLong()) / 50)
+fun delay(value: Int, async: Boolean = false, unit: TimeUnit = TimeUnit.MILLISECONDS, runnable: BukkitRunnable.() -> Unit): BukkitTask {
+    return if (async) {
+        createBukkitRunnable(runnable).runTaskLaterAsynchronously(Twilight.plugin, unit.toMillis(value.toLong()) / 50)
+    } else {
+        createBukkitRunnable(runnable).runTaskLater(Twilight.plugin, unit.toMillis(value.toLong()) / 50)
+    }
+}
+
+fun delay(value: Int, unit: TimeUnit = TimeUnit.MILLISECONDS, async: Boolean = false, runnable: BukkitRunnable.() -> Unit): BukkitTask {
+    return delay(value, async, unit, runnable)
 }
 
 fun repeat(delay: Int, period: Int, async: Boolean = false, unit: TimeUnit = TimeUnit.MILLISECONDS, runnable: Runnable.() -> Unit): BukkitTask {
