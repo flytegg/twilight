@@ -5,7 +5,6 @@ import org.bukkit.ChatColor
 import java.math.BigInteger
 import java.util.*
 
-
 fun String.translate(): String {
     return ChatColor.translateAlternateColorCodes('&', this)
 }
@@ -18,8 +17,10 @@ fun List<String>.translate(): List<String> {
     return stream().apply { translate() }.toList()
 }
 
-fun String.smallText(): String {
-    return translate()
+fun String.smallText(translate: Boolean = false): String {
+    var string = this
+    if (translate) string = translate()
+    return string.uppercase()
         .replace("Q", "ꞯ")
         .replace("W", "ᴡ")
         .replace("E", "ᴇ")
