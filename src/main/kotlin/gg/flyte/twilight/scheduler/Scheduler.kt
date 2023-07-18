@@ -19,9 +19,9 @@ fun delay(value: Int, unit: TimeUnit = TimeUnit.MILLISECONDS, runnable: BukkitRu
 
 fun repeat(delay: Int, period: Int, async: Boolean = false, unit: TimeUnit = TimeUnit.MILLISECONDS, runnable: Runnable.() -> Unit): BukkitTask {
     return if (async) {
-        return createBukkitRunnable(runnable).runTaskTimerAsynchronously(Twilight.plugin, unit.toMillis(delay.toLong()) / 50, unit.toMillis(period.toLong()) / 50)
+        createBukkitRunnable(runnable).runTaskTimerAsynchronously(Twilight.plugin, unit.toMillis(delay.toLong()) / 50, unit.toMillis(period.toLong()) / 50)
     } else {
-        return createBukkitRunnable(runnable).runTaskTimer(Twilight.plugin, unit.toMillis(delay.toLong()) / 50, unit.toMillis(period.toLong()) / 50)
+        createBukkitRunnable(runnable).runTaskTimer(Twilight.plugin, unit.toMillis(delay.toLong()) / 50, unit.toMillis(period.toLong()) / 50)
     }
 }
 
