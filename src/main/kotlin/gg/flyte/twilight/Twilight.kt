@@ -16,6 +16,7 @@ class Twilight private constructor(
         /*
         Register event listeners
          */
+
         listOf(
             GUIListener()
         ).forEach { Bukkit.getPluginManager().registerEvents(it, plugin) }
