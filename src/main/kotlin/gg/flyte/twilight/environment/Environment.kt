@@ -1,7 +1,6 @@
 package gg.flyte.twilight.environment
 
 import io.github.cdimascio.dotenv.Dotenv
-import io.github.cdimascio.dotenv.DotenvBuilder
 
 object Environment {
 
@@ -9,10 +8,10 @@ object Environment {
 
     fun env(env: Settings) {
         if (env.useDifferentEnvironments) {
-            println("YAY")
-        } else {
-            println("awwww")
+            TODO("Implement dev vs prod env setup")
         }
+
+        TODO("Implement other settings stuff")
     }
 
     fun isDev(): Boolean {
@@ -27,16 +26,9 @@ object Environment {
         return dotenv.get(variable)
     }
 
-    class Builder(
-        var envBuilder: DotenvBuilder? = Dotenv.configure()
-    ) {
-        var useDifferentEnvironments = false
-
-        fun build() = Settings(useDifferentEnvironments)
+    class Settings {
+        var useDifferentEnvironments: Boolean = false
+        // TODO: Implement other settings stuff
     }
-
-    class Settings(
-        val useDifferentEnvironments: Boolean
-    )
 
 }
