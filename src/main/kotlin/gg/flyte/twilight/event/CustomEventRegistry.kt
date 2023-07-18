@@ -1,11 +1,12 @@
 package gg.flyte.twilight.event
 
+import gg.flyte.twilight.event.player.listener.PlayerDamageListener
 import gg.flyte.twilight.event.player.listener.PlayerMoveBlockListener
 import org.bukkit.event.Listener
 
 object CustomEventRegistry {
-    private val eventListeners = setOf<Listener>(
-        PlayerMoveBlockListener
+    private val eventListeners = setOf(
+        PlayerMoveBlockListener, PlayerDamageListener
     )
 
     private var activeEventListeners = eventListeners.toMutableSet()
