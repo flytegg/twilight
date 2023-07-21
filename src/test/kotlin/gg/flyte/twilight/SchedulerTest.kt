@@ -2,9 +2,9 @@ package gg.flyte.twilight
 
 import gg.flyte.twilight.scheduler.async
 import gg.flyte.twilight.scheduler.delay
-import gg.flyte.twilight.scheduler.sync
 import gg.flyte.twilight.scheduler.repeat
-import java.util.concurrent.TimeUnit
+import gg.flyte.twilight.scheduler.sync
+import gg.flyte.twilight.time.TimeUnit
 
 fun main() {
     syncTaskTest()

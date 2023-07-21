@@ -9,6 +9,3 @@ fun Inventory.hasSpace(): Boolean {
 fun Inventory.isFull(): Boolean {
     return firstEmpty() == -1
 }
-
-
-
