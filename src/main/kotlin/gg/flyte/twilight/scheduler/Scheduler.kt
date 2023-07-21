@@ -34,7 +34,7 @@ fun async(runnable: BukkitRunnable.() -> Unit): BukkitTask {
  * @param runnable The function representing the task to be executed.
  * @return The BukkitTask representing the scheduled task.
  */
-fun delay(value: Int, unit: TimeUnit = TimeUnit.MILLISECONDS, async: Boolean = false, runnable: BukkitRunnable.() -> Unit): BukkitTask {
+fun delay(value: Int, unit: TimeUnit = TimeUnit.TICKS, async: Boolean = false, runnable: BukkitRunnable.() -> Unit): BukkitTask {
     return if (async) {
         createBukkitRunnable(runnable).runTaskLaterAsynchronously(Twilight.plugin, unit.toMillis(value.toLong()) / 50)
     } else {
@@ -52,7 +52,7 @@ fun delay(value: Int, unit: TimeUnit = TimeUnit.MILLISECONDS, async: Boolean = f
  * @see delay
  */
 fun delay(ticks: Int = 1, runnable: BukkitRunnable.() -> Unit): BukkitTask {
-    return delay(ticks, TimeUnit.MILLISECONDS, false, runnable)
+    return delay(ticks, TimeUnit.TICKS, false, runnable)
 }
 
 /**
@@ -67,7 +67,7 @@ fun delay(ticks: Int = 1, runnable: BukkitRunnable.() -> Unit): BukkitTask {
  * @see delay
  */
 fun delay(ticks: Int = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): BukkitTask {
-    return delay(ticks, TimeUnit.MILLISECONDS, async, runnable)
+    return delay(ticks, TimeUnit.TICKS, async, runnable)
 }
 
 /**
@@ -80,7 +80,7 @@ fun delay(ticks: Int = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): 
  * @param runnable The function representing the task to be executed.
  * @return The BukkitTask representing the scheduled task.
  */
-fun repeat(delay: Int, period: Int, unit: TimeUnit = TimeUnit.MILLISECONDS, async: Boolean = false, runnable: BukkitRunnable.() -> Unit): BukkitTask {
+fun repeat(delay: Int, period: Int, unit: TimeUnit = TimeUnit.TICKS, async: Boolean = false, runnable: BukkitRunnable.() -> Unit): BukkitTask {
     return if (async) {
         createBukkitRunnable(runnable).runTaskTimerAsynchronously(Twilight.plugin, unit.toMillis(delay.toLong()) / 50, unit.toMillis(period.toLong()) / 50)
     } else {
@@ -98,7 +98,7 @@ fun repeat(delay: Int, period: Int, unit: TimeUnit = TimeUnit.MILLISECONDS, asyn
  * @see repeat
  */
 fun repeat(periodTicks: Int = 1, runnable: BukkitRunnable.() -> Unit): BukkitTask {
-    return repeat(periodTicks, periodTicks, TimeUnit.MILLISECONDS, false, runnable)
+    return repeat(periodTicks, periodTicks, TimeUnit.TICKS, false, runnable)
 }
 
 /**
@@ -113,7 +113,7 @@ fun repeat(periodTicks: Int = 1, runnable: BukkitRunnable.() -> Unit): BukkitTas
  * @see repeat
  */
 fun repeat(periodTicks: Int = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): BukkitTask {
-    return repeat(periodTicks, periodTicks, TimeUnit.MILLISECONDS, async, runnable)
+    return repeat(periodTicks, periodTicks, TimeUnit.TICKS, async, runnable)
 }
 
 /**
@@ -159,7 +159,7 @@ fun repeat(period: Int, unit: TimeUnit, async: Boolean, runnable: BukkitRunnable
  * @see repeat
  */
 fun repeat(delayTicks: Int, periodTicks: Int, async: Boolean, runnable: BukkitRunnable.() -> Unit): BukkitTask {
-    return repeat(delayTicks, periodTicks, TimeUnit.MILLISECONDS, async, runnable)
+    return repeat(delayTicks, periodTicks, TimeUnit.TICKS, async, runnable)
 }
 
 /**
