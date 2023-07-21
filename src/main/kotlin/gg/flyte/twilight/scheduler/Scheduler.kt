@@ -4,6 +4,7 @@ import gg.flyte.twilight.Twilight
 import gg.flyte.twilight.time.TimeUnit
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
+import sun.jvm.hotspot.oops.CellTypeState.value
 
 /**
  * Schedules a synchronous task to be executed by the Bukkit scheduler.
@@ -36,9 +37,9 @@ fun async(runnable: BukkitRunnable.() -> Unit): BukkitTask {
  */
 fun delay(value: Int, unit: TimeUnit = TimeUnit.TICKS, async: Boolean = false, runnable: BukkitRunnable.() -> Unit): BukkitTask {
     return if (async) {
-        createBukkitRunnable(runnable).runTaskLaterAsynchronously(Twilight.plugin, unit.toMillis(value.toLong()) / 50)
+        createBukkitRunnable(runnable).runTaskLaterAsynchronously(Twilight.plugin, unit.toTicks(value.toLong()))
     } else {
-        createBukkitRunnable(runnable).runTaskLater(Twilight.plugin, unit.toMillis(value.toLong()) / 50)
+        createBukkitRunnable(runnable).runTaskLater(Twilight.plugin, unit.toTicks(value.toLong()))
     }
 }
 
@@ -82,9 +83,9 @@ fun delay(ticks: Int = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): 
  */
 fun repeat(delay: Int, period: Int, unit: TimeUnit = TimeUnit.TICKS, async: Boolean = false, runnable: BukkitRunnable.() -> Unit): BukkitTask {
     return if (async) {
-        createBukkitRunnable(runnable).runTaskTimerAsynchronously(Twilight.plugin, unit.toMillis(delay.toLong()) / 50, unit.toMillis(period.toLong()) / 50)
+        createBukkitRunnable(runnable).runTaskTimerAsynchronously(Twilight.plugin, unit.toTicks(delay.toLong()), unit.toTicks(period.toLong()))
     } else {
-        createBukkitRunnable(runnable).runTaskTimer(Twilight.plugin, unit.toMillis(delay.toLong()) / 50, unit.toMillis(period.toLong()) / 50)
+        createBukkitRunnable(runnable).runTaskTimer(Twilight.plugin, unit.toTicks(delay.toLong()), unit.toTicks(period.toLong()))
     }
 }
 
