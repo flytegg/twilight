@@ -4,7 +4,6 @@ import gg.flyte.twilight.Twilight
 import gg.flyte.twilight.time.TimeUnit
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
-import sun.jvm.hotspot.oops.CellTypeState.value
 
 /**
  * Schedules a synchronous task to be executed by the Bukkit scheduler.
