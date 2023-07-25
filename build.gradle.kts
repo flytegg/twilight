@@ -1,5 +1,5 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     kotlin("jvm") version "1.8.21"
     id("maven-publish")
 }
@@ -61,14 +61,35 @@ kotlin {
 }
 
 publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = group.toString()
-            artifactId = "twilight"
-            version = version.toString()
+    repositories {
+        maven {
+            name = "flyte-repository"
+            url = uri(
+                "https://repo.flyte.gg/${
+                    if (version.toString().endsWith("-SNAPSHOT")) "snapshots" else "releases"
+                }"
+            )
+            credentials {
+                username = System.getenv("MAVEN_NAME") ?: property("mavenUser").toString()
+                password = System.getenv("MAVEN_SECRET") ?: property("mavenPassword").toString()
+            }
+            authentication {
 
-            from(components["java"])
+            }
+        }
+    }
+
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                groupId = group.toString()
+                artifactId = "twilight"
+                version = version.toString()
+
+                from(components["java"])
+            }
         }
     }
 }
+
 
