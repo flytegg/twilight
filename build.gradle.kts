@@ -73,9 +73,6 @@ publishing {
                 username = System.getenv("MAVEN_NAME") ?: property("mavenUser").toString()
                 password = System.getenv("MAVEN_SECRET") ?: property("mavenPassword").toString()
             }
-            authentication {
-
-            }
         }
     }
 
