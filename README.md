@@ -76,11 +76,7 @@ Other features that can be configured in the Twilight class builder will have th
 
 ### Extension Functions
 
-Twilight takes advantage of Kotlin's extension functions to add additional functions to various classes used within the API:
-
-### Events
-
-// JOSH FILL OUT (range of custom events, plus easy custom event making?)
+Twilight takes advantage of Kotlin's extension functions to add additional functions to various classes used within the API.
 
 ### Scheduler
 Bukkit's build in scheduler is tedious at best, so Twilight takes advantage of beautiful Kotlin syntax to make it easier to write, as well as adding a custom TimeUnit to save you calculating ticks.
