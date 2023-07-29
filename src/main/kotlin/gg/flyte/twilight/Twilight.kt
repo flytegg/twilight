@@ -1,5 +1,6 @@
 package gg.flyte.twilight
 
+import gg.flyte.twilight.data.MongoDB
 import gg.flyte.twilight.environment.Environment
 import gg.flyte.twilight.inventory.GUIListener
 import org.bukkit.Bukkit
@@ -21,6 +22,10 @@ class Twilight(javaPlugin: JavaPlugin) {
 
     fun env(init: Environment.Settings.() -> Unit) {
         Environment.env(Environment.Settings().apply(init))
+    }
+
+    fun mongo(init: MongoDB.Settings.() -> Unit) {
+        MongoDB.mongo(MongoDB.Settings().apply(init))
     }
 
 }
