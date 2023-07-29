@@ -157,7 +157,31 @@ repeat(5, 10, TimeUnit.SECONDS, true) {
 ```
 
 ### Databases
-// JOSH FILL OUT
+Currently we have support for MongoDB. To configure it, you can take one of two routes:
+
+#### Environment variables
+You can use the following Environment variables for your MongoDB:
+```env
+MONGO_URI="your URI string"
+MONGO_DATABASE="your database name"
+```
+
+#### Builder
+When building your Twilight instance, you can specify your URI and database like so:
+```kotlin
+val twilight = twilight(plugin) {
+    mongo {
+        uri = "your URI string"
+        database = "your database name"
+    }
+}
+```
+
+From here you can use the following method to get a collection from your database:
+```kotlin
+MongoDB.collection("my-collection")
+```
+And use the standard features of the Mongo Java Driver with your `MongoCollection`.
 
 ### UUID <--> Name
 Twilight can do the heavy lifting and query the Mojang API to find the UUID from name or name from UUID of a player, particularly useful for networks. Twilight will cache responses in an attempt to not break the rate limit imposed by Mojang.
