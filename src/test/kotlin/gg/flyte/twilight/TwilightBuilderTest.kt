@@ -12,6 +12,8 @@ fun useBuilderTest() {
     val twilight = twilight(plugin) {
         env {
             useDifferentEnvironments = true
+            devEnvFileName = ".env.dev"
+            prodEnvFileName = ".env.prod"
         }
     }
 }
