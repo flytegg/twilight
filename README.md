@@ -41,18 +41,42 @@ maven {
 implementation("gg.flyte:twilight:1.0.0")
 ```
 
-// JOSH EXPLAIN THE ENVIRONMENT STUFF AND THE BUILDER FOR STARTUP
+Certain features of Twilight require configuration, which can be done via the Twilight class. To setup a Twilight class instance, you can use the `twilight` method as shown below:
+```kotlin
+val twilight = twilight(plugin) {
 
+}
+```
+
+If you want to make use of environment variables (.env files), you can configure your usage of these here, like so:
+```kotlin
+val twilight = twilight(plugin) {
+    env {
+        useDifferentEnvironments = true
+        devEnvFileName = ".env.dev"
+        prodEnvFileName = ".env.prod"
+    }
+}
+```
+The above are the default env configuration settings.
+
+If you `useDifferentEnvironments`, you'll need a `.env` file which contains the following:
+```env
+ENVIRONMENT=DEV # or PROD
+```
+This file determines whether to use your dev .env or your prod .env.
+
+If you do not use this different environments feature, then it will just use the .env (or whatever you specify the name as with `prodEnvFileName`)
+
+Throughout your project you can use `Environment.get("VARIABLE")` to retrieve a value from your environment variables.
+
+Other features that can be configured in the Twilight class builder will have their own sections later in the README.
 
 ## Features
 
 ### Extension Functions
 
-Twilight takes advantage of Kotlin's extension functions to add additional functions to various classes used within the API:
-
-### Events
-
-// JOSH FILL OUT (range of custom events, plus easy custom event making?)
+Twilight takes advantage of Kotlin's extension functions to add additional functions to various classes used within the API.
 
 ### Scheduler
 Bukkit's build in scheduler is tedious at best, so Twilight takes advantage of beautiful Kotlin syntax to make it easier to write, as well as adding a custom TimeUnit to save you calculating ticks.
