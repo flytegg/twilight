@@ -7,11 +7,14 @@ object Environment {
     private lateinit var dotenv: Dotenv
 
     fun env(env: Settings) {
+        val envBuilder = Dotenv.configure()
         if (env.useDifferentEnvironments) {
-            TODO("Implement dev vs prod env setup")
+            envBuilder.filename(
+                if (Dotenv.configure().load().get("ENVIRONMENT", "PROD") == "DEV") env.devEnvFileName
+                else env.prodEnvFileName
+            )
         }
-
-        TODO("Implement other settings stuff")
+        dotenv = envBuilder.load()
     }
 
     fun isDev(): Boolean {
@@ -28,6 +31,8 @@ object Environment {
 
     class Settings {
         var useDifferentEnvironments: Boolean = false
+        var prodEnvFileName: String = ".env.prod"
+        var devEnvFileName: String = ".env.dev"
         // TODO: Implement other settings stuff
     }
 
