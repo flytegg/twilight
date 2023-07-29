@@ -22,7 +22,7 @@ object MongoDB {
                 codecRegistry
             )
 
-    fun collection(name: String): MongoCollection<Document>? {
+    fun collection(name: String): MongoCollection<Document> {
         return database.getCollection(name)
     }
 
