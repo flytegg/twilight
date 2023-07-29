@@ -5,8 +5,43 @@ Twilight is an API for developers creating plugins for Spigot or Paper based Min
 
 Twilight is built using **Kotlin**, and is recommended for usage with. Many features of Twilight should work with plain Java, though compatability is not guaranteed.
 
-## Startup
-// JOSH EXPLAIN THE ENVIRONMENT STUFF AND THE BUILDER
+## Setup
+Twilight should be bundled within your plugin. Add the following repository and dependency to your build tool:
+
+Maven
+```xml
+<repository>
+    <id>flyte-repository-releases</id>
+    <name>Flyte Repository</name>
+    <url>https://repo.flyte.gg/releases</url>
+</repository>
+
+<dependency>
+  <groupId>gg.flyte</groupId>
+  <artifactId>twilight</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+
+Gradle (Groovy DSL)
+```groovy
+maven {
+    url "https://repo.flyte.gg/releases"
+}
+
+implementation "gg.flyte:twilight:1.0.0"
+```
+
+Gradle (Kotlin DSL)
+```kotlin
+maven {
+    url = uri("https://repo.flyte.gg/releases")
+}
+
+implementation("gg.flyte:twilight:1.0.0")
+```
+
+// JOSH EXPLAIN THE ENVIRONMENT STUFF AND THE BUILDER FOR STARTUP
 
 
 ## Features
