@@ -30,7 +30,7 @@ object Environment {
     }
 
     class Settings {
-        var useDifferentEnvironments: Boolean = false
+        var useDifferentEnvironments: Boolean = true
         var prodEnvFileName: String = ".env.prod"
         var devEnvFileName: String = ".env.dev"
         // TODO: Implement other settings stuff
