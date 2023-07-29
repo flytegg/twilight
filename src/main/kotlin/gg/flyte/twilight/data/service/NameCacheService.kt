@@ -25,7 +25,7 @@ object NameCacheService {
     }
 
     private fun queryMongoNameByUUID(uuid: UUID): String? {
-        mongoCache?.let {
+        mongoCache.let {
             mongoCache.find(Filters.eq("_id", uuid.toString())).first()
                 ?.let {
                     val name =
@@ -34,7 +34,6 @@ object NameCacheService {
                     return name
                 } ?: return null
         }
-            ?: throw MongoException("Unable to query MongoDB for '$uuid' in '${Environment.get("NAME_CACHE_COLLECTION")}', can't find collection.")
     }
 
     private fun queryMojangNameByUUID(uuid: UUID): String {
@@ -44,7 +43,7 @@ object NameCacheService {
         val name = JsonParser.parseReader(connection.inputStream.reader()).asJsonObject.get("name").asString
         connection.disconnect()
         cache[uuid] = name
-        mongoCache?.insertOne(
+        mongoCache.insertOne(
             Document(
                 mapOf(
                     "_id" to uuid.toString(),
@@ -52,7 +51,6 @@ object NameCacheService {
                 )
             )
         )
-            ?: throw MongoException("Unable to save document in MongoDB for '$uuid' in '${Environment.get("NAME_CACHE_COLLECTION")}', can't find collection.")
         return name
     }
 
@@ -64,7 +62,7 @@ object NameCacheService {
     }
 
     private fun queryMongoUUIDByName(name: String): UUID? {
-        mongoCache?.let {
+        mongoCache.let {
             mongoCache.find(
                 Filters.regex(
                     "name",
@@ -77,7 +75,6 @@ object NameCacheService {
                 return uuid
             } ?: return null
         }
-            ?: throw MongoException("Unable to query MongoDB for '$name' in '${Environment.get("NAME_CACHE_COLLECTION")}', can't find collection.")
     }
 
     private fun queryMojangUUIDByName(name: String): UUID {
@@ -87,7 +84,7 @@ object NameCacheService {
         val uuid = JsonParser.parseReader(connection.inputStream.reader()).asJsonObject.get("id").asString.toUUID()
         connection.disconnect()
         cache[uuid] = name
-        mongoCache?.insertOne(
+        mongoCache.insertOne(
             Document(
                 mapOf(
                     "_id" to uuid.toString(),
@@ -95,7 +92,6 @@ object NameCacheService {
                 )
             )
         )
-            ?: throw MongoException("Unable to save document in MongoDB for '$name' in '${Environment.get("NAME_CACHE_COLLECTION")}', can't find collection.")
         return uuid
     }
 
