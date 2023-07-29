@@ -1,14 +1,11 @@
 package gg.flyte.twilight
 
 import gg.flyte.twilight.environment.Environment
-import gg.flyte.twilight.event.CustomEventRegistry
 import gg.flyte.twilight.inventory.GUIListener
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
 class Twilight(javaPlugin: JavaPlugin) {
-
-    private lateinit var customEvents: CustomEventRegistry
 
     init {
         plugin = javaPlugin
@@ -24,10 +21,6 @@ class Twilight(javaPlugin: JavaPlugin) {
 
     fun env(init: Environment.Settings.() -> Unit) {
         Environment.env(Environment.Settings().apply(init))
-    }
-
-    fun events(init: CustomEventRegistry.() -> Unit) {
-        this.customEvents = CustomEventRegistry.apply(init)
     }
 
 }
