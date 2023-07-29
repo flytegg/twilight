@@ -13,9 +13,6 @@ fun useBuilderTest() {
         env {
             useDifferentEnvironments = true
         }
-        events {
-            none()
-        }
     }
 }
 
