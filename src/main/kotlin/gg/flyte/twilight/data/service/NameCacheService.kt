@@ -15,6 +15,9 @@ import javax.net.ssl.HttpsURLConnection
 
 object NameCacheService {
 
+    private const val MOJANG_PROFILE_ENDPOINT = "https://sessionserver.mojang.com/session/minecraft/profile"
+    private const val MOJANG_UUID_ENDPOINT = "https://api.mojang.com/users/profiles/minecraft"
+
     private val cache = mutableMapOf<UUID, String>()
     private val mongoCache = MongoDB.collection(Environment.get("NAME_CACHE_COLLECTION"))
 
@@ -38,7 +41,7 @@ object NameCacheService {
 
     private fun queryMojangNameByUUID(uuid: UUID): String {
         val connection =
-            URL("${Environment.get("MOJANG_PROFILE_ENDPOINT")}/$uuid").openConnection() as HttpsURLConnection
+            URL("$MOJANG_PROFILE_ENDPOINT/$uuid").openConnection() as HttpsURLConnection
         connection.doOutput = true
         val name = JsonParser.parseReader(connection.inputStream.reader()).asJsonObject.get("name").asString
         connection.disconnect()
@@ -79,7 +82,7 @@ object NameCacheService {
 
     private fun queryMojangUUIDByName(name: String): UUID {
         val connection =
-            URL("${Environment.get("MOJANG_UUID_ENDPOINT")}/$name").openConnection() as HttpsURLConnection
+            URL("$MOJANG_UUID_ENDPOINT/$name").openConnection() as HttpsURLConnection
         connection.doOutput = true
         val uuid = JsonParser.parseReader(connection.inputStream.reader()).asJsonObject.get("id").asString.toUUID()
         connection.disconnect()
