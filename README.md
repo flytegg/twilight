@@ -186,8 +186,20 @@ And use the standard features of the Mongo Java Driver with your `MongoCollectio
 ### UUID <--> Name
 Twilight can do the heavy lifting and query the Mojang API to find the UUID from name or name from UUID of a player, particularly useful for networks. Twilight will cache responses in an attempt to not break the rate limit imposed by Mojang.
 
-This can be used by:
-// JOSH
+If you have a UUID and you want to get a name, you can call `nameFromUUID`:
+```kotlin
+NameCacheService.nameFromUUID(UUID.fromString("a008c892-e7e1-48e1-8235-8aa389318b7a"))
+```
+This will look up your cache to see if we already know the name, otherwise we will check the MongoDB "cache" of key, value pairs, and finally, we'll query Mojang if we still don't know it. 
+
+After each step the key, value pair will be stored so the next call is just on the cache.
+
+Similarly, if you have a name and want to get the UUID, you can call `uuidFromName`:
+```kotlin
+NameCacheService.uuidFromName("stxphen")
+```
+
+Currently the only way to configure your MongoDB "cache" for UUIDs and names, is to have an Environment variable called `NAME_CACHE_COLLECTION` with the value being what you want to call the collection.
 
 ### Symbols
 Twilight offers a collection of widely used symbols within the `Symbols` object.
