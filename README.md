@@ -34,9 +34,7 @@ implementation "gg.flyte:twilight:1.0.0"
 
 Gradle (Kotlin DSL)
 ```kotlin
-maven {
-    url = uri("https://repo.flyte.gg/releases")
-}
+maven("https://repo.flyte.gg/releases")
 
 implementation("gg.flyte:twilight:1.0.0")
 ```
