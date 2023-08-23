@@ -37,8 +37,8 @@ object MongoDB {
     }
 
     class Settings {
-        var uri: String = Environment.get("MONGO_URI")
-        var database: String = Environment.get("MONGO_DATABASE")
+        var uri: String = if (Twilight.usingEnv) Environment.get("MONGO_URI") else ""
+        var database: String = if (Twilight.usingEnv) Environment.get("MONGO_DATABASE") else ""
     }
 
 }
