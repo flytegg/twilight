@@ -1,6 +1,7 @@
 package gg.flyte.twilight
 
 import gg.flyte.twilight.data.MongoDB
+import gg.flyte.twilight.data.service.NameCacheService
 import gg.flyte.twilight.environment.Environment
 import gg.flyte.twilight.inventory.GUIListener
 import org.bukkit.Bukkit
@@ -18,15 +19,17 @@ class Twilight(javaPlugin: JavaPlugin) {
 
     companion object {
         lateinit var plugin: JavaPlugin
+        var usingEnv = false
     }
 
     fun env(init: Environment.Settings.() -> Unit) {
+        usingEnv = true
         Environment.env(Environment.Settings().apply(init))
     }
 
-    fun mongo(init: MongoDB.Settings.() -> Unit) {
-        MongoDB.mongo(MongoDB.Settings().apply(init))
-    }
+    fun mongo(init: MongoDB.Settings.() -> Unit) = MongoDB.mongo(MongoDB.Settings().apply(init))
+
+    fun nameCache(init: NameCacheService.Settings.() -> Unit) = NameCacheService.nameCache(NameCacheService.Settings().apply(init))
 
 }
 
