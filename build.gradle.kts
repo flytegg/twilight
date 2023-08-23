@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "gg.flyte"
-version = "1.0.1"
+version = "1.0.2"
 
 repositories {
     mavenCentral()
@@ -23,7 +23,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     implementation("org.mongodb:mongo-java-driver:3.12.12")
-    implementation("com.google.code.gson:gson:2.7")
+    implementation("com.google.code.gson:gson:2.8.9")
 }
 
 tasks {
