@@ -4,7 +4,7 @@ import io.github.cdimascio.dotenv.Dotenv
 
 object Environment {
 
-    private lateinit var dotenv: Dotenv
+    private var dotenv: Dotenv = Dotenv.load()
 
     fun env(env: Settings) {
         val envBuilder = Dotenv.configure()
