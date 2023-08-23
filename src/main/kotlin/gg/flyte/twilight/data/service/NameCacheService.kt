@@ -2,7 +2,9 @@ package gg.flyte.twilight.data.service
 
 import com.google.gson.JsonParser
 import com.mongodb.MongoException
+import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters
+import gg.flyte.twilight.Twilight
 import gg.flyte.twilight.data.MongoDB
 import gg.flyte.twilight.environment.Environment
 import gg.flyte.twilight.extension.findKeyByValue
@@ -19,7 +21,11 @@ object NameCacheService {
     private const val MOJANG_UUID_ENDPOINT = "https://api.mojang.com/users/profiles/minecraft"
 
     private val cache = mutableMapOf<UUID, String>()
-    private val mongoCache = MongoDB.collection(Environment.get("NAME_CACHE_COLLECTION"))
+    private lateinit var mongoCache: MongoCollection<Document>
+
+    fun nameCache(nameCache: Settings) {
+        mongoCache = MongoDB.collection(nameCache.collectionName)
+    }
 
     fun nameFromUUID(uuid: UUID): String {
         return cache[uuid] ?: queryMongoNameByUUID(
@@ -96,6 +102,10 @@ object NameCacheService {
             )
         )
         return uuid
+    }
+
+    class Settings {
+        var collectionName: String = if (Twilight.usingEnv) Environment.get("NAME_CACHE_COLLECTION") else ("name-cache")
     }
 
 }

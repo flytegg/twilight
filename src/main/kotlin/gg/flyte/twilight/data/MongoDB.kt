@@ -5,6 +5,7 @@ import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoClients
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
+import gg.flyte.twilight.Twilight
 import gg.flyte.twilight.environment.Environment
 import org.bson.Document
 import org.bson.codecs.configuration.CodecRegistries.fromProviders
@@ -23,7 +24,7 @@ object MongoDB {
 
     fun mongo(mongo: Settings) {
         client = MongoClients.create(mongo.uri)
-        database = client.getDatabase(mongo.database + if (Environment.isDev()) "-dev" else "")
+        database = client.getDatabase(mongo.database + if (Twilight.usingEnv && Environment.isDev()) "-dev" else "")
             .withCodecRegistry(codecRegistry)
     }
 
