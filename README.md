@@ -41,14 +41,14 @@ implementation("gg.flyte:twilight:1.0.3")
 
 Certain features of Twilight require configuration, which can be done via the Twilight class. To setup a Twilight class instance, you can use the `twilight` method as shown below:
 ```kotlin
-val twilight = twilight(plugin) {
+val twilight = twilight(this) {
 
 }
 ```
 
 If you want to make use of environment variables (.env files), you can configure your usage of these here, like so:
 ```kotlin
-val twilight = twilight(plugin) {
+val twilight = twilight(this) {
     env {
         useDifferentEnvironments = true
         devEnvFileName = ".env.dev"
