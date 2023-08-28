@@ -19,7 +19,7 @@ Maven
 <dependency>
   <groupId>gg.flyte</groupId>
   <artifactId>twilight</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
 </dependency>
 ```
 
@@ -29,14 +29,14 @@ maven {
     url "https://repo.flyte.gg/releases"
 }
 
-implementation "gg.flyte:twilight:1.0.3"
+implementation "gg.flyte:twilight:1.0.4"
 ```
 
 Gradle (Kotlin DSL)
 ```kotlin
 maven("https://repo.flyte.gg/releases")
 
-implementation("gg.flyte:twilight:1.0.3")
+implementation("gg.flyte:twilight:1.0.4")
 ```
 
 Certain features of Twilight require configuration, which can be done via the Twilight class. To setup a Twilight class instance, you can use the `twilight` method as shown below:
@@ -186,6 +186,14 @@ From here you can use the following method to get a collection from your databas
 MongoDB.collection("my-collection")
 ```
 And use the standard features of the Mongo Java Driver with your `MongoCollection`.
+
+### Ternary Operator
+There is a basic ternary operator implementation added which can be used like so:
+```kotlin
+val test = false
+println(test then "yes" or "no")
+```
+This doesn't yet work for evaluating functions either side of the ternary though, we plan to figure this out in the near future.
 
 ### UUID <--> Name
 Twilight can do the heavy lifting and query the Mojang API to find the UUID from name or name from UUID of a player, particularly useful for networks. Twilight will cache responses in an attempt to not break the rate limit imposed by Mojang.
