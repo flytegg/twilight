@@ -3,6 +3,7 @@ package gg.flyte.twilight
 import gg.flyte.twilight.data.MongoDB
 import gg.flyte.twilight.data.service.NameCacheService
 import gg.flyte.twilight.environment.Environment
+import gg.flyte.twilight.events.EventListener
 import gg.flyte.twilight.inventory.GUIListener
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
@@ -13,7 +14,8 @@ class Twilight(javaPlugin: JavaPlugin) {
         plugin = javaPlugin
 
         listOf(
-            GUIListener()
+            GUIListener(),
+            EventListener()
         ).forEach { Bukkit.getPluginManager().registerEvents(it, plugin) }
     }
 
