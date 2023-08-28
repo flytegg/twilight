@@ -228,4 +228,12 @@ These are:
 - ⛁ (COINS)
 
 ### Libraries
-Comes bundled with useful librarise (gson etc) JOSH <--
+Twilight is bundled with some useful libraries, some include:
+- Bson
+- Dotenv
+- Mongo Sync Driver
+- GSON
+
+#### GSON
+We're aiming to provide some standard GSON Type Adapters for ease of use. Currently, we have adapters for the following:
+- Location
