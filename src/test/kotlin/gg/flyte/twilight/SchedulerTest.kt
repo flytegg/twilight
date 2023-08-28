@@ -85,7 +85,6 @@ fun asyncTaskTimerTest() {
     repeat(5, 10, TimeUnit.SECONDS, true) {
         println("I am an async BukkitRunnable running every 10 seconds, waiting 5 before starting")
     }
-
 }
 
 
