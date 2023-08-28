@@ -1,9 +1,9 @@
 package gg.flyte.twilight.extension
 
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Player
 
 /**
  * Kills the living entity.
@@ -28,24 +28,23 @@ fun LivingEntity.heal() {
 }
 
 /**
- * Checks if the player is standing on a ladder block.
+ * Checks if the living entity is standing on a ladder block.
  *
- * This method checks whether the player is currently standing on a ladder block in the game world.
- * If the player's location is on a ladder block, this method returns `true`; otherwise, it returns `false`.
+ * This method checks whether the living entity is currently standing on a ladder block in the game world.
  *
  * @return `true` if the player is standing on a ladder block, `false` otherwise.
  */
-fun Player.isOnLadder(): Boolean {
+fun LivingEntity.isOnLadder(): Boolean {
     return location.block.type == Material.LADDER
 }
 
 /**
- * Restores the player's food level to maximum.
+ * Teleports the living entity to the specified coordinates in their current world.
  *
- * This method sets the player's food level to its maximum value of 20, effectively
- * filling the player's hunger bar completely. The player will be fully fed after
- * calling this method.
+ * @param x The X-coordinate to teleport the player to (double or int).
+ * @param y The Y-coordinate to teleport the player to (double or int).
+ * @param z The Z-coordinate to teleport the player to (double or int).
  */
-fun Player.feed() {
-    foodLevel = 20
+fun LivingEntity.teleport(x: Number, y: Number, z: Number) {
+    teleport(Location(world, x.toDouble(), y.toDouble(), z.toDouble()))
 }

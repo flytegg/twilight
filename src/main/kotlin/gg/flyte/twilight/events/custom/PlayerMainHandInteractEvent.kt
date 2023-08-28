@@ -53,7 +53,7 @@ class PlayerMainHandInteractEvent(
     }
 
     companion object {
-        private val HANDLERS = HandlerList()
+        val HANDLERS = HandlerList()
 
         /**
          * Returns the list of event handlers for this event.

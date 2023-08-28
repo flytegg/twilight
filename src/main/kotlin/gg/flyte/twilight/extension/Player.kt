@@ -14,3 +14,14 @@ import org.bukkit.entity.Player
 fun Player.playSound(sound: Sound) {
     playSound(location, sound, 1.0F, 1.0F)
 }
+
+/**
+ * Restores the player's food level to maximum.
+ *
+ * This method sets the player's food level to its maximum value of 20, effectively
+ * filling the player's hunger bar completely. The player will be fully fed after
+ * calling this method.
+ */
+fun Player.feed() {
+    foodLevel = 20
+}
