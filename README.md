@@ -76,6 +76,12 @@ Other features that can be configured in the Twilight class builder will have th
 
 Twilight takes advantage of Kotlin's extension functions to add additional functions to various classes used within the API.
 
+### Events
+
+Twilight provides additional events which are not found in Spigot or Paper. These are:
+- PlayerMainHandInteractEvent
+- PlayerOffHandInteractEvent
+
 ### Scheduler
 Bukkit's build in scheduler is tedious at best, so Twilight takes advantage of beautiful Kotlin syntax to make it easier to write, as well as adding a custom TimeUnit to save you calculating ticks.
 

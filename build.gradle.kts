@@ -23,7 +23,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     implementation("org.mongodb:mongodb-driver-sync:4.9.0")
-    implementation("com.google.code.gson:gson:2.8.9")
+    implementation("com.google.code.gson:gson:2.10.1")
 }
 
 tasks {
