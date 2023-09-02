@@ -216,7 +216,7 @@ Currently the only way to configure your MongoDB "cache" for UUIDs and names, is
 ### Symbols
 Twilight offers a collection of widely used symbols within the `Symbols` object.
 
-These are:
+These include, but are not limited to:
 - • (BULLET)
 - ❤ (HEART)
 - ★ (STAR)

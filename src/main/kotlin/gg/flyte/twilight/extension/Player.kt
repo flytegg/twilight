@@ -1,7 +1,9 @@
 package gg.flyte.twilight.extension
 
+import gg.flyte.twilight.Twilight
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
+import org.bukkit.Bukkit
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -46,5 +48,27 @@ fun Player.feed() {
 fun Player.addToInvOrDrop(itemStack: ItemStack) {
     inventory.addItem(itemStack).values.forEach {
         location.dropItem(itemStack)
+    }
+}
+
+/**
+ * Hides the player from all online players.
+ *
+ * @param player The player instance calling the method.
+ */
+fun Player.hidePlayer() {
+    Bukkit.getOnlinePlayers().forEach {
+        it.hidePlayer(Twilight.plugin, this)
+    }
+}
+
+/**
+ * Shows the player to all online players.
+ *
+ * @param player The player instance calling the method.
+ */
+fun Player.showPlayer() {
+    Bukkit.getOnlinePlayers().forEach {
+        it.showPlayer(Twilight.plugin, this)
     }
 }
