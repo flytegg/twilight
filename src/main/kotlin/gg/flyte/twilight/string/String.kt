@@ -42,7 +42,7 @@ fun String.translate(): String {
  * @return The list of strings with color codes replaced by their corresponding colors.
  */
 fun List<String>.translate(): List<String> {
-    return stream().apply { translate() }.toList()
+    return apply { translate() }.toList()
 }
 
 /**
