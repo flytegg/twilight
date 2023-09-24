@@ -53,8 +53,6 @@ fun Player.addToInvOrDrop(itemStack: ItemStack) {
 
 /**
  * Hides the player from all online players.
- *
- * @param player The player instance calling the method.
  */
 fun Player.hidePlayer() {
     Bukkit.getOnlinePlayers().forEach {
@@ -64,11 +62,16 @@ fun Player.hidePlayer() {
 
 /**
  * Shows the player to all online players.
- *
- * @param player The player instance calling the method.
  */
 fun Player.showPlayer() {
     Bukkit.getOnlinePlayers().forEach {
         it.showPlayer(Twilight.plugin, this)
     }
+}
+
+/**
+ * Clears all the player's active potion effects
+ */
+fun Player.removeActivePotionEffects() {
+    activePotionEffects.forEach { removePotionEffect(it.type) }
 }
