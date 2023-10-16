@@ -1,4 +1,4 @@
-package gg.flyte.twilight.events
+package gg.flyte.twilight.event
 
 import org.bukkit.event.Listener
 
