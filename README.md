@@ -196,7 +196,7 @@ event<PlayerJoinEvent> {
     player.sendMessage("Welcome to the server!")
 }
 ```
-If you need to change the of an event, you can pass it to the function call like:
+If you need to change the priorty of an event, you can pass it to the function call like:
 ```kt
 event<PlayerJoinEvent>(EventPriority.HIGHEST) {
     player.sendMessage("Welcome to the server!")
