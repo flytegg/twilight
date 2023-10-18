@@ -7,7 +7,7 @@ import org.bukkit.event.Listener
 
 inline fun <reified T : Event> event(
     priority: EventPriority = EventPriority.NORMAL,
-    crossinline callback: (T) -> Unit,
+    crossinline callback: T.() -> Unit,
 ) {
     Twilight.plugin.server.pluginManager.registerEvent(
         T::class.java, // tell bukkit what event we're listening to

@@ -3,10 +3,10 @@ package gg.flyte.twilight
 import gg.flyte.twilight.environment.Environment
 
 fun main() {
-    test()
+    envTest()
 }
 
-fun test() {
+fun envTest() {
     env {
         useDifferentEnvironments = true
     }
