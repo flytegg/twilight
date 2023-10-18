@@ -5,7 +5,7 @@ import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 
-inline fun <reified T : Event> listen(
+inline fun <reified T : Event> event(
     priority: EventPriority = EventPriority.NORMAL,
     crossinline callback: (T) -> Unit,
 ) {
