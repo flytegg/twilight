@@ -19,7 +19,7 @@ Maven
 <dependency>
   <groupId>gg.flyte</groupId>
   <artifactId>twilight</artifactId>
-  <version>1.0.13</version>
+  <version>1.0.14</version>
 </dependency>
 ```
 
@@ -29,14 +29,14 @@ maven {
     url "https://repo.flyte.gg/releases"
 }
 
-implementation "gg.flyte:twilight:1.0.13"
+implementation "gg.flyte:twilight:1.0.14"
 ```
 
 Gradle (Kotlin DSL)
 ```kotlin
 maven("https://repo.flyte.gg/releases")
 
-implementation("gg.flyte:twilight:1.0.13")
+implementation("gg.flyte:twilight:1.0.14")
 ```
 
 Certain features of Twilight require configuration, which can be done via the Twilight class. To setup a Twilight class instance, you can use the `twilight` method as shown below:
@@ -237,3 +237,7 @@ Twilight is bundled with some useful libraries, some include:
 #### GSON
 We're aiming to provide some standard GSON Type Adapters for ease of use. Currently, we have adapters for the following:
 - Location
+
+We have a useful exclusion strategy, allowing you to exclude marked fields of a class from being in serialized JSON. All you need to do is annotate the class field with `@Exclude`!
+
+Make sure to use our `GSON` import rather than making your own/own builder, as the Gson instance has to declare the ExclusionStrategy.
