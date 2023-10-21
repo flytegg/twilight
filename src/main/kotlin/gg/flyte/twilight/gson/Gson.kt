@@ -1,8 +1,20 @@
 package gg.flyte.twilight.gson
 
+import com.google.gson.ExclusionStrategy
+import com.google.gson.FieldAttributes
 import com.google.gson.GsonBuilder
 
-val GSON = GsonBuilder().setPrettyPrinting().create()!!
+object ExclusionStrategy : ExclusionStrategy {
+    override fun shouldSkipField(attributes: FieldAttributes) = attributes.getAnnotation(Exclude::class.java) != null
+
+    override fun shouldSkipClass(clazz: Class<*>) =false
+}
+
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.FIELD)
+annotation class Exclude
+
+val GSON = GsonBuilder().setPrettyPrinting().setExclusionStrategies(ExclusionStrategy).create()!!
 
 /**
  * Converts an object to its JSON representation using Google's Gson library.
@@ -10,4 +22,4 @@ val GSON = GsonBuilder().setPrettyPrinting().create()!!
  * @receiver The object to be converted to JSON.
  * @return The JSON representation of the object.
  */
-fun Any.toJson() = GSON.toJson(this)
+fun Any.toJson(): String = GSON.toJson(this)
