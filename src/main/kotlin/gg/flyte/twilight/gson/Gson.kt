@@ -14,7 +14,7 @@ object ExclusionStrategy : ExclusionStrategy {
 @Target(AnnotationTarget.FIELD)
 annotation class Exclude
 
-val GSON = GsonBuilder().setPrettyPrinting().setExclusionStrategies(ExclusionStrategy).create()!!
+val GSON = GsonBuilder().setPrettyPrinting().addSerializationExclusionStrategy(ExclusionStrategy).create()!!
 
 /**
  * Converts an object to its JSON representation using Google's Gson library.
