@@ -187,6 +187,22 @@ MongoDB.collection("my-collection")
 ```
 And use the standard features of the Mongo Java Driver with your `MongoCollection`.
 
+### Events
+We have a neat way to handle code for events, which register by themselves so you don't have to!
+
+You can make use of it like so:
+```kt
+event<PlayerJoinEvent> {
+    player.sendMessage("Welcome to the server!")
+}
+```
+If you need to change the priorty of an event, you can pass it to the function call like:
+```kt
+event<PlayerJoinEvent>(EventPriority.HIGHEST) {
+    player.sendMessage("Welcome to the server!")
+}
+```
+
 ### Ternary Operator
 There is a basic ternary operator implementation added which can be used like so:
 ```kotlin
