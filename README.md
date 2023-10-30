@@ -203,6 +203,15 @@ event<PlayerJoinEvent>(EventPriority.HIGHEST) {
 }
 ```
 
+If you ever need an instance of the Listener class that the event gets put in to, it's returned by the function. Specifically, it returns `TwilightListener`. This class has a convenience method in for unregistering the listener, it can be used like so:
+```kt
+val listener = event<PlayerJoinEvent> {
+    player.sendMessage("Welcome to the server!")
+}
+
+listener.unregister()
+```
+
 ### Ternary Operator
 There is a basic ternary operator implementation added which can be used like so:
 ```kotlin
