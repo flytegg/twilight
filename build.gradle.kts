@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "gg.flyte"
-version = "1.0.17"
+version = "1.0.18"
 
 repositories {
     mavenCentral()
@@ -44,7 +44,7 @@ tasks {
         relocate("org.intellij", "$`package`.intellij")
         relocate("org.jetbrains", "$`package`.jetbrains")
         relocate("io.github.cdimascio.dotenv", "$`package`.dotenv")
-        relocate("com.google.code.gson", "$`package`.gson")
+        relocate("com.google.gson", "$`package`.gson")
     }
 
     javadoc {
