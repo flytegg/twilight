@@ -72,3 +72,16 @@ fun BoundingBox.getLocations(world: World): List<Location> {
 
     return locations
 }
+
+/**
+ * Checks if the specified Location is within the boundaries of this BoundingBox.
+ *
+ * This extension function provides a simple way to determine if a Location is contained
+ * within the BoundingBox using its x, y, and z coordinates.
+ *
+ * @param location The Location to check for containment within this BoundingBox.
+ * @return Boolean true if the Location is within the BoundingBox; false otherwise.
+ */
+fun BoundingBox.contains(location: Location): Boolean {
+    return contains(location.x, location.y, location.z)
+}
