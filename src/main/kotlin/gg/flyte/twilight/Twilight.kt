@@ -14,6 +14,7 @@ class Twilight(javaPlugin: JavaPlugin) {
 
     init {
         plugin = javaPlugin
+        run { customEvents }
     }
 
     companion object {
