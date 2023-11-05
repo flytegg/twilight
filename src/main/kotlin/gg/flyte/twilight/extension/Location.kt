@@ -33,3 +33,87 @@ fun Location.dropItemNaturally(itemStack: ItemStack) {
 fun Location.spawnEntity(type: EntityType): Entity {
     return world!!.spawnEntity(this, type)
 }
+
+/**
+ * Increases the X coordinate of this location by the specified amount.
+ *
+ * @param x The amount to add to the X coordinate.
+ * @return The modified Location object.
+ */
+fun Location.addX(x: Number): Location {
+    return add(x.toDouble(), 0.0, 0.0)
+}
+
+/**
+ * Increases the Y coordinate of this location by the specified amount.
+ *
+ * @param y The amount to add to the Y coordinate.
+ * @return The modified Location object.
+ */
+fun Location.addY(y: Number): Location {
+    return add(0.0, y.toDouble(), 0.0)
+}
+
+/**
+ * Increases the Z coordinate of this location by the specified amount.
+ *
+ * @param z The amount to add to the Z coordinate.
+ * @return The modified Location object.
+ */
+fun Location.addZ(z: Number): Location {
+    return add(0.0, 0.0, z.toDouble())
+}
+
+/**
+ * Increases the X, Y, and Z coordinates of this location.
+ *
+ * @param x The amount to add to the X coordinate (default 0).
+ * @param y The amount to add to the Y coordinate (default 0).
+ * @param z The amount to add to the Z coordinate (default 0).
+ * @return The modified Location object.
+ */
+fun Location.add(x: Number = 0, y: Number = 0, z: Number = 0): Location {
+    return add(x.toDouble(), y.toDouble(), z.toDouble())
+}
+
+/**
+ * Decreases the X coordinate of this location by the specified amount.
+ *
+ * @param x The amount to subtract from the X coordinate.
+ * @return The modified Location object.
+ */
+fun Location.subtractX(x: Number): Location {
+    return subtract(x.toDouble(), 0.0, 0.0)
+}
+
+/**
+ * Decreases the Y coordinate of this location by the specified amount.
+ *
+ * @param y The amount to subtract from the Y coordinate.
+ * @return The modified Location object.
+ */
+fun Location.subtractY(y: Number): Location {
+    return subtract(0.0, y.toDouble(), 0.0)
+}
+
+/**
+ * Decreases the Z coordinate of this location by the specified amount.
+ *
+ * @param z The amount to subtract from the Z coordinate.
+ * @return The modified Location object.
+ */
+fun Location.subtractZ(z: Number): Location {
+    return subtract(0.0, 0.0, z.toDouble())
+}
+
+/**
+ * Decreases the X, Y, and Z coordinates of this location.
+ *
+ * @param x The amount to subtract from the X coordinate (default 0).
+ * @param y The amount to subtract from the Y coordinate (default 0).
+ * @param z The amount to subtract from the Z coordinate (default 0).
+ * @return The modified Location object.
+ */
+fun Location.subtract(x: Number = 0, y: Number = 0, z: Number = 0): Location {
+    return subtract(x.toDouble(), y.toDouble(), z.toDouble())
+}
