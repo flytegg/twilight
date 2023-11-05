@@ -142,11 +142,11 @@ delay(10) {
     println("I am a sync BukkitRunnable delayed by 10 ticks")
 }
 
-// ASYNC
 delay(1, TimeUnit.SECONDS) {
     println("I am a sync BukkitRunnable delayed by 1 second")
 }
 
+// ASYNC
 delay(10, true) {
     println("I am an async BukkitRunnable delayed by 10 ticks")
 }
@@ -181,7 +181,7 @@ repeat(10, true) {
 }
 
 repeat(10, TimeUnit.SECONDS, true) {
-    println("I am an asyncBukkitRunnable running every 10 seconds")
+    println("I am an async BukkitRunnable running every 10 seconds")
 }
 
 repeat(5, 10, true) {
