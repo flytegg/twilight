@@ -19,7 +19,7 @@ Maven
 <dependency>
   <groupId>gg.flyte</groupId>
   <artifactId>twilight</artifactId>
-  <version>1.0.28</version>
+  <version>1.0.29</version>
 </dependency>
 ```
 
@@ -29,21 +29,19 @@ maven {
     url "https://repo.flyte.gg/releases"
 }
 
-implementation "gg.flyte:twilight:1.0.28"
+implementation "gg.flyte:twilight:1.0.29"
 ```
 
 Gradle (Kotlin DSL)
 ```kotlin
 maven("https://repo.flyte.gg/releases")
 
-implementation("gg.flyte:twilight:1.0.28")
+implementation("gg.flyte:twilight:1.0.29")
 ```
 
-Certain features of Twilight require configuration, which can be done via the Twilight class. To setup a Twilight class instance, you can use the `twilight` method as shown below:
+Certain features of Twilight require configuration, which can be done via the Twilight class. To setup a Twilight class instance, you can use the `twilight` function as shown below:
 ```kotlin
-val twilight = twilight(this) {
-
-}
+val twilight = twilight(this)
 ```
 
 If you want to make use of environment variables (.env files), you can configure your usage of these here, like so:
@@ -74,13 +72,48 @@ Other features that can be configured in the Twilight class builder will have th
 
 ### Extension Functions
 
-Twilight takes advantage of Kotlin's extension functions to add additional functions to various classes used within the API.
+Twilight takes advantage of Kotlin's extension functions to add additional functions to various classes used within the API. Many of these are convenience functions, and some add complete new functionality. To see all of the functions added, view them [inside the code](https://github.com/flytegg/twilight/tree/master/src/main/kotlin/gg/flyte/twilight/extension).
 
 ### Events
+We have a neat way to handle code for events, which register by themselves so you don't have to!
+
+You can make use of it like so:
+```kt
+event<PlayerJoinEvent> {
+    player.sendMessage("Welcome to the server!")
+}
+```
+If you need to change the `eventPriority` or the `ignoreCancelled`, you can pass it to the function call like:
+```kt
+event<PlayerJoinEvent>(EventPriority.HIGHEST, true) {
+    player.sendMessage("Welcome to the server!")
+}
+```
+
+If you ever need an instance of the Listener class that the event gets put in to, it's returned by the function. Specifically, it returns `TwilightListener`. This class has a convenience function in for unregistering the listener, it can be used like so:
+```kt
+val listener = event<PlayerJoinEvent> {
+    player.sendMessage("Welcome to the server!")
+}
+
+listener.unregister()
+```
+
+### Additional Events
 
 Twilight provides additional events which are not found in Spigot or Paper. These are:
 - PlayerMainHandInteractEvent
 - PlayerOffHandInteractEvent
+- PlayerOpChangeEvent
+- PlayerOpEvent
+- PlayerDeopEvent
+
+You can opt out of Twilight calling these events. For example:
+
+```kotlin
+disableCustomEventListeners(OpEventListener, InteractEventListener)
+```
+
 
 ### Scheduler
 Bukkit's build in scheduler is tedious at best, so Twilight takes advantage of beautiful Kotlin syntax to make it easier to write, as well as adding a custom TimeUnit to save you calculating ticks.
@@ -181,36 +214,11 @@ val twilight = twilight(plugin) {
 }
 ```
 
-From here you can use the following method to get a collection from your database:
+From here you can use the following function to get a collection from your database:
 ```kotlin
 MongoDB.collection("my-collection")
 ```
 And use the standard features of the Mongo Java Driver with your `MongoCollection`.
-
-### Events
-We have a neat way to handle code for events, which register by themselves so you don't have to!
-
-You can make use of it like so:
-```kt
-event<PlayerJoinEvent> {
-    player.sendMessage("Welcome to the server!")
-}
-```
-If you need to change the priority of an event, you can pass it to the function call like:
-```kt
-event<PlayerJoinEvent>(EventPriority.HIGHEST) {
-    player.sendMessage("Welcome to the server!")
-}
-```
-
-If you ever need an instance of the Listener class that the event gets put in to, it's returned by the function. Specifically, it returns `TwilightListener`. This class has a convenience method in for unregistering the listener, it can be used like so:
-```kt
-val listener = event<PlayerJoinEvent> {
-    player.sendMessage("Welcome to the server!")
-}
-
-listener.unregister()
-```
 
 ### Ternary Operator
 There is a basic ternary operator implementation added which can be used like so:
@@ -220,7 +228,7 @@ println(test then "yes" or "no")
 ```
 This doesn't yet work for evaluating functions either side of the ternary though, we plan to figure this out in the near future.
 
-### UUID <--> Name
+### UUID ⟷ Name
 Twilight can do the heavy lifting and query the Mojang API to find the UUID from name or name from UUID of a player, particularly useful for networks. Twilight will cache responses in an attempt to not break the rate limit imposed by Mojang.
 
 If you have a UUID and you want to get a name, you can call `nameFromUUID`:
