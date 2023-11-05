@@ -64,11 +64,16 @@ open class TwilightEvent(async: Boolean = false) : Event(async), Cancellable {
     val timestamp: Instant = Instant.now()
 
     /**
+     * Whether the event is cancelled
+     */
+    private var _isCancelled = false
+
+    /**
      * Checks if the event is cancelled.
      *
      * @return True if the event is cancelled, otherwise false.
      */
-    override fun isCancelled(): Boolean = isCancelled
+    override fun isCancelled(): Boolean = _isCancelled
 
     /**
      * Sets the cancellation status of the event.
@@ -76,7 +81,7 @@ open class TwilightEvent(async: Boolean = false) : Event(async), Cancellable {
      * @param cancel True to cancel the event, false to allow it to proceed.
      */
     override fun setCancelled(cancel: Boolean) {
-        isCancelled = cancel
+        _isCancelled = cancel
     }
 
     companion object {
