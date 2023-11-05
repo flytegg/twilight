@@ -30,6 +30,13 @@ fun Player.sendActionBar(message: String) {
 }
 
 /**
+ * Removes any existing action bar for the player.
+ */
+fun Player.clearActionBar() {
+    spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(""))
+}
+
+/**
  * Restores the player's food level to maximum.
  *
  * This method sets the player's food level to its maximum value of 20, effectively
