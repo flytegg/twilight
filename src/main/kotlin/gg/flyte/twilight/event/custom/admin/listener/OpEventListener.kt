@@ -8,10 +8,12 @@ import gg.flyte.twilight.event.custom.admin.PlayerOpEvent
 import gg.flyte.twilight.extension.applyForEach
 import gg.flyte.twilight.gson.GSON
 import gg.flyte.twilight.scheduler.repeat
+import gg.flyte.twilight.scheduler.sync
 import java.io.File
 import java.util.*
 
 object OpEventListener : CustomTwilightListener() {
+
     private val opsFile = File("${Twilight.plugin.dataFolder}/../../ops.json")
     private var opsData = mutableSetOf<OpData>()
     private var opsLastChanged: Long? = null
@@ -31,15 +33,19 @@ object OpEventListener : CustomTwilightListener() {
             // Removed ops
             opsData.subtract(newOpsData).toSet().applyForEach {
                 opsData -= this
-                Twilight.plugin.server.pluginManager.callEvent(PlayerDeopEvent(uuid, name))
-                Twilight.plugin.server.pluginManager.callEvent(PlayerOpChangeEvent(uuid, name))
+                sync {
+                    Twilight.plugin.server.pluginManager.callEvent(PlayerDeopEvent(uuid, name))
+                    Twilight.plugin.server.pluginManager.callEvent(PlayerOpChangeEvent(uuid, name))
+                }
             }
 
             // Added ops
             newOpsData.subtract(opsData).toSet().applyForEach {
                 opsData += this
-                Twilight.plugin.server.pluginManager.callEvent(PlayerOpEvent(uuid, name))
-                Twilight.plugin.server.pluginManager.callEvent(PlayerOpChangeEvent(uuid, name))
+                sync {
+                    Twilight.plugin.server.pluginManager.callEvent(PlayerOpEvent(uuid, name))
+                    Twilight.plugin.server.pluginManager.callEvent(PlayerOpChangeEvent(uuid, name))
+                }
             }
         }
     }
