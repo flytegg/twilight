@@ -51,6 +51,10 @@ open class CustomTwilightListener {
     val events = mutableListOf<TwilightListener>()
     val runnables = mutableListOf<BukkitTask>()
 
+    /**
+     * Unregisters this custom Twilight listener, removing all registered events and associated runnables.
+     * Any event handlers and scheduled tasks associated with this listener are deactivated.
+     */
     fun unregister() {
         events.applyForEach { unregister() }
         runnables.applyForEach { cancel() }
@@ -117,9 +121,17 @@ open class TwilightEvent(async: Boolean = false) : Event(async), Cancellable {
 /**
  * List of custom Twilight Event Listeners
  */
-val customEvents = listOf<CustomTwilightListener>(
+val customEventListeners = mutableSetOf<CustomTwilightListener>(
     GUIListener,
     InteractEventListener,
     OpEventListener
 )
 
+/**
+ * Disables custom event listeners by unregistering them from the associated events.
+ *
+ * @param events The custom event listeners to disable.
+ */
+fun disableCustomEventListeners(vararg events: CustomTwilightListener) {
+    customEventListeners -= events.toSet().also { it.applyForEach { unregister() } }
+}
