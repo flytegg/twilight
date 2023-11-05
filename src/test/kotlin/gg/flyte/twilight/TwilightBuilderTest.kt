@@ -16,5 +16,11 @@ fun useBuilderTest() {
             prodEnvFileName = ".env.prod"
         }
     }
+
+    twilight(plugin) {
+        env()
+        mongo()
+        name
+    }
 }
 
