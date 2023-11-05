@@ -28,5 +28,5 @@ class PlayerOpEvent(
      * Represents the online player associated with this event, if available.
      * This property will be null if the player is not currently online.
      */
-    val player: Player? = if (offlinePlayer.isOnline) offlinePlayer.player else null
+    val player: Player? = offlinePlayer.player
 }
