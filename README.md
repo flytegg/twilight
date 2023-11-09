@@ -107,19 +107,54 @@ Twilight provides additional events which are not found in Spigot or Paper. Thes
 - PlayerOpChangeEvent
 - PlayerOpEvent
 - PlayerDeopEvent
+- ChatClickEvent [(see below)](#custom-chatclickevent)
 
 You can opt out of Twilight calling these events. For example:
 
 ```kotlin
 disableCustomEventListeners(OpEventListener, InteractEventListener)
 ```
+### Custom ChatClickEvent
 
+Due to limitations imposed by the Minecraft server software, when interacting with a clickable message in chat or in a book the only response options are `RUN_COMMAND`, `SUGGEST_COMMAND`, `CHANGE_PAGE`, `COPY_TO_CLIPBOARD`, `OPEN_FILE` and `OPEN_URL`. None of these match the most common use case: running custom code. Twilight utilizes the `RUN_COMMAND` response to call a custom `ChatClickEvent` which can be listened to like a regular event.
 
-### Scheduler
+To use this feature, where you would normally build your clickable message, use the Twilight extension functions to add a custom click event. Twilight will then redirect any data which you  put in the parameters to be accessable as a variable from within the `ChatClickEvent`.
+
+For Paper/Adventure (recommended):
+```kotlin
+import net.kyori.adventure.text.Component
+
+Component.text("Click here")
+    .customClickEvent("openGUI", "warps")
+```
+
+Or for Spigot/BungeeCord:
+```kotlin
+import net.md_5.bungee.api.chat.TextComponent
+
+TextComponent("Click here")
+    .customClickEvent("openGUI", "warps")
+```
+
+From there, simply listen to the event as normal, and access the data attached to the message the player has clicked. In this basic example, information to open a "warps" GUI has been passed through as the custom data, and so the correct action can be taken:
+
+```kotlin
+event<ChatClickEvent> {
+    if (data.size != 2) return@event
+    if (data[0] != "openGUI") return@event
+    when (data[1]) {
+        "warps" -> GUIManager.openWarps(player)
+        ...
+    }
+}
+
+```
+
+`### Scheduler
 Bukkit's build in scheduler is tedious at best, so Twilight takes advantage of beautiful Kotlin syntax to make it easier to write, as well as adding a custom TimeUnit to save you calculating ticks.
 
 How to schedule a single task to run on Bukkit's main thread either sync or async:
-
+`
 ```kotlin
 sync {
     println("I am a sync BukkitRunnable")
