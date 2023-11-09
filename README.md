@@ -118,7 +118,7 @@ disableCustomEventListeners(OpEventListener, InteractEventListener)
 
 Due to limitations imposed by the Minecraft server software, when interacting with a clickable message in chat or in a book the only response options are `RUN_COMMAND`, `SUGGEST_COMMAND`, `CHANGE_PAGE`, `COPY_TO_CLIPBOARD`, `OPEN_FILE` and `OPEN_URL`. None of these match the most common use case: running custom code. Twilight utilizes the `RUN_COMMAND` response to call a custom `ChatClickEvent` which can be listened to like a regular event.
 
-To use this feature, where you would normally build your clickable message, use the Twilight extension functions to add a custom click event. Twilight will then redirect any data which you  put in the parameters to be accessable as a variable from within the `ChatClickEvent`.
+To use this feature, where you would normally build your clickable message, use the Twilight extension functions to add a custom click event. Twilight will then redirect any data which you  put in the parameters to be accessable as a variable from within the `ChatClickEvent` when the player clicks the message.
 
 For Paper/Adventure (recommended):
 ```kotlin
@@ -144,7 +144,7 @@ event<ChatClickEvent> {
     if (data[0] != "openGUI") return@event
     when (data[1]) {
         "warps" -> GUIManager.openWarps(player)
-        ...
+        ..
     }
 }
 
