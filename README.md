@@ -150,8 +150,8 @@ event<ChatClickEvent> {
 
 ```
 
-`### Scheduler
-Bukkit's build in scheduler is tedious at best, so Twilight takes advantage of beautiful Kotlin syntax to make it easier to write, as well as adding a custom TimeUnit to save you calculating ticks.
+### Scheduler
+Bukkit's built in scheduler is tedious at best, so Twilight takes advantage of beautiful Kotlin syntax to make it easier to write, as well as adding a custom TimeUnit to save you calculating ticks.
 
 How to schedule a single task to run on Bukkit's main thread either sync or async:
 `
