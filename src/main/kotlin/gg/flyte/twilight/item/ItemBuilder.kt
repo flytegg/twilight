@@ -71,7 +71,6 @@ class ItemBuilder(
             }
 
             event<PlayerInteractEvent> {
-                Bukkit.broadcast(Component.text("interact"))
                 item?.let { item ->
                     when (action) {
                         Action.RIGHT_CLICK_AIR, Action.RIGHT_CLICK_BLOCK -> {
