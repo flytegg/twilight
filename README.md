@@ -281,6 +281,15 @@ NameCacheService.uuidFromName("stxphen")
 
 Currently the only way to configure your MongoDB "cache" for UUIDs and names, is to have an Environment variable called `NAME_CACHE_COLLECTION` with the value being what you want to call the collection.
 
+### Files Extensions
+
+#### File.hash()
+You can easily get the hash of a file using this method. The parameter `algorithm` is used to define which should be used for the hash, the default is SHA-256.
+
+If you need to hold a reference to a file at a remote location you can use the `RemoteFile` class provided here. This allows you to easily get the hash of a remote file with `RemoteFile#hash`.
+
+This is particularly useful when used in parallel with our other open-source library, [resource-pack-deploy](https://github.com/flytegg/resource-pack-deploy), so you can get the hash of the latest resource pack file, and use it to reset a client's cached version of your resource pack if there are any differences.
+
 ### Symbols
 Twilight offers a collection of widely used symbols within the `Symbols` object.
 
