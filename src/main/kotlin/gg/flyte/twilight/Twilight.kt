@@ -6,6 +6,7 @@ import gg.flyte.twilight.environment.Environment
 import gg.flyte.twilight.event.custom.chat.command.ChatClickCommand
 import gg.flyte.twilight.event.customEventListeners
 import gg.flyte.twilight.extension.applyForEach
+import gg.flyte.twilight.item.ItemBuilder
 import org.bukkit.plugin.java.JavaPlugin
 
 class Twilight(javaPlugin: JavaPlugin) {
@@ -14,6 +15,7 @@ class Twilight(javaPlugin: JavaPlugin) {
         plugin = javaPlugin
         run {
             customEventListeners
+            ItemBuilder.Companion
             ChatClickCommand.register()
         }
     }
@@ -21,6 +23,7 @@ class Twilight(javaPlugin: JavaPlugin) {
     companion object {
         lateinit var plugin: JavaPlugin
         var usingEnv = false
+        val internalPdc by lazy { "_twilight_${plugin.name.lowercase()}" }
     }
 
     fun env(init: Environment.Settings.() -> Unit = {}) {
@@ -33,7 +36,6 @@ class Twilight(javaPlugin: JavaPlugin) {
     fun nameCache(init: NameCacheService.Settings.() -> Unit = {}) = NameCacheService.nameCache(NameCacheService.Settings().apply(init))
 
     fun terminate() = customEventListeners.applyForEach { unregister() }
-
 }
 
 fun twilight(plugin: JavaPlugin, init: Twilight.() -> Unit = {}): Twilight = Twilight(plugin).apply(init)
