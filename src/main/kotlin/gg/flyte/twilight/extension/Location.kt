@@ -1,9 +1,32 @@
 package gg.flyte.twilight.extension
 
 import org.bukkit.Location
+import org.bukkit.World
 import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 import org.bukkit.inventory.ItemStack
+
+/**
+ * An extension of the Bukkit Location class, providing conversion of the given coordinates
+ * to double and orientation to float.
+ *
+ * @param world The world in which the location exists.
+ * @param x The x-coordinate of the location.
+ * @param y The y-coordinate of the location.
+ * @param z The z-coordinate of the location.
+ * @param yaw The yaw (rotation on the horizontal plane) at this location, defaulting to 0 if not specified.
+ * @param pitch The pitch (vertical rotation) at this location, defaulting to 0 if not specified.
+ *
+ * @constructor Creates a new Location object with specified world, coordinates, and optionally, orientation.
+ */
+data class Location(
+    val world: World,
+    val x: Number,
+    val y: Number,
+    val z: Number,
+    val yaw: Number = 0,
+    val pitch: Number = 0
+) : Location(world, x.toDouble(), y.toDouble(), z.toDouble(), yaw.toFloat(), pitch.toFloat())
 
 /**
  * Drops the specified [itemStack] at the current location in the world.
