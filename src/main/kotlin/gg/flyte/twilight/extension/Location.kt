@@ -20,13 +20,13 @@ import org.bukkit.inventory.ItemStack
  * @constructor Creates a new Location object with specified world, coordinates, and optionally, orientation.
  */
 data class Location(
-    val world: World,
+    private val _world: World,
     val x: Number,
     val y: Number,
     val z: Number,
     val yaw: Number = 0,
     val pitch: Number = 0
-) : Location(world, x.toDouble(), y.toDouble(), z.toDouble(), yaw.toFloat(), pitch.toFloat())
+) : Location(_world, x.toDouble(), y.toDouble(), z.toDouble(), yaw.toFloat(), pitch.toFloat())
 
 /**
  * Drops the specified [itemStack] at the current location in the world.
