@@ -1,7 +1,6 @@
-package gg.flyte.twilight.item
+package gg.flyte.twilight.itembuilder
 
 import org.bukkit.persistence.PersistentDataType
-import org.jetbrains.annotations.NotNull
 import java.util.*
 
 data class PersistentData<Z>(
