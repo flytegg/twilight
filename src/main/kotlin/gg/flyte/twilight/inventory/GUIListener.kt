@@ -11,6 +11,10 @@ import org.bukkit.inventory.Inventory
 object GUIListener : CustomTwilightListener() {
 
     init {
+        events += event<InventoryClickEvent>(EventPriority.NORMAL, ignoreCancelled = true) {
+            GuiManager.slotActions[inventory]?.get(slot)?.invoke(this)
+        }
+
         events += event<InventoryOpenEvent>(EventPriority.NORMAL, ignoreCancelled = true) {
             if (inventory.isNotCustom()) return@event
             (inventory.holder as CustomGUI).onOpen(this)
@@ -18,6 +22,7 @@ object GUIListener : CustomTwilightListener() {
 
         events += event<InventoryClickEvent>(EventPriority.NORMAL, ignoreCancelled = true) {
             if (inventory.isNotCustom() || view.topInventory != inventory) return@event
+            println("clicked")
             (inventory.holder as CustomGUI).onClick(this)
         }
 

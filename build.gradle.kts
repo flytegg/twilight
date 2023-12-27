@@ -5,9 +5,10 @@ plugins {
 }
 
 group = "gg.flyte"
-version = "1.0.33"
+version = "1.0.34"
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") {
         content {

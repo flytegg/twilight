@@ -1,8 +1,7 @@
-package gg.flyte.twilight.item
+package gg.flyte.twilight.itembuilder
 
 import gg.flyte.twilight.Twilight
 import gg.flyte.twilight.event.event
-import gg.flyte.twilight.gson.toJson
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -37,12 +36,10 @@ class ItemBuilder(
     val persistentLongs: MutableMap<String, Long> = HashMap(),
     val persistentBooleans: MutableMap<String, Boolean> = HashMap(),
 
-    block: ItemBuilder.() -> Unit
+    block: ItemBuilder.() -> Unit = {}
 ) {
 
-    init {
-        apply(block)
-    }
+    init { apply(block) }
 
     companion object {
         const val INTERACTION_UUID_KEY = "interaction_uuid"
