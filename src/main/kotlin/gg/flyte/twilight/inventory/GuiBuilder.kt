@@ -25,20 +25,20 @@ class GuiBuilder(
 
     private var onOpen: InventoryOpenEvent.() -> Unit = {}
     private var onClick: InventoryClickEvent.() -> Unit = {
-        println("running")
+
     }
     private var onClose: InventoryCloseEvent.() -> Unit = {}
 
     fun onOpen(block: InventoryOpenEvent.() -> Unit) { onOpen = block }
     fun onClick(block: InventoryClickEvent.() -> Unit) {
-        println("running")
+
         onClick = block
     }
     fun onClose(block: InventoryCloseEvent.() -> Unit) { onClose = block  }
 
     override fun onOpen(event: InventoryOpenEvent) { onOpen.invoke(event) }
     override fun onClick(event: InventoryClickEvent) {
-        println("invoking")
+
         onClick.invoke(event) }
     override fun onClose(event: InventoryCloseEvent) { onClose.invoke(event) }
 
