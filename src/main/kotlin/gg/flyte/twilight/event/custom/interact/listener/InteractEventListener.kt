@@ -14,9 +14,9 @@ object InteractEventListener : CustomTwilightListener() {
         events += event<PlayerInteractEvent>(ignoreCancelled = true) {
             Twilight.plugin.server.pluginManager.callEvent(
                 if (hand == EquipmentSlot.HAND)
-                    PlayerMainHandInteractEvent(player, action, item, clickedBlock, blockFace, clickedPosition)
+                    PlayerMainHandInteractEvent(player, action, item, clickedBlock, blockFace, if (Twilight.plugin.server.version.startsWith("1.20.")) clickedPosition else null)
                 else
-                    PlayerOffHandInteractEvent(player, action, item, clickedBlock, blockFace, clickedPosition)
+                    PlayerOffHandInteractEvent(player, action, item, clickedBlock, blockFace, if (Twilight.plugin.server.version.startsWith("1.20.")) clickedPosition else null)
             )
         }
     }
