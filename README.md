@@ -17,9 +17,9 @@ Maven
 </repository>
 
 <dependency>
-  <groupId>gg.flyte</groupId>
-  <artifactId>twilight</artifactId>
-  <version>1.0.36</version>
+<groupId>gg.flyte</groupId>
+<artifactId>twilight</artifactId>
+<version>1.0.39</version>
 </dependency>
 ```
 
@@ -29,14 +29,14 @@ maven {
     url "https://repo.flyte.gg/releases"
 }
 
-implementation "gg.flyte:twilight:1.0.36"
+implementation "gg.flyte:twilight:1.0.39"
 ```
 
 Gradle (Kotlin DSL)
 ```kotlin
 maven("https://repo.flyte.gg/releases")
 
-implementation("gg.flyte:twilight:1.0.36")
+implementation("gg.flyte:twilight:1.0.39")
 ```
 
 Certain features of Twilight require configuration, which can be done via the Twilight class. To setup a Twilight class instance, you can use the `twilight` function as shown below:
@@ -144,7 +144,7 @@ event<ChatClickEvent> {
     if (data[0] != "openGUI") return@event
     when (data[1]) {
         "warps" -> GUIManager.openWarps(player)
-        ..
+            ..
     }
 }
 
@@ -230,6 +230,8 @@ repeat(5, 10, TimeUnit.SECONDS, true) {
 
 > Twilight `repeat` conflicting with Kotlin's `repeat`? As an alternative, you can use `repeatingTask`. 
 
+> Twilight `repeat` conflicting with Kotlin's `repeat`? As an alternative, you can use `repeatingTask`.
+
 ### Databases
 Currently we have support for MongoDB. To configure it, you can take one of two routes:
 
@@ -272,7 +274,7 @@ If you have a UUID and you want to get a name, you can call `nameFromUUID`:
 ```kotlin
 NameCacheService.nameFromUUID(UUID.fromString("a008c892-e7e1-48e1-8235-8aa389318b7a"))
 ```
-This will look up your cache to see if we already know the name, otherwise we will check the MongoDB "cache" of key, value pairs, and finally, we'll query Mojang if we still don't know it. 
+This will look up your cache to see if we already know the name, otherwise we will check the MongoDB "cache" of key, value pairs, and finally, we'll query Mojang if we still don't know it.
 
 After each step the key, value pair will be stored so the next call is just on the cache.
 

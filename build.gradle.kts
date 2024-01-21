@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "gg.flyte"
-version = "1.0.37"
+version = "1.0.39"
 
 repositories {
     mavenLocal()
@@ -29,8 +29,8 @@ dependencies {
     implementation("org.mongodb:mongodb-driver-sync:4.9.0")
     implementation("com.google.code.gson:gson:2.10.1")
 
-    implementation("com.github.okkero:Skedule:v1.2.6")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2")
+//    api("com.github.okkero:Skedule:v1.2.6")
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2")
 }
 
 tasks {
