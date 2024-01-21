@@ -1,4 +1,4 @@
-package gg.flyte.twilight.inventory
+package gg.flyte.twilight.outdated.inventory
 
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory

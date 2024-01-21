@@ -1,4 +1,4 @@
-package gg.flyte.twilight.itembuilder
+package gg.flyte.twilight.outdated.itembuilder
 
 enum class ItemInteraction {
     RIGHT,

@@ -1,4 +1,4 @@
-package gg.flyte.twilight.itembuilder
+package gg.flyte.twilight.outdated.itembuilder
 
 import gg.flyte.twilight.Twilight
 import gg.flyte.twilight.event.event

@@ -331,7 +331,7 @@ fun repeatTask(delay: Int, period: Int, unit: TimeUnit, runnable: BukkitRunnable
 /**
  * Schedules a coroutine-based task to be executed by the Bukkit scheduler.
  *
- * @param initialContext The initial synchronization context for the task (default: SynchronizationContext.SYNC).
+ * @param initialContext The initial synchronization context for the task (default: `SynchronizationContext.SYNC`).
  * @param block The coroutine block representing the task to be executed.
  * @return The CoroutineTask representing the scheduled task.
  */

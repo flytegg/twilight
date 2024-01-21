@@ -1,4 +1,4 @@
-package gg.flyte.twilight.inventory
+package gg.flyte.twilight.outdated.inventory
 
 import gg.flyte.twilight.event.CustomTwilightListener
 import gg.flyte.twilight.event.event
