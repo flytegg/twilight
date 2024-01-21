@@ -1,7 +1,11 @@
 package gg.flyte.twilight.scheduler
 
+import com.okkero.skedule.BukkitSchedulerController
+import com.okkero.skedule.SynchronizationContext
+import com.okkero.skedule.schedule
 import gg.flyte.twilight.Twilight
 import gg.flyte.twilight.time.TimeUnit
+import org.bukkit.Bukkit
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
 
@@ -176,6 +180,21 @@ fun repeat(delayTicks: Int, periodTicks: Int, async: Boolean, runnable: BukkitRu
 fun repeat(delay: Int, period: Int, unit: TimeUnit, runnable: BukkitRunnable.() -> Unit): BukkitTask {
     return repeat(delay, period, unit, false, runnable)
 }
+
+/**
+ * Schedules a coroutine-based task to be executed by the Bukkit scheduler.
+ *
+ * @param initialContext The initial synchronization context for the task (default: SynchronizationContext.SYNC).
+ * @param block           The coroutine block representing the task to be executed.
+ */
+fun skedule(
+    initialContext: SynchronizationContext = SynchronizationContext.SYNC,
+    block: suspend BukkitSchedulerController.() -> Unit
+) = Bukkit.getScheduler().schedule(
+    Twilight.plugin,
+    initialContext,
+    block
+)
 
 /**
  * Converts to a BukkitRunnable instance based on the provided [runnable] function.
