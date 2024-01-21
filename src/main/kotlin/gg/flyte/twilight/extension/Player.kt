@@ -7,6 +7,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.PlayerInventory
 
 /**
  * Plays a sound at the player's current location with default volume and pitch.
@@ -43,9 +44,9 @@ fun Player.clearActionBar() {
  * filling the player's hunger bar completely. The player will be fully fed after
  * calling this method.
  */
-fun Player.feed() {
-    foodLevel = 20
-}
+fun Player.feed() { foodLevel = 20 }
+fun Player.resetWalkSpeed() { walkSpeed = 0.2F }
+fun Player.resetFlySpeed() { flySpeed = 0.1F}
 
 /**
  * Adds the specified [itemStack] to the player's inventory and/or drops remaining on the ground once inventory is full.
