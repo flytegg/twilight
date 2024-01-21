@@ -1,4 +1,4 @@
-package gg.flyte.twilight.outdated.inventory
+package gg.flyte.twilight.inventory
 
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit

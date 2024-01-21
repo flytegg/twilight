@@ -1,4 +1,4 @@
-package gg.flyte.twilight.outdated.inventory
+package gg.flyte.twilight.inventory
 
 enum class InventoryCorner {
     TOP_LEFT,

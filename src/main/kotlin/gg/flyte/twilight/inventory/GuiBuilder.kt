@@ -1,6 +1,6 @@
-package gg.flyte.twilight.outdated.inventory
+package gg.flyte.twilight.inventory
 
-import gg.flyte.twilight.outdated.inventory.CustomGUI
+import gg.flyte.twilight.inventory.CustomGUI
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player

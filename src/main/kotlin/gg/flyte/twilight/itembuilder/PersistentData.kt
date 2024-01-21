@@ -1,4 +1,4 @@
-package gg.flyte.twilight.outdated.itembuilder
+package gg.flyte.twilight.itembuilder
 
 import org.bukkit.persistence.PersistentDataType
 import java.util.*
