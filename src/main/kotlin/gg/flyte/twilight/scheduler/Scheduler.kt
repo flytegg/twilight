@@ -38,7 +38,12 @@ fun async(runnable: BukkitRunnable.() -> Unit): BukkitTask {
  * @param runnable The function representing the task to be executed.
  * @return The BukkitTask representing the scheduled task.
  */
-fun delay(value: Int, unit: TimeUnit = TimeUnit.TICKS, async: Boolean = false, runnable: BukkitRunnable.() -> Unit): BukkitTask {
+fun delay(
+    value: Int,
+    unit: TimeUnit = TimeUnit.TICKS,
+    async: Boolean = false,
+    runnable: BukkitRunnable.() -> Unit
+): BukkitTask {
     return if (async) {
         createBukkitRunnable(runnable).runTaskLaterAsynchronously(Twilight.plugin, unit.toTicks(value.toLong()))
     } else {
@@ -84,11 +89,25 @@ fun delay(ticks: Int = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): 
  * @param runnable The function representing the task to be executed.
  * @return The BukkitTask representing the scheduled task.
  */
-fun repeat(delay: Int, period: Int, unit: TimeUnit = TimeUnit.TICKS, async: Boolean = false, runnable: BukkitRunnable.() -> Unit): BukkitTask {
+fun repeat(
+    delay: Int,
+    period: Int,
+    unit: TimeUnit = TimeUnit.TICKS,
+    async: Boolean = false,
+    runnable: BukkitRunnable.() -> Unit
+): BukkitTask {
     return if (async) {
-        createBukkitRunnable(runnable).runTaskTimerAsynchronously(Twilight.plugin, unit.toTicks(delay.toLong()), unit.toTicks(period.toLong()))
+        createBukkitRunnable(runnable).runTaskTimerAsynchronously(
+            Twilight.plugin,
+            unit.toTicks(delay.toLong()),
+            unit.toTicks(period.toLong())
+        )
     } else {
-        createBukkitRunnable(runnable).runTaskTimer(Twilight.plugin, unit.toTicks(delay.toLong()), unit.toTicks(period.toLong()))
+        createBukkitRunnable(runnable).runTaskTimer(
+            Twilight.plugin,
+            unit.toTicks(delay.toLong()),
+            unit.toTicks(period.toLong())
+        )
     }
 }
 
@@ -185,7 +204,8 @@ fun repeat(delay: Int, period: Int, unit: TimeUnit, runnable: BukkitRunnable.() 
  * Schedules a coroutine-based task to be executed by the Bukkit scheduler.
  *
  * @param initialContext The initial synchronization context for the task (default: SynchronizationContext.SYNC).
- * @param block           The coroutine block representing the task to be executed.
+ * @param block The coroutine block representing the task to be executed.
+ * @return The CoroutineTask representing the scheduled task.
  */
 fun skedule(
     initialContext: SynchronizationContext = SynchronizationContext.SYNC,
