@@ -200,6 +200,134 @@ fun repeat(delay: Int, period: Int, unit: TimeUnit, runnable: BukkitRunnable.() 
     return repeat(delay, period, unit, false, runnable)
 }
 
+
+
+
+
+
+
+
+/**
+ * Schedules a repeating task to be executed by the Bukkit scheduler.
+ *
+ * @param delay The duration value for the initial delay.
+ * @param period The duration value for the period between subsequent executions.
+ * @param unit The TimeUnit representing the time unit of the delay and period (default: MILLISECONDS).
+ * @param async Whether the task should be executed asynchronously (default: false).
+ * @param runnable The function representing the task to be executed.
+ * @return The BukkitTask representing the scheduled task.
+ */
+fun repeatTask(
+    delay: Int,
+    period: Int,
+    unit: TimeUnit = TimeUnit.TICKS,
+    async: Boolean = false,
+    runnable: BukkitRunnable.() -> Unit
+): BukkitTask {
+    return if (async) {
+        createBukkitRunnable(runnable).runTaskTimerAsynchronously(
+            Twilight.plugin,
+            unit.toTicks(delay.toLong()),
+            unit.toTicks(period.toLong())
+        )
+    } else {
+        createBukkitRunnable(runnable).runTaskTimer(
+            Twilight.plugin,
+            unit.toTicks(delay.toLong()),
+            unit.toTicks(period.toLong())
+        )
+    }
+}
+
+/**
+ * A convenience wrapper around the main [repeatTask] method, allowing you to schedule a repeating task
+ * using ticks instead of specifying time values and time units.
+ *
+ * @param periodTicks The number of ticks for the period between subsequent executions (default: 1).
+ * @param runnable The function representing the task to be executed.
+ * @return The BukkitTask representing the scheduled task.
+ * @see repeatTask
+ */
+fun repeatTask(periodTicks: Int = 1, runnable: BukkitRunnable.() -> Unit): BukkitTask {
+    return repeatTask(periodTicks, periodTicks, TimeUnit.TICKS, false, runnable)
+}
+
+/**
+ * A convenience wrapper around the main [repeatTask] method, allowing you to schedule a repeatTasking task
+ * using ticks instead of specifying time values and time units. Additionally, you can choose to execute the task
+ * asynchronously if necessary.
+ *
+ * @param periodTicks The number of ticks for the period between subsequent executions (default: 1).
+ * @param async Whether the task should be executed asynchronously.
+ * @param runnable The function representing the task to be executed.
+ * @return The BukkitTask representing the scheduled task.
+ * @see repeatTask
+ */
+fun repeatTask(periodTicks: Int = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): BukkitTask {
+    return repeatTask(periodTicks, periodTicks, TimeUnit.TICKS, async, runnable)
+}
+
+/**
+ * A convenience wrapper around the main [repeatTask] method, allowing you to schedule a repeatTasking task
+ * with a fixed period by specifying the period value and the time unit.
+ *
+ * @param period The duration value for the period between subsequent executions.
+ * @param unit The TimeUnit representing the time unit of the period.
+ * @param runnable The function representing the task to be executed.
+ * @return The BukkitTask representing the scheduled task.
+ * @see repeatTask
+ */
+fun repeatTask(period: Int, unit: TimeUnit, runnable: BukkitRunnable.() -> Unit): BukkitTask {
+    return repeatTask(period, period, unit, false, runnable)
+}
+
+/**
+ * A convenience wrapper around the main [repeatTask] method, allowing you to schedule a repeatTasking task
+ * with a fixed period by specifying the period value, the time unit, and whether the task should be executed
+ * asynchronously.
+ *
+ * @param period The duration value for the period between subsequent executions.
+ * @param unit The TimeUnit representing the time unit of the period.
+ * @param async Whether the task should be executed asynchronously.
+ * @param runnable The function representing the task to be executed.
+ * @return The BukkitTask representing the scheduled task.
+ * @see repeatTask
+ */
+fun repeatTask(period: Int, unit: TimeUnit, async: Boolean, runnable: BukkitRunnable.() -> Unit): BukkitTask {
+    return repeatTask(period, period, unit, async, runnable)
+}
+
+/**
+ * A convenience wrapper around the main [repeatTask] method, allowing you to schedule a repeatTasking task
+ * with a fixed initial delay and a fixed period using ticks instead of specifying time values and time units.
+ * Additionally, you can choose to execute the task asynchronously if necessary.
+ *
+ * @param delayTicks The number of ticks for the initial delay.
+ * @param periodTicks The number of ticks for the period between subsequent executions.
+ * @param async Whether the task should be executed asynchronously.
+ * @param runnable The function representing the task to be executed.
+ * @return The BukkitTask representing the scheduled task.
+ * @see repeatTask
+ */
+fun repeatTask(delayTicks: Int, periodTicks: Int, async: Boolean, runnable: BukkitRunnable.() -> Unit): BukkitTask {
+    return repeatTask(delayTicks, periodTicks, TimeUnit.TICKS, async, runnable)
+}
+
+/**
+ * A convenience wrapper around the main [repeatTask] method, allowing you to schedule a repeatTasking task
+ * with a fixed initial delay and a fixed period by specifying the delay and period values and the time unit.
+ *
+ * @param delay The duration value for the initial delay.
+ * @param period The duration value for the period between subsequent executions.
+ * @param unit The TimeUnit representing the time unit of the delay and period.
+ * @param runnable The function representing the task to be executed.
+ * @return The BukkitTask representing the scheduled task.
+ * @see repeatTask
+ */
+fun repeatTask(delay: Int, period: Int, unit: TimeUnit, runnable: BukkitRunnable.() -> Unit): BukkitTask {
+    return repeatTask(delay, period, unit, false, runnable)
+}
+
 /**
  * Schedules a coroutine-based task to be executed by the Bukkit scheduler.
  *
