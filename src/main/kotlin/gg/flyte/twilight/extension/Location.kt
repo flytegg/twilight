@@ -140,3 +140,14 @@ fun Location.subtractZ(z: Number): Location {
 fun Location.subtract(x: Number = 0, y: Number = 0, z: Number = 0): Location {
     return subtract(x.toDouble(), y.toDouble(), z.toDouble())
 }
+
+/**
+ * Checks whether the chunk containing this Location is loaded in the world.
+ * If the world or the chunk is not loaded, the function returns false.
+ *
+ * @return `true` if the chunk is loaded, `false` otherwise.
+ */
+fun Location.isLoaded(): Boolean {
+    val world = world ?: return false
+    return world.isChunkLoaded(blockX shr 4, blockZ shr 4)
+}
