@@ -1,13 +1,13 @@
 package gg.flyte.twilight.extension
 
 import gg.flyte.twilight.Twilight
+import net.kyori.adventure.text.Component.text
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.PlayerInventory
 
 /**
  * Plays a sound at the player's current location with default volume and pitch.
