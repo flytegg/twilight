@@ -1,6 +1,7 @@
 package gg.flyte.twilight.extension
 
 import gg.flyte.twilight.Twilight
+import net.kyori.adventure.text.Component.text
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
@@ -43,9 +44,9 @@ fun Player.clearActionBar() {
  * filling the player's hunger bar completely. The player will be fully fed after
  * calling this method.
  */
-fun Player.feed() {
-    foodLevel = 20
-}
+fun Player.feed() { foodLevel = 20 }
+fun Player.resetWalkSpeed() { walkSpeed = 0.2F }
+fun Player.resetFlySpeed() { flySpeed = 0.1F}
 
 /**
  * Adds the specified [itemStack] to the player's inventory and/or drops remaining on the ground once inventory is full.
