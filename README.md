@@ -99,6 +99,27 @@ val listener = event<PlayerJoinEvent> {
 listener.unregister()
 ```
 
+### Making your own events with Twilight
+Instead of having to extend the org.bukkit.event.Event yourself, you can extend TwilightEvent!
+
+Here's an example:
+```kt
+class MyCustomEvent : TwilightEvent() {
+
+}
+```
+
+This is much easier than the standard Bukkit Event, as you don't have to worry about defining handles, etc.
+
+The TwilightEvent also includes a timestamp which provides an Instant for when the event was ran:
+
+```kt
+// with the above event example
+event<MyCustomEvent> {
+    println("time event was executed: $timestamp")
+}
+```
+
 ### Additional Events
 
 Twilight provides additional events which are not found in Spigot or Paper. These are:
