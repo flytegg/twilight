@@ -120,6 +120,20 @@ event<MyCustomEvent> {
 }
 ```
 
+You can also declare that it should be asyncronous by passing a `true` value to the TwilightEvent constructor:
+```kt
+class MyCustomEvent : TwilightEvent(true) {
+
+}
+
+class MyCustomEvent(async: Boolean) : TwilightEvent(async) {
+
+}
+```
+
+```
+
+
 ### Additional Events
 
 Twilight provides additional events which are not found in Spigot or Paper. These are:
