@@ -20,7 +20,12 @@ fun useBuilderTest() {
     twilight(plugin) {
         env()
         mongo()
-        name
+        nameCache()
+        network {
+            server {
+                name = "Yippie"
+            }
+        }
     }
 }
 

@@ -7,6 +7,7 @@ import gg.flyte.twilight.event.custom.chat.command.ChatClickCommand
 import gg.flyte.twilight.event.customEventListeners
 import gg.flyte.twilight.extension.applyForEach
 import gg.flyte.twilight.itembuilder.ItemBuilder
+import gg.flyte.twilight.network.Network
 import org.bukkit.plugin.java.JavaPlugin
 
 class Twilight(javaPlugin: JavaPlugin) {
@@ -34,6 +35,8 @@ class Twilight(javaPlugin: JavaPlugin) {
     fun mongo(init: MongoDB.Settings.() -> Unit = {}) = MongoDB.mongo(MongoDB.Settings().apply(init))
 
     fun nameCache(init: NameCacheService.Settings.() -> Unit = {}) = NameCacheService.nameCache(NameCacheService.Settings().apply(init))
+
+    fun network(init: Network.Settings.() -> Unit = {}) = run { Network.settings.apply(init) }
 
     fun terminate() = customEventListeners.applyForEach { unregister() }
 }
