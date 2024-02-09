@@ -1,5 +1,6 @@
 package gg.flyte.twilight.extension
 
+import gg.flyte.twilight.nms.NMS
 import org.bukkit.entity.Entity
 
 /**
@@ -28,3 +29,14 @@ fun Entity.getNearbyEntities(range: Double): MutableList<Entity> {
 fun Entity.isOnFire(): Boolean {
     return fireTicks > 0
 }
+
+/**
+ * Checks if the entity is currently on the ground.
+ *
+ * This method checks whether the entity is currently standing on a solid block in the game world.
+ * This is different from the `isOnGround` method in the `LivingEntity` class, which is determined
+ * by the packet data sent by the client. This method is more accurate and reliable.
+ *
+ * @return `true` if the entity is on the ground, `false` otherwise.
+ */
+fun Entity.onGround(): Boolean = NMS.onGround(this)

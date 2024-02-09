@@ -1,7 +1,7 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    kotlin("jvm") version "1.8.21"
+    id("gg.flyte.twilight.kotlin")
     id("maven-publish")
+    id("com.github.johnrengelman.shadow")
 }
 
 group = "gg.flyte"
@@ -10,33 +10,22 @@ version = "1.0.39"
 repositories {
     mavenLocal()
     mavenCentral()
-    maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://jitpack.io")
+    maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
-
-    // NMS imports
-    compileOnly("org.spigotmc:spigot:1.20.1-R0.1-SNAPSHOT")
-
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     implementation("org.mongodb:mongodb-driver-sync:4.9.0")
     implementation("com.google.code.gson:gson:2.10.1")
-
-//    api("com.github.okkero:Skedule:v1.2.6")
-//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2")
 }
 
 tasks {
     build { dependsOn(shadowJar) }
 
-    compileJava {
-        options.encoding = Charsets.UTF_8.name()
-        options.release.set(17)
-    }
-
     shadowJar {
+        minimize()
         val `package` = "gg.flyte.twilight.shaded"
         relocate("kotlin", "$`package`.kotlin")
         relocate("com.mongodb", "$`package`.mongodb")
@@ -50,8 +39,6 @@ tasks {
     javadoc { options.encoding = Charsets.UTF_8.name() }
     processResources { filteringCharset = Charsets.UTF_8.name() }
 }
-
-kotlin { jvmToolchain(17) }
 
 publishing {
     repositories {
