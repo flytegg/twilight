@@ -131,9 +131,6 @@ class MyCustomEvent(async: Boolean) : TwilightEvent(async) {
 }
 ```
 
-```
-
-
 ### Additional Events
 
 Twilight provides additional events which are not found in Spigot or Paper. These are:
@@ -264,8 +261,6 @@ repeat(5, 10, TimeUnit.SECONDS, true) {
 ```
 
 > Twilight `repeat` conflicting with Kotlin's `repeat`? As an alternative, you can use `repeatingTask`. 
-
-> Twilight `repeat` conflicting with Kotlin's `repeat`? As an alternative, you can use `repeatingTask`.
 
 ### Databases
 Currently we have support for MongoDB. To configure it, you can take one of two routes:
