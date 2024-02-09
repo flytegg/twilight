@@ -10,15 +10,7 @@ version = "1.0.39"
 repositories {
     mavenLocal()
     mavenCentral()
-    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") {
-        content {
-            includeGroup("org.bukkit")
-            includeGroup("org.spigotmc")
-        }
-    }
     maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://oss.sonatype.org/content/repositories/snapshots")
-    maven("https://oss.sonatype.org/content/repositories/central")
     maven("https://jitpack.io")
 }
 
