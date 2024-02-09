@@ -1,7 +1,9 @@
 package gg.flyte.twilight.nms
 
-import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Entity
 
 interface NMSBridge {
-    fun isOnGround(entity: LivingEntity): Boolean
+
+    fun onGround(bukkitEntity: Entity): Boolean
+
 }
