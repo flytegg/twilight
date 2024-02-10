@@ -1,7 +1,6 @@
 plugins {
     id("gg.flyte.twilight.kotlin")
-    id("maven-publish")
-    id("com.github.johnrengelman.shadow")
+    id("gg.flyte.twilight.shadow")
 }
 
 group = "gg.flyte"
@@ -41,38 +40,4 @@ tasks {
         relocate("io.github.cdimascio.dotenv", "$`package`.dotenv")
         relocate("com.google.gson", "$`package`.gson")
     }
-
-    javadoc { options.encoding = Charsets.UTF_8.name() }
-    processResources { filteringCharset = Charsets.UTF_8.name() }
 }
-
-publishing {
-    repositories {
-        maven {
-            name = "flyte-repository"
-            url = uri(
-                "https://repo.flyte.gg/${
-                    if (version.toString().endsWith("-SNAPSHOT")) "snapshots" else "releases"
-                }"
-            )
-            credentials {
-                username = System.getenv("MAVEN_NAME") ?: property("mavenUser").toString()
-                password = System.getenv("MAVEN_SECRET") ?: property("mavenPassword").toString()
-            }
-        }
-    }
-
-    publishing {
-        publications {
-            create<MavenPublication>("maven") {
-                groupId = group.toString()
-                artifactId = "twilight"
-                version = version.toString()
-
-                from(components["java"])
-            }
-        }
-    }
-}
-
-
