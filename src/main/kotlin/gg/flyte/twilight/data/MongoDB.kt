@@ -62,8 +62,6 @@ object MongoDB {
     fun collection(clazz: KClass<out MongoSerializable>): TwilightMongoCollection =
         collections.getOrPut(clazz) { TwilightMongoCollection(clazz.simpleName!!.pluralize().formatCase(Case.CAMEL)) }
 
-    fun save(serializable: MongoSerializable) = collection(serializable::class).save(serializable)
-
 }
 
 class TwilightMongoCollection(name: String) {
@@ -79,7 +77,7 @@ class TwilightMongoCollection(name: String) {
 }
 
 interface MongoSerializable {
-    fun save(): UpdateResult = MongoDB.save(this)
+    fun save(): UpdateResult = MongoDB.collection(this::class).save(this)
 }
 
 @Target(AnnotationTarget.FIELD)
