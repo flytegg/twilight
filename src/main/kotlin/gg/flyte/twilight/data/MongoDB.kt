@@ -4,12 +4,11 @@ import com.mongodb.MongoClientSettings.getDefaultCodecRegistry
 import com.mongodb.client.*
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.ReplaceOptions
-import com.mongodb.client.result.DeleteResult
-import com.mongodb.client.result.UpdateResult
 import gg.flyte.twilight.Twilight
 import gg.flyte.twilight.environment.Environment
 import gg.flyte.twilight.gson.GSON
 import gg.flyte.twilight.gson.toJson
+import gg.flyte.twilight.scheduler.delay
 import gg.flyte.twilight.string.Case
 import gg.flyte.twilight.string.formatCase
 import gg.flyte.twilight.string.pluralize
@@ -66,8 +65,16 @@ class TwilightMongoCollection(private val clazz: KClass<out MongoSerializable>) 
 
     val documents: MongoCollection<Document> = MongoDB.database.getCollection(name, Document::class.java)
 
-    fun save(serializable: MongoSerializable): UpdateResult = with(serializable.toDocument()) {
-        documents.replaceOne(eq(idField.name, this[idField.name]), this, ReplaceOptions().upsert(true))
+    fun save(serializable: MongoSerializable, async: Boolean = true) {
+        delay(0, async) {
+            with(serializable.toDocument()) {
+                documents.replaceOne(
+                    eq(idField.name, this[idField.name]),
+                    this,
+                    ReplaceOptions().upsert(true)
+                )
+            }
+        }
     }
 
     fun find(filter: Bson): MongoIterable<out MongoSerializable> =
@@ -75,26 +82,30 @@ class TwilightMongoCollection(private val clazz: KClass<out MongoSerializable>) 
 
     fun findById(id: Any): MongoIterable<out MongoSerializable> {
         require(id::class.javaObjectType == idField.type.javaType) {
-            "ID must be of type ${idField.type} (Java: ${idField.type.javaType})"
+            "id must be of type ${idField.type} (Java: ${idField.type.javaType})"
         }
         return find(eq(idField.name, id))
     }
 
-    fun delete(filter: Bson): DeleteResult = documents.deleteMany(filter)
-
-    fun deleteById(id: Any): DeleteResult {
-        require(id::class.javaObjectType == idField.type.javaType) {
-            "ID must be of type ${idField.type} (Java: ${idField.type.javaType})"
+    fun delete(filter: Bson, async: Boolean = true) {
+        delay(0, async) {
+            documents.deleteMany(filter)
         }
-        return delete(eq(idField.name, id))
+    }
+
+    fun deleteById(id: Any, async: Boolean = true) {
+        require(id::class.javaObjectType == idField.type.javaType) {
+            "id must be of type ${idField.type} (Java: ${idField.type.javaType})"
+        }
+        delete(eq(idField.name, id), async)
     }
 
 }
 
 interface MongoSerializable {
-    fun save(): UpdateResult = MongoDB.collection(this::class).save(this)
+    fun save() = MongoDB.collection(this::class).save(this)
 
-    fun delete(): DeleteResult = MongoDB.collection(this::class).delete(eq(IdField(this).name, IdField(this).value))
+    fun delete() = MongoDB.collection(this::class).delete(eq(IdField(this).name, IdField(this).value))
 
     fun toDocument(): Document = Document.parse(toJson())
 }
