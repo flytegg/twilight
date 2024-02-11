@@ -103,10 +103,10 @@ class TwilightMongoCollection(private val clazz: KClass<out MongoSerializable>) 
 }
 
 interface MongoSerializable {
-    fun save() = MongoDB.collection(this::class).save(this)
+    fun save(async: Boolean = true) = MongoDB.collection(this::class).save(this, async)
 
-    fun delete() = with(MongoDB.collection(this::class)) {
-        delete(eq(idField.name, idField.value(this@MongoSerializable)))
+    fun delete(async: Boolean = true) = with(MongoDB.collection(this::class)) {
+        delete(eq(idField.name, idField.value(this@MongoSerializable)), async)
     }
 
     fun toDocument(): Document = Document.parse(toJson())
