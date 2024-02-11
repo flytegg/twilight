@@ -289,6 +289,43 @@ MongoDB.collection("my-collection")
 ```
 And use the standard features of the Mongo Java Driver with your `MongoCollection`.
 
+**OR** you can use some of our custom features, making communicating with a Mongo database infinitely easier. Here's how you do it:
+
+```kt
+class Profile(
+    @field:Id val id: UUID,
+    val name: String
+) : MongoSerializable
+```
+
+What's happening here? We're declaring what should be used as the key identifier for our class in the database, we can do so by annotating a field with `@field:Id`.
+
+We also implement an interface `MongoSerializable`. This gives us access to a bunch of methods which make our lives really easy when it comes to moving between our class instance and our database.
+
+For example, I could do the following:
+```kt
+val profile = Profile(UUID.randomUUID(), "Name")
+
+profile.save()
+// or we could do profile.save(async = false) if we need it to be sync, it is async by default
+
+profile.delete()
+// same as save, async by default, can do profile.delete(async = false) for sync
+```
+
+If we ever want to find and load and instance of our class from the database, we can use some functions from the TwilightMongoCollection:
+
+```kt
+val collection = MongoDB.collection(Profile::class)
+collection.find() // returns a MongoIterable<Profile>
+collection.find(BsonFilter) // returns a MongoIterable<Profile>
+collection.findById(id) // id must be the same type as the field marked as the id on the class, returns a MongoIterable<Profile>
+collection.delete(BsonFilter)
+collection.delete(id) // id must be the same type as the field marked as the id on the class
+```
+
+If we need something that isn't already wrapped by the TwilightMongoCollection, it exposes us the MongoCollection of Documents, which we can get with `collection.documents`
+
 ### Ternary Operator
 There is a basic ternary operator implementation added which can be used like so:
 ```kotlin
