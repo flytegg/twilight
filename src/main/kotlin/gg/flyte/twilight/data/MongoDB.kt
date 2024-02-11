@@ -1,11 +1,7 @@
 package gg.flyte.twilight.data
 
 import com.mongodb.MongoClientSettings.getDefaultCodecRegistry
-import com.mongodb.client.MongoClient
-import com.mongodb.client.MongoClients
-import com.mongodb.client.MongoCollection
-import com.mongodb.client.MongoDatabase
-import com.mongodb.client.model.Filters
+import com.mongodb.client.*
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.result.UpdateResult
@@ -77,7 +73,17 @@ class TwilightMongoCollection(name: String) {
 }
 
 interface MongoSerializable {
+
     fun save(): UpdateResult = MongoDB.collection(this::class).save(this)
+
+    fun toDocument(): Document = Document.parse(GSON.toJsonTree(this, this::class.java).asJsonObject.run {
+        IdField(this@MongoSerializable).let {
+            remove(it.name)
+            add("_id", GSON.toJsonTree(it.value))
+        }
+        toString()
+    })
+
 }
 
 @Target(AnnotationTarget.FIELD)
@@ -106,15 +112,6 @@ data class IdField(val instance: Any) {
     }
 
 }
-
-fun MongoSerializable.toDocument(): Document =
-    Document.parse(GSON.toJsonTree(this, this::class.java).asJsonObject.run {
-        IdField(this@toDocument).let {
-            remove(it.name)
-            add("_id", GSON.toJsonTree(it.value))
-        }
-        toString()
-    })
 
 fun Any.toDocument(): Document = Document.parse(toJson())
 
