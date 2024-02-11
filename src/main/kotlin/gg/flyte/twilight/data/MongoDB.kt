@@ -1,10 +1,7 @@
 package gg.flyte.twilight.data
 
 import com.mongodb.MongoClientSettings.getDefaultCodecRegistry
-import com.mongodb.client.MongoClient
-import com.mongodb.client.MongoClients
-import com.mongodb.client.MongoCollection
-import com.mongodb.client.MongoDatabase
+import com.mongodb.client.*
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.result.UpdateResult
@@ -26,6 +23,7 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
+import kotlin.reflect.jvm.javaType
 
 object MongoDB {
 
@@ -60,16 +58,29 @@ object MongoDB {
     val collections = mutableMapOf<KClass<out MongoSerializable>, TwilightMongoCollection>()
 
     fun collection(clazz: KClass<out MongoSerializable>): TwilightMongoCollection =
-        collections.getOrPut(clazz) { TwilightMongoCollection(clazz.simpleName!!.pluralize().formatCase(Case.CAMEL)) }
+        collections.getOrPut(clazz) { TwilightMongoCollection(clazz) }
 
 }
 
-class TwilightMongoCollection(name: String) {
+class TwilightMongoCollection(private val clazz: KClass<out MongoSerializable>) {
+    private val idField = IdField(clazz)
+    val name = clazz.simpleName!!.pluralize().formatCase(Case.CAMEL)
 
     val documents: MongoCollection<Document> = MongoDB.database.getCollection(name, Document::class.java)
 
     fun save(serializable: MongoSerializable): UpdateResult = with(serializable.toDocument()) {
-        documents.replaceOne(eq("_id", this["_id"]), this, ReplaceOptions().upsert(true))
+        documents.replaceOne(eq(idField.name, this[idField.name]), this, ReplaceOptions().upsert(true))
+    }
+
+    fun find(filter: Bson): MongoIterable<out MongoSerializable> = documents.find(filter).map {
+        GSON.fromJson(it.toJson(), clazz.java)
+    }
+
+    fun findById(id: Any): MongoIterable<out MongoSerializable> {
+        require(id::class.javaObjectType == idField.type.javaType) {
+            "ID must be of type ${idField.type} (Java: ${idField.type.javaType})"
+        }
+        return find(eq(idField.name, id))
     }
 
     // TODO: Implement more methods for querying, updating, and deleting documents - for now just keep exposing the underlying collection as documents
@@ -80,13 +91,7 @@ interface MongoSerializable {
 
     fun save(): UpdateResult = MongoDB.collection(this::class).save(this)
 
-    fun toDocument(): Document = Document.parse(GSON.toJsonTree(this, this::class.java).asJsonObject.run {
-        IdField(this@MongoSerializable).let {
-            remove(it.name)
-            add("_id", GSON.toJsonTree(it.value))
-        }
-        toString()
-    })
+    fun toDocument(): Document = Document.parse(toJson())
 
 }
 
