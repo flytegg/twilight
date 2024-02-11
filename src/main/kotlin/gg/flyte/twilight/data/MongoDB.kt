@@ -40,14 +40,10 @@ object MongoDB {
             .withCodecRegistry(codecRegistry)
     }
 
-    fun collection(name: String): MongoCollection<Document> {
-        return database.getCollection(name)
-    }
+    fun collection(name: String): MongoCollection<Document> = database.getCollection(name)
 
     @Deprecated("Use collection(clazz: KClass<out MongoSerializable>)", ReplaceWith("collection(`class`)"))
-    fun <T> collection(name: String, `class`: Class<T>): MongoCollection<T> {
-        return database.getCollection(name, `class`)
-    }
+    fun <T> collection(name: String, `class`: Class<T>): MongoCollection<T> = database.getCollection(name, `class`)
 
     class Settings {
         var uri: String = if (Twilight.usingEnv) Environment.get("MONGO_URI") else ""
