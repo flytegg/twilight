@@ -23,6 +23,7 @@ import org.bson.conversions.Bson
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
+import kotlin.reflect.KType
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
 
@@ -93,9 +94,11 @@ interface MongoSerializable {
 annotation class Id
 
 data class IdField(val clazz: KClass<out MongoSerializable>, val instance: MongoSerializable? = null) {
+
     constructor(instance: MongoSerializable) : this(instance::class, instance)
 
     val name: String
+    val type: KType
     var value: Any? = null
 
     init {
@@ -108,10 +111,14 @@ data class IdField(val clazz: KClass<out MongoSerializable>, val instance: Mongo
             }
         }
 
-        name = idFields.first().name
+        val idField = idFields.first()
+
+        name = idField.name
+        type = idField.returnType
+
         @Suppress("unchecked_cast")
         if (instance != null) {
-            value = (idFields.first() as KProperty1<Any, *>).get(instance)
+            value = (idField as KProperty1<Any, *>).get(instance)
                 ?: throw IllegalStateException("Field annotated with @Id must not be null")
         }
     }
