@@ -2,8 +2,8 @@ package gg.flyte.twilight.data.service
 
 import com.google.gson.JsonParser
 import com.mongodb.MongoException
-import com.mongodb.client.MongoCollection
 import com.mongodb.client.model.Filters
+import com.mongodb.kotlin.client.MongoCollection
 import gg.flyte.twilight.Twilight
 import gg.flyte.twilight.data.MongoDB
 import gg.flyte.twilight.environment.Environment
