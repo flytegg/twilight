@@ -19,7 +19,6 @@ import org.bson.codecs.pojo.PojoCodecProvider
 import org.bson.conversions.Bson
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
-import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
@@ -55,7 +54,7 @@ object MongoDB {
         var database: String = if (Twilight.usingEnv) Environment.get("MONGO_DATABASE") else ""
     }
 
-    val collections = mutableMapOf<KClass<out MongoSerializable>, TwilightMongoCollection>()
+    private val collections = mutableMapOf<KClass<out MongoSerializable>, TwilightMongoCollection>()
 
     fun collection(clazz: KClass<out MongoSerializable>): TwilightMongoCollection =
         collections.getOrPut(clazz) { TwilightMongoCollection(clazz) }
@@ -73,9 +72,8 @@ class TwilightMongoCollection(private val clazz: KClass<out MongoSerializable>) 
         documents.replaceOne(eq(idField.name, this[idField.name]), this, ReplaceOptions().upsert(true))
     }
 
-    fun find(filter: Bson): MongoIterable<out MongoSerializable> = documents.find(filter).map {
-        GSON.fromJson(it.toJson(), clazz.java)
-    }
+    fun find(filter: Bson): MongoIterable<out MongoSerializable> =
+        documents.find(filter).map { GSON.fromJson(it.toJson(), clazz.java) }
 
     fun findById(id: Any): MongoIterable<out MongoSerializable> {
         require(id::class.javaObjectType == idField.type.javaType) {
