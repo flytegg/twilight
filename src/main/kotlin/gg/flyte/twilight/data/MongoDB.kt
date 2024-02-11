@@ -60,7 +60,7 @@ object MongoDB {
 
 class TwilightMongoCollection(private val clazz: KClass<out MongoSerializable>) {
 
-    private val idField = IdField(clazz)
+    val idField = IdField(clazz)
     val name = clazz.simpleName!!.pluralize().formatCase(Case.CAMEL)
 
     val documents: MongoCollection<Document> = MongoDB.database.getCollection(name, Document::class.java)
@@ -105,7 +105,9 @@ class TwilightMongoCollection(private val clazz: KClass<out MongoSerializable>) 
 interface MongoSerializable {
     fun save() = MongoDB.collection(this::class).save(this)
 
-    fun delete() = MongoDB.collection(this::class).delete(eq(IdField(this).name, IdField(this).value))
+    fun delete() = with(MongoDB.collection(this::class)) {
+        delete(eq(idField.name, idField.value(this@MongoSerializable)))
+    }
 
     fun toDocument(): Document = Document.parse(toJson())
 }
@@ -113,13 +115,11 @@ interface MongoSerializable {
 @Target(AnnotationTarget.FIELD)
 annotation class Id
 
-data class IdField(val clazz: KClass<out MongoSerializable>, val instance: MongoSerializable? = null) {
+data class IdField(val clazz: KClass<out MongoSerializable>) {
 
-    constructor(instance: MongoSerializable) : this(instance::class, instance)
-
+    private val idField: KProperty1<out MongoSerializable, *>
     val name: String
     val type: KType
-    var value: Any? = null
 
     init {
         val idFields = clazz.memberProperties.filter { it.javaField?.isAnnotationPresent(Id::class.java) == true }
@@ -131,17 +131,15 @@ data class IdField(val clazz: KClass<out MongoSerializable>, val instance: Mongo
             }
         }
 
-        val idField = idFields.first()
+        idField = idFields.first()
 
         name = idField.name
         type = idField.returnType
-
-        @Suppress("unchecked_cast")
-        if (instance != null) {
-            value = (idField as KProperty1<Any, *>).get(instance)
-                ?: throw IllegalStateException("Field annotated with @Id must not be null")
-        }
     }
+
+    @Suppress("unchecked_cast")
+    fun value(instance: MongoSerializable): Any = (idField as KProperty1<Any, *>).get(instance)
+        ?: throw IllegalStateException("Field annotated with @Id must not be null")
 
 }
 
