@@ -12,12 +12,15 @@ fun main() {
         database = "test"
     })
 
-    testCollectionCache()
-    testSaving()
+    val sample = StandardTestClass()
+    sample.save()
+
+//    testCollectionCache()
+//    testSaving()
 //  testFind()
 }
 
-fun testCollectionCache() {
+/*fun testCollectionCache() {
     val iterations = 1000
     var millisTotal = 0L
     var firstMillis = 0L
@@ -46,12 +49,12 @@ fun testSaving() {
         }.also { millisTotal += it }
     }
     println("Average time to save a document: ${millisTotal / iterations}ms")
-    /*
+    *//*
       runCatching { NameAsIdTestClass().save() }.onFailure { it.printStackTrace() }
       runCatching { NoIdTestClass().save() }.onFailure { it.printStackTrace() }
       runCatching { MultipleIdTestClass().save() }.onFailure { it.printStackTrace() }
-      runCatching { NullIdTestClass().save() }.onFailure { it.printStackTrace() }*/
-}
+      runCatching { NullIdTestClass().save() }.onFailure { it.printStackTrace() }*//*
+}*/
 
 data class StandardTestClass(
     @field:Id val id: UUID = UUID.randomUUID(),

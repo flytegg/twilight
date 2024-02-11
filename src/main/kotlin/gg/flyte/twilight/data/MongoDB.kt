@@ -62,18 +62,28 @@ object MongoDB {
         var database: String = if (Twilight.usingEnv) Environment.get("MONGO_DATABASE") else ""
     }
 
-    private val collections = mutableMapOf<KClass<out MongoSerializable>, TwilightMongoCollection>()
+    val collections = mutableMapOf<KClass<out MongoSerializable>, TwilightMongoCollection<out MongoSerializable>>()
 
-    fun collection(
-        clazz: KClass<out MongoSerializable>,
-        name: String = clazz.simpleName!!.pluralize().formatCase(Case.CAMEL)
-    ): TwilightMongoCollection =
-        collections.getOrPut(clazz) { TwilightMongoCollection(clazz, name) }
+    inline fun <reified T : MongoSerializable> collection(
+        name: String = T::class.simpleName!!.pluralize().formatCase(Case.CAMEL)
+    ): TwilightMongoCollection<T> {
+        @Suppress("unchecked_cast")
+        return collections.getOrPut(T::class) { TwilightMongoCollection(T::class, name) } as TwilightMongoCollection<T>
+    }
+
+    fun collection(clazz: KClass<out MongoSerializable>): TwilightMongoCollection<out MongoSerializable> {
+        return collections.getOrPut(clazz) { TwilightMongoCollection(clazz, clazz.simpleName!!.pluralize().formatCase(Case.CAMEL)) }
+    }
 
 }
 
-class TwilightMongoCollection(private val clazz: KClass<out MongoSerializable>, val name: String) {
-
+class TwilightMongoCollection<T : MongoSerializable>(
+    private val clazz: KClass<out MongoSerializable>,
+    val name: String
+) {
+    init {
+        println("collection named $name")
+    }
     val idField = IdField(clazz)
     val documents: MongoCollection<Document> = MongoDB.database.getCollection(name, Document::class.java)
 
@@ -88,16 +98,16 @@ class TwilightMongoCollection(private val clazz: KClass<out MongoSerializable>, 
     fun save(serializable: MongoSerializable): CompletableFuture<UpdateResult> =
         CompletableFuture.supplyAsync({ saveSync(serializable) }, executor)
 
-    fun <T : MongoSerializable> findSync(filter: Bson? = null): MongoIterable<T> =
+    fun findSync(filter: Bson? = null): MongoIterable<T> =
         (if (filter == null) documents.find() else documents.find(filter)).map {
             @Suppress("unchecked_cast")
             GSON.fromJson(it.toJson(), clazz.java) as T
         }
 
-    fun <T : MongoSerializable> find(filter: Bson? = null): CompletableFuture<MongoIterable<T>> =
+    fun find(filter: Bson? = null): CompletableFuture<MongoIterable<T>> =
         CompletableFuture.supplyAsync({ findSync(filter) }, executor)
 
-    fun <T : MongoSerializable> findById(id: Any): CompletableFuture<MongoIterable<T>> {
+    fun findById(id: Any): CompletableFuture<MongoIterable<T>> {
         require(id::class.javaObjectType == idField.type.javaType) {
             "id must be of type ${idField.type} (Java: ${idField.type.javaType})"
         }
@@ -145,6 +155,7 @@ data class IdField(val clazz: KClass<out MongoSerializable>) {
 
     init {
         val idFields = clazz.memberProperties.filter { it.javaField?.isAnnotationPresent(Id::class.java) == true }
+        println(idFields)
 
         require(idFields.size == 1) {
             when (idFields.size) {
