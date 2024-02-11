@@ -4,6 +4,7 @@ import com.mongodb.MongoClientSettings.getDefaultCodecRegistry
 import com.mongodb.client.*
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.ReplaceOptions
+import com.mongodb.client.result.DeleteResult
 import com.mongodb.client.result.UpdateResult
 import gg.flyte.twilight.Twilight
 import gg.flyte.twilight.environment.Environment
@@ -19,6 +20,7 @@ import org.bson.codecs.pojo.PojoCodecProvider
 import org.bson.conversions.Bson
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
@@ -78,12 +80,21 @@ class TwilightMongoCollection(private val clazz: KClass<out MongoSerializable>) 
         return find(eq(idField.name, id))
     }
 
-    // TODO: Implement more methods for querying, updating, and deleting documents - for now just keep exposing the underlying collection as documents
+    fun delete(filter: Bson): DeleteResult = documents.deleteMany(filter)
+
+    fun deleteById(id: Any): DeleteResult {
+        require(id::class.javaObjectType == idField.type.javaType) {
+            "ID must be of type ${idField.type} (Java: ${idField.type.javaType})"
+        }
+        return delete(eq(idField.name, id))
+    }
 
 }
 
 interface MongoSerializable {
     fun save(): UpdateResult = MongoDB.collection(this::class).save(this)
+
+    fun delete(): DeleteResult = MongoDB.collection(this::class).delete(eq(IdField(this).name, IdField(this).value))
 
     fun toDocument(): Document = Document.parse(toJson())
 }
@@ -91,10 +102,13 @@ interface MongoSerializable {
 @Target(AnnotationTarget.FIELD)
 annotation class Id
 
-data class IdField(val clazz: KClass<out MongoSerializable>) {
+data class IdField(val clazz: KClass<out MongoSerializable>, val instance: MongoSerializable? = null) {
+
+    constructor(instance: MongoSerializable) : this(instance::class, instance)
 
     val name: String
     val type: KType
+    var value: Any? = null
 
     init {
         val idFields = clazz.memberProperties.filter { it.javaField?.isAnnotationPresent(Id::class.java) == true }
@@ -110,6 +124,12 @@ data class IdField(val clazz: KClass<out MongoSerializable>) {
 
         name = idField.name
         type = idField.returnType
+
+        @Suppress("unchecked_cast")
+        if (instance != null) {
+            value = (idField as KProperty1<Any, *>).get(instance)
+                ?: throw IllegalStateException("Field annotated with @Id must not be null")
+        }
     }
 
 }
