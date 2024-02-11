@@ -15,13 +15,16 @@ dependencies {
 }
 
 tasks {
-    build {
+    shadowJar {
+        archiveFileName.set("twilight-$version.jar")
+    }
+/*    build {
         dependsOn(shadowJar)
     }
 
     shadowJar {
         archiveFileName.set("twilight-$version.jar")
-    }
+    }*/
 
     /*register("renameJar") {
         group = "build"

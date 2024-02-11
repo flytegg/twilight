@@ -3,9 +3,6 @@ plugins {
     id("gg.flyte.twilight.shadow")
 }
 
-group = "gg.flyte"
-version = "1.0.39"
-
 repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") {

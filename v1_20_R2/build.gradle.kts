@@ -2,9 +2,6 @@ plugins {
     id("gg.flyte.twilight.kotlin")
 }
 
-group = "gg.flyte"
-version = "1.0.39"
-
 repositories {
     mavenLocal()
 }
