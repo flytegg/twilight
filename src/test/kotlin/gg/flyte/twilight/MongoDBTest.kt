@@ -19,7 +19,7 @@ fun main() {
 
 fun testCollectionCache() {
     (0..10).forEach { _ ->
-        println(MongoDB.collections)
+//        println(MongoDB.collections) - was made private
         MongoDB.collection(StandardTestClass::class)
     }
 }
