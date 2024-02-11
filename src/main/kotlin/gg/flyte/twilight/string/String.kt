@@ -203,7 +203,6 @@ fun String.formatCase(case: Case): String = CASE_DELIMITER_REGEX.split(this)
         }
     }
 
-
 /**
  * Capitalizes the first letter of a string.
  *
