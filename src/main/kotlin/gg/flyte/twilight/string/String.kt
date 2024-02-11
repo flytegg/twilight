@@ -168,19 +168,41 @@ fun Char.isVowel(): Boolean = lowercaseChar() in VOWELS
 
 var CASE_DELIMITER_REGEX = Regex("(?<!^)(?=[A-Z])|[_\\-\\s]+")
 
+enum class Case {
+    CAMEL,
+    SNAKE,
+    PASCAL,
+}
+
 /**
- * Splits a string into words based on capital letters, underscores, hyphens, and spaces, then converts it to lowerCamelCase.
+ * Formats a string according to the specified [case] format.
  *
- * The first word is converted to lowercase, and each subsequent word is capitalized and concatenated to form a single string.
+ * This function first splits the string into words based on capital letters, underscores, hyphens, and spaces.
+ * Each word is then converted to lowercase. The function formats these words into a single string according to the
+ * specified [case] format: camel case, snake case, or Pascal case.
  *
- * @return The string converted to lowerCamelCase.
+ * - **Camel case** (`Case.CAMEL`): The first word is in lowercase, and each subsequent word starts with an uppercase letter.
+ * - **Snake case** (`Case.SNAKE`): Words are joined by underscores, and all characters are in lowercase.
+ * - **Pascal case** (`Case.PASCAL`): Each word starts with an uppercase letter.
+ *
+ * @param case The case format to apply to the string.
+ * @return The formatted string according to the specified [case] format.
  */
-fun String.lowerCamelCase(): String = CASE_DELIMITER_REGEX.split(this)
+fun String.formatCase(case: Case): String = CASE_DELIMITER_REGEX.split(this)
     .filter { it.isNotEmpty() }
-    .mapIndexed { index, word ->
-        if (index == 0) word.lowercase(Locale.getDefault())
-        else word.capitalizeFirstLetter()
-    }.joinToString("")
+    .map { it.lowercase() }
+    .run {
+        when (case) {
+            Case.CAMEL -> mapIndexed { index, word ->
+                if (index == 0) word else word.capitalizeFirstLetter()
+            }.joinToString("")
+
+            Case.SNAKE -> joinToString("_")
+
+            Case.PASCAL -> joinToString("") { it.capitalizeFirstLetter() }
+        }
+    }
+
 
 /**
  * Capitalizes the first letter of a string.
