@@ -63,6 +63,7 @@ object MongoDB {
 }
 
 class TwilightMongoCollection(private val clazz: KClass<out MongoSerializable>) {
+
     private val idField = IdField(clazz)
     val name = clazz.simpleName!!.pluralize().formatCase(Case.CAMEL)
 
@@ -88,23 +89,18 @@ class TwilightMongoCollection(private val clazz: KClass<out MongoSerializable>) 
 }
 
 interface MongoSerializable {
-
     fun save(): UpdateResult = MongoDB.collection(this::class).save(this)
 
     fun toDocument(): Document = Document.parse(toJson())
-
 }
 
 @Target(AnnotationTarget.FIELD)
 annotation class Id
 
-data class IdField(val clazz: KClass<out MongoSerializable>, val instance: MongoSerializable? = null) {
-
-    constructor(instance: MongoSerializable) : this(instance::class, instance)
+data class IdField(val clazz: KClass<out MongoSerializable>) {
 
     val name: String
     val type: KType
-    var value: Any? = null
 
     init {
         val idFields = clazz.memberProperties.filter { it.javaField?.isAnnotationPresent(Id::class.java) == true }
@@ -120,12 +116,6 @@ data class IdField(val clazz: KClass<out MongoSerializable>, val instance: Mongo
 
         name = idField.name
         type = idField.returnType
-
-        @Suppress("unchecked_cast")
-        if (instance != null) {
-            value = (idField as KProperty1<Any, *>).get(instance)
-                ?: throw IllegalStateException("Field annotated with @Id must not be null")
-        }
     }
 
 }
