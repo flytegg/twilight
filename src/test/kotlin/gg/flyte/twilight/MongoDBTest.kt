@@ -35,8 +35,8 @@ fun testSaving() {
 fun testFind() {
     runCatching {
         with(MongoDB.collection(NameAsIdTestClass::class)) {
+            println("TwilightMongoCollection#findById")
             runCatching {
-                println("TwilightMongoCollection#findById")
                 with(findById("Test2")) {
                     println("Found ${count()} documents")
                     forEach { println(it) }
@@ -44,8 +44,8 @@ fun testFind() {
                 }
             }.onFailure { it.printStackTrace() }
 
+            println("TwilightMongoCollection#findById")
             runCatching {
-                println("TwilightMongoCollection#findById")
                 with(findById(123)) {
                     println("Found ${count()} documents")
                     forEach { println(it) }
@@ -53,8 +53,8 @@ fun testFind() {
                 }
             }.onFailure { it.printStackTrace() }
 
+            println("TwilightMongoCollection#find")
             runCatching {
-                println("TwilightMongoCollection#find")
                 with(find(NameAsIdTestClass::name eq "Test2")) {
                     println("Found ${count()} documents")
                     forEach { println(it) }
