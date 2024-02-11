@@ -72,7 +72,12 @@ object MongoDB {
     }
 
     fun collection(clazz: KClass<out MongoSerializable>): TwilightMongoCollection<out MongoSerializable> {
-        return collections.getOrPut(clazz) { TwilightMongoCollection(clazz, clazz.simpleName!!.pluralize().formatCase(Case.CAMEL)) }
+        return collections.getOrPut(clazz) {
+            TwilightMongoCollection(
+                clazz,
+                clazz.simpleName!!.pluralize().formatCase(Case.CAMEL)
+            )
+        }
     }
 
 }
@@ -81,9 +86,7 @@ class TwilightMongoCollection<T : MongoSerializable>(
     private val clazz: KClass<out MongoSerializable>,
     val name: String
 ) {
-    init {
-        println("collection named $name")
-    }
+
     val idField = IdField(clazz)
     val documents: MongoCollection<Document> = MongoDB.database.getCollection(name, Document::class.java)
 
@@ -107,24 +110,30 @@ class TwilightMongoCollection<T : MongoSerializable>(
     fun find(filter: Bson? = null): CompletableFuture<MongoIterable<T>> =
         CompletableFuture.supplyAsync({ findSync(filter) }, executor)
 
-    fun findById(id: Any): CompletableFuture<MongoIterable<T>> {
+    fun findByIdSync(id: Any): MongoIterable<T> {
         require(id::class.javaObjectType == idField.type.javaType) {
             "id must be of type ${idField.type} (Java: ${idField.type.javaType})"
         }
-        return find(eq(idField.name, id))
+        return findSync(eq(idField.name, id))
     }
+
+    fun findById(id: Any): CompletableFuture<MongoIterable<T>> =
+        CompletableFuture.supplyAsync({ findByIdSync(id) }, executor)
 
     fun deleteSync(filter: Bson): DeleteResult = documents.deleteMany(filter)
 
     fun delete(filter: Bson): CompletableFuture<DeleteResult> =
         CompletableFuture.supplyAsync({ deleteSync(filter) }, executor)
 
-    fun deleteById(id: Any): CompletableFuture<DeleteResult> {
+    fun deleteByIdSync(id: Any): DeleteResult {
         require(id::class.javaObjectType == idField.type.javaType) {
             "id must be of type ${idField.type} (Java: ${idField.type.javaType})"
         }
-        return delete(eq(idField.name, id))
+        return deleteSync(eq(idField.name, id))
     }
+
+    fun deleteById(id: Any): CompletableFuture<DeleteResult> =
+        CompletableFuture.supplyAsync({ deleteByIdSync(id) }, executor)
 
 }
 
