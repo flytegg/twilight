@@ -53,16 +53,14 @@ object MongoDB {
 
     private val collections = mutableMapOf<KClass<out MongoSerializable>, TwilightMongoCollection>()
 
-    fun collection(clazz: KClass<out MongoSerializable>): TwilightMongoCollection =
-        collections.getOrPut(clazz) { TwilightMongoCollection(clazz) }
+    fun collection(clazz: KClass<out MongoSerializable>, name: String = clazz.simpleName!!.pluralize().formatCase(Case.CAMEL)): TwilightMongoCollection =
+        collections.getOrPut(clazz) { TwilightMongoCollection(clazz, name) }
 
 }
 
-class TwilightMongoCollection(private val clazz: KClass<out MongoSerializable>) {
+class TwilightMongoCollection(private val clazz: KClass<out MongoSerializable>, val name: String) {
 
     val idField = IdField(clazz)
-    val name = clazz.simpleName!!.pluralize().formatCase(Case.CAMEL)
-
     val documents: MongoCollection<Document> = MongoDB.database.getCollection(name, Document::class.java)
 
     fun save(serializable: MongoSerializable, async: Boolean = true) {
