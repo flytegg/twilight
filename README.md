@@ -329,7 +329,7 @@ collection.deleteById(id) // id must be the same type as the field marked as the
 // all of these have sync versions which follow the same pattern, f.x. collection.findSync(), where the return value is the same as the async version, just not wrapped by a CompletableFuture
 ```
 
-If we need something that isn't already wrapped by the TwilightMongoCollection, it exposes us the MongoCollection of Documents, which we can get with `collection.documents`
+If we need something that isn't already wrapped by the TwilightMongoCollection, it exposes us the MongoCollection of Documents, which we can get with `collection.documents`.
 
 ### Ternary Operator
 There is a basic ternary operator implementation added which can be used like so:
