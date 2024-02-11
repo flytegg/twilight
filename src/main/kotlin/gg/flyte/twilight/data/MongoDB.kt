@@ -1,7 +1,10 @@
 package gg.flyte.twilight.data
 
 import com.mongodb.MongoClientSettings.getDefaultCodecRegistry
-import com.mongodb.client.*
+import com.mongodb.client.MongoClient
+import com.mongodb.client.MongoClients
+import com.mongodb.client.MongoCollection
+import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.result.UpdateResult
@@ -89,14 +92,14 @@ interface MongoSerializable {
 @Target(AnnotationTarget.FIELD)
 annotation class Id
 
-data class IdField(val instance: Any) {
+data class IdField(val clazz: KClass<out MongoSerializable>, val instance: MongoSerializable? = null) {
+    constructor(instance: MongoSerializable) : this(instance::class, instance)
 
     val name: String
-    val value: Any
+    var value: Any? = null
 
     init {
-        val idFields =
-            instance::class.memberProperties.filter { it.javaField?.isAnnotationPresent(Id::class.java) == true }
+        val idFields = clazz.memberProperties.filter { it.javaField?.isAnnotationPresent(Id::class.java) == true }
 
         require(idFields.size == 1) {
             when (idFields.size) {
@@ -107,8 +110,10 @@ data class IdField(val instance: Any) {
 
         name = idFields.first().name
         @Suppress("unchecked_cast")
-        value = (idFields.first() as KProperty1<Any, *>).get(instance)
-            ?: throw IllegalStateException("Field annotated with @Id must not be null")
+        if (instance != null) {
+            value = (idFields.first() as KProperty1<Any, *>).get(instance)
+                ?: throw IllegalStateException("Field annotated with @Id must not be null")
+        }
     }
 
 }
