@@ -307,21 +307,26 @@ For example, I could do the following:
 val profile = Profile(UUID.randomUUID(), "Name")
 
 profile.save()
-// or we could do profile.save(async = false) if we need it to be sync, it is async by default
+// this returns a CompletableFuture of the UpdateResult
+// or we could do profile.saveSync() if we need it to be sync, does not return wrapped by a CompletableFuture
 
 profile.delete()
-// same as save, async by default, can do profile.delete(async = false) for sync
+// this returns a CompletableFuture of the DeleteResult
+// same as save, can do profile.deleteSync() for sync, does not return wrapped by a CompletableFuture
 ```
 
 If we ever want to find and load and instance of our class from the database, we can use some functions from the TwilightMongoCollection:
 
 ```kt
-val collection = MongoDB.collection(Profile::class)
-collection.find() // returns a MongoIterable<Profile>
-collection.find(BsonFilter) // returns a MongoIterable<Profile>
-collection.findById(id) // id must be the same type as the field marked as the id on the class, returns a MongoIterable<Profile>
-collection.delete(BsonFilter)
-collection.delete(id) // id must be the same type as the field marked as the id on the class
+val collection = MongoDB.collection<Profile>() // by default this assumes the name of the collection is the plural camel case of the type, f.x. Profile -> profiles, SomeExampleThing -> someExampleThings
+// you can specify the name of the collection if you wish it to be different like so
+val collection = MongoDB.collection<Profile>("myCollection")
+collection.find() // returns a CompletableFuture<MongoIterable<Profile>>
+collection.find(BsonFilter) // returns a CompletableFuture<MongoIterable<Profile>>
+collection.findById(id) // id must be the same type as the field marked as the id on the class, returns a CompletableFuture<MongoIterable<Profile>>
+collection.delete(BsonFilter) // returns a CompletableFuture<DeleteResult>
+collection.deleteById(id) // id must be the same type as the field marked as the id on the class, returns a CompletableFuture<DeleteResult>
+// all of these have sync versions which follow the same pattern, f.x. collection.findSync(), where the return value is the same as the async version, just not wrapped by a CompletableFuture
 ```
 
 If we need something that isn't already wrapped by the TwilightMongoCollection, it exposes us the MongoCollection of Documents, which we can get with `collection.documents`
