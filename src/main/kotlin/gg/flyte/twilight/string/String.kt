@@ -107,3 +107,109 @@ fun String.toUUID(): UUID {
     if (contains("-")) return UUID.fromString(this)
     return UUID(BigInteger(substring(0, 16), 16).toLong(), BigInteger(substring(16, 32), 16).toLong())
 }
+
+/**
+ * A map of irregular nouns to their plural forms.
+ */
+val IRREGULAR_NOUNS = mapOf(
+    "man" to "men",
+    "woman" to "women",
+    "child" to "children",
+    "tooth" to "teeth",
+    "foot" to "feet",
+    "mouse" to "mice",
+    "person" to "people",
+    "goose" to "geese",
+    "ox" to "oxen",
+    "leaf" to "leaves",
+    "sheep" to "sheep",
+    "deer" to "deer",
+    "fish" to "fish",
+    "moose" to "moose",
+    "aircraft" to "aircraft",
+    "hovercraft" to "hovercraft",
+    "spacecraft" to "spacecraft",
+    "watercraft" to "watercraft",
+    "offspring" to "offspring",
+    "species" to "species",
+    "series" to "series",
+)
+
+/**
+ * Pluralizes a singular noun.
+ *
+ * This function converts a singular noun to its plural form according to English grammar rules,
+ * including handling of irregular nouns, regular nouns ending with 'y', Latin-origin nouns ending with 'us',
+ * Greek-origin nouns ending with 'is', and nouns ending with 'ch', 'sh', 'x', 's', or 'z'.
+ *
+ * @return The plural form of the noun.
+ */
+fun String.pluralize(): String = IRREGULAR_NOUNS[this]?.let { return it } ?: when {
+    endsWith("y") && length > 1 && !this[lastIndex - 1].isVowel() -> dropLast(1) + "ies"
+    endsWith("us") -> dropLast(2) + "i"  // Latin origin, e.g., "cactus" to "cacti"
+    endsWith("is") -> dropLast(2) + "es" // Greek origin, e.g., "analysis" to "analyses"
+    endsWith("ch") || endsWith("sh") || endsWith("x") || endsWith("s") || endsWith("z") -> this + "es"
+    else -> this + "s"
+}
+
+/**
+ * A list of English vowels.
+ */
+var VOWELS = listOf('a', 'e', 'i', 'o', 'u')
+
+/**
+ * Checks if a character is a vowel.
+ *
+ * Vowels are 'a', 'e', 'i', 'o', and 'u'. This function checks if the character (case-insensitive) is one of these vowels.
+ *
+ * @return `true` if the character is a vowel, `false` otherwise.
+ */
+fun Char.isVowel(): Boolean = lowercaseChar() in VOWELS
+
+var CASE_DELIMITER_REGEX = Regex("(?<!^)(?=[A-Z])|[_\\-\\s]+")
+
+enum class Case {
+    CAMEL,
+    SNAKE,
+    PASCAL,
+}
+
+/**
+ * Formats a string according to the specified [case] format.
+ *
+ * This function first splits the string into words based on capital letters, underscores, hyphens, and spaces.
+ * Each word is then converted to lowercase. The function formats these words into a single string according to the
+ * specified [case] format: camel case, snake case, or Pascal case.
+ *
+ * - **Camel case** (`Case.CAMEL`): The first word is in lowercase, and each subsequent word starts with an uppercase letter.
+ * - **Snake case** (`Case.SNAKE`): Words are joined by underscores, and all characters are in lowercase.
+ * - **Pascal case** (`Case.PASCAL`): Each word starts with an uppercase letter.
+ *
+ * @param case The case format to apply to the string.
+ * @return The formatted string according to the specified [case] format.
+ */
+fun String.formatCase(case: Case): String = CASE_DELIMITER_REGEX.split(this)
+    .filter { it.isNotEmpty() }
+    .map { it.lowercase() }
+    .run {
+        when (case) {
+            Case.CAMEL -> mapIndexed { index, word ->
+                if (index == 0) word else word.capitalizeFirstLetter()
+            }.joinToString("")
+
+            Case.SNAKE -> joinToString("_")
+
+            Case.PASCAL -> joinToString("") { it.capitalizeFirstLetter() }
+        }
+    }
+
+/**
+ * Capitalizes the first letter of a string.
+ *
+ * If the first character of the string is lowercase, it is converted to uppercase. Otherwise, the string is returned unchanged.
+ *
+ * @return The string with its first letter capitalized.
+ */
+fun String.capitalizeFirstLetter(): String = replaceFirstChar {
+    if (it.isLowerCase()) it.titlecase() else it.toString()
+}
