@@ -62,6 +62,19 @@ fun testFind() {
                 }
             }.onFailure { it.printStackTrace() }
         }
+
+        with(MongoDB.collection(StandardTestClass::class)) {
+            println("TwilightMongoCollection#find (no filter)")
+            runCatching {
+                with(find()) {
+                    println("Found ${count()} documents")
+                    forEach {
+                        println(it)
+                    }
+                    println("Done")
+                }
+            }.onFailure { it.printStackTrace() }
+        }
     }.onFailure { it.printStackTrace() }
 }
 

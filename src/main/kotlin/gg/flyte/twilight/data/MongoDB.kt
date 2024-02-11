@@ -77,8 +77,13 @@ class TwilightMongoCollection(private val clazz: KClass<out MongoSerializable>) 
         }
     }
 
-    fun find(filter: Bson): MongoIterable<out MongoSerializable> =
-        documents.find(filter).map { GSON.fromJson(it.toJson(), clazz.java) }
+    fun find(filter: Bson? = null): MongoIterable<out MongoSerializable> =
+        (if (filter == null) documents.find() else documents.find(filter)).map {
+            GSON.fromJson(
+                it.toJson(),
+                clazz.java
+            )
+        }
 
     fun findById(id: Any): MongoIterable<out MongoSerializable> {
         require(id::class.javaObjectType == idField.type.javaType) {
