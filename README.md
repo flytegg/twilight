@@ -1,4 +1,3 @@
-
 # Twilight ✨
 
 Twilight is an API for developers creating plugins for Spigot or Paper based Minecraft servers. It contains a wide range of utilities and QOL improvements, from inventories, to schedulers and databases.
