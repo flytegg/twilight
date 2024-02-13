@@ -24,7 +24,7 @@ class AsyncSQLWrapper(private val url: String, private val user: String, private
                 val statement: Statement? = connection?.createStatement()
                 statement?.executeQuery(query)
             }
-            val rs = resultSet.await();
+            val rs = resultSet.await()
             rs?.toResults()
         }
     }
@@ -39,14 +39,14 @@ class AsyncSQLWrapper(private val url: String, private val user: String, private
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            result;
+            result
         }
     }
 
     suspend fun executeUpdate(query: String): Int {
         return coroutineScope {
             val rowsAffected = async(Dispatchers.IO) {
-                val statement: PreparedStatement? = connection?.prepareStatement(query);
+                val statement: PreparedStatement? = connection?.prepareStatement(query)
                 statement?.executeUpdate() ?: 0
             }
             rowsAffected.await()

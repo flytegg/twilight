@@ -24,7 +24,7 @@ class SQLWrapper(private val url: String, private val user: String, private val 
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        return result;
+        return result
     }
 
     fun execute(sql: String): Boolean {
@@ -36,7 +36,7 @@ class SQLWrapper(private val url: String, private val user: String, private val 
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        return result;
+        return result
     }
 
     fun executeUpdate(query: String): Int {

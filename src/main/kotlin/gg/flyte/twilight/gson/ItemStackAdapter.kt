@@ -3,11 +3,10 @@ package gg.flyte.twilight.gson
 import com.google.gson.*
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.MapMeta
 import org.bukkit.inventory.meta.SkullMeta
 import java.lang.reflect.Type
-import gg.flyte.twilight.extension.enumValue;
-import gg.flyte.twilight.itembuilder.ItemBuilder
+import gg.flyte.twilight.extension.enumValue
+import gg.flyte.twilight.builders.item.ItemBuilder
 import net.kyori.adventure.text.Component
 import org.bukkit.enchantments.Enchantment
 
@@ -24,7 +23,7 @@ object ItemStackAdapter: JsonDeserializer<ItemStack>, JsonSerializer<ItemStack> 
 
 
         if (!materialType.isJsonPrimitive && !(materialType as JsonPrimitive).isString) throw JsonParseException("\"type\" not of type string.")
-        val material = enumValue<Material>(materialType.asString) ?: throw JsonParseException("Invalid JSON, Invalid Material Provided.");
+        val material = enumValue<Material>(materialType.asString) ?: throw JsonParseException("Invalid JSON, Invalid Material Provided.")
         val builder = ItemBuilder(material, amount)
 
 
@@ -37,15 +36,15 @@ object ItemStackAdapter: JsonDeserializer<ItemStack>, JsonSerializer<ItemStack> 
             val unbreakable = meta.get("unbreakable")
 
             if(unbreakable != null && unbreakable.isJsonPrimitive && (unbreakable as JsonPrimitive).isBoolean) {
-                builder.unbreakable = unbreakable.asBoolean;
+                builder.unbreakable = unbreakable.asBoolean
             }
 
             if(displayName != null && displayName.isJsonPrimitive && (displayName as JsonPrimitive).isString) {
-                builder.name = Component.text(displayName.asString);
+                builder.name = Component.text(displayName.asString)
             }
 
             if(lore != null) {
-                builder.lore = lore.map { Component.text(it.asString) }.toMutableList();
+                builder.lore = lore.map { Component.text(it.asString) }.toMutableList()
             }
 
             if(enchants != null && !enchants.isEmpty) {

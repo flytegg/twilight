@@ -1,17 +1,10 @@
 package gg.flyte.twilight.inventory
 
-import gg.flyte.twilight.inventory.CustomGUI
 import net.kyori.adventure.text.Component
-import org.bukkit.Bukkit
-import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.inventory.InventoryType
-import org.bukkit.inventory.Inventory
-import org.bukkit.inventory.InventoryHolder
-import org.bukkit.inventory.InventoryView
-import org.bukkit.inventory.ItemStack
 
 class GuiBuilder(
     title: Component,

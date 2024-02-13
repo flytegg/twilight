@@ -1,6 +1,5 @@
 package gg.flyte.twilight.extension
 
-import gg.flyte.twilight.inventory.CustomGUI
 import gg.flyte.twilight.inventory.GuiManager.slotActions
 import gg.flyte.twilight.inventory.InventoryCorner
 import org.bukkit.event.inventory.InventoryClickEvent
