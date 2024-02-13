@@ -27,6 +27,7 @@ dependencies {
 
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     implementation("org.mongodb:mongodb-driver-kotlin-sync:4.11.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation(kotlin("reflect"))
 
