@@ -8,7 +8,8 @@ class QueryBuilder {
     private var updateTableName: String? = null
     private val updateSet = mutableMapOf<String, Any?>()
     private var deleteTableName: String? = null
-    private var whereClause: String? = null
+    private val whereClauses = mutableListOf<String>()
+    private val joinClauses = mutableListOf<String>()
 
     fun select(vararg columns: String): QueryBuilder {
         selectColumns.addAll(columns)
@@ -47,7 +48,12 @@ class QueryBuilder {
     }
 
     fun where(condition: String): QueryBuilder {
-        whereClause = condition
+        whereClauses.add(condition)
+        return this
+    }
+
+    fun join(joinClause: String): QueryBuilder {
+        joinClauses.add(joinClause)
         return this
     }
 
@@ -55,8 +61,13 @@ class QueryBuilder {
         requireNotNull(tableName) { "Table name must be specified for SELECT query." }
         require(selectColumns.isNotEmpty()) { "At least one column must be selected." }
         val columns = selectColumns.joinToString(", ")
-        val query = "SELECT $columns FROM $tableName"
-        whereClause?.let { query.plus(" WHERE $it") }
+        var query = "SELECT $columns FROM $tableName"
+        if (joinClauses.isNotEmpty()) {
+            query += " ${joinClauses.joinToString(" ")}"
+        }
+        if (whereClauses.isNotEmpty()) {
+            query += " WHERE ${whereClauses.joinToString(" AND ")}"
+        }
         return query
     }
 
@@ -65,7 +76,7 @@ class QueryBuilder {
         require(insertColumns.isNotEmpty()) { "At least one column must be specified for INSERT query." }
         require(insertValues.isNotEmpty()) { "Values must be provided for INSERT query." }
         val columns = insertColumns.joinToString(", ")
-        val placeholders = insertColumns.map { "?" }.joinToString(", ")
+        val placeholders = insertColumns.joinToString(", ") { "?" }
         return "INSERT INTO $tableName ($columns) VALUES ($placeholders)"
     }
 
@@ -73,15 +84,19 @@ class QueryBuilder {
         requireNotNull(updateTableName) { "Table name must be specified for UPDATE query." }
         require(updateSet.isNotEmpty()) { "At least one column must be updated for UPDATE query." }
         val setClause = updateSet.entries.joinToString(", ") { "${it.key} = ?" }
-        val query = "UPDATE $updateTableName SET $setClause"
-        whereClause?.let { query.plus(" WHERE $it") }
+        var query = "UPDATE $updateTableName SET $setClause"
+        if (whereClauses.isNotEmpty()) {
+            query += " WHERE ${whereClauses.joinToString(" AND ")}"
+        }
         return query
     }
 
     fun buildDeleteQuery(): String {
         requireNotNull(deleteTableName) { "Table name must be specified for DELETE query." }
-        val query = "DELETE FROM $deleteTableName"
-        whereClause?.let { query.plus(" WHERE $it") }
+        var query = "DELETE FROM $deleteTableName"
+        if (whereClauses.isNotEmpty()) {
+            query += " WHERE ${whereClauses.joinToString(" AND ")}"
+        }
         return query
     }
 }
