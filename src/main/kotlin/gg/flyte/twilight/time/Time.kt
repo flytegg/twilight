@@ -8,11 +8,20 @@ package gg.flyte.twilight.time
  */
 fun getDaySuffix(day: Int): String {
     if (day in 11..13) return "th"
-    val last = day.toString().last()
-    return when (last) {
-        '1' -> "st"
-        '2' -> "nd"
-        '3' -> "rd"
-        else -> "th"
+
+    val lastTwoDigits = day % 100
+    val suffix = when (lastTwoDigits) {
+        11, 12, 13 -> "th"
+        else -> {
+            val lastDigit = day % 10
+            when (lastDigit) {
+                1 -> "st"
+                2 -> "nd"
+                3 -> "rd"
+                else -> "th"
+            }
+        }
     }
+
+    return suffix
 }
