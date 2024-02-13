@@ -2,22 +2,51 @@ package gg.flyte.twilight.gson
 
 import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
-import com.google.gson.GsonBuilder
+import com.google.gson.TypeAdapter
+import com.google.gson.stream.JsonReader
+import com.google.gson.stream.JsonWriter
+import gg.flyte.twilight.Twilight
 
 object ExclusionStrategy : ExclusionStrategy {
     override fun shouldSkipField(attributes: FieldAttributes) = attributes.getAnnotation(Exclude::class.java) != null
-
-    override fun shouldSkipClass(clazz: Class<*>) =false
+    override fun shouldSkipClass(clazz: Class<*>) = false
 }
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FIELD)
 annotation class Exclude
 
-val GSON = GsonBuilder()
-    .setPrettyPrinting()
-    .addSerializationExclusionStrategy(ExclusionStrategy)
-    .create()!!
+val GSON = Twilight.gsonBuilder.addSerializationExclusionStrategy(ExclusionStrategy).create()!!
+
+open class TwilightTypeAdapter<T>(open var allowNull: Boolean = false) : TypeAdapter<T>() {
+
+    open fun writeSafe(writer: JsonWriter, instance: T): Unit =
+        throw NotImplementedError("Not implemented TwilightTypeAdapter#writeSafe")
+
+    override fun write(writer: JsonWriter, instance: T?) {
+        if (instance == null) {
+            if (allowNull) writer.nullValue()
+            else throw IllegalArgumentException("Cannot be null.")
+            return
+        }
+
+        writeSafe(writer, instance)
+    }
+
+    override fun read(reader: JsonReader): T = throw NotImplementedError("Not implemented TwilightTypeAdapter#read")
+
+    fun JsonWriter.property(name: String, value: Any?): JsonWriter {
+        name(name)
+        return when (value) {
+            null -> nullValue()
+            is String -> value(value)
+            is Number -> value(value)
+            is Boolean -> value(value)
+            else -> jsonValue(value.toJson())
+        }
+    }
+
+}
 
 /**
  * Converts an object to its JSON representation using Google's Gson library.

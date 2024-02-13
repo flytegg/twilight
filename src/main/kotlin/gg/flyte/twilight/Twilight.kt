@@ -1,5 +1,6 @@
 package gg.flyte.twilight
 
+import com.google.gson.GsonBuilder
 import gg.flyte.twilight.data.MongoDB
 import gg.flyte.twilight.data.service.NameCacheService
 import gg.flyte.twilight.environment.Environment
@@ -11,8 +12,11 @@ import org.bukkit.plugin.java.JavaPlugin
 
 class Twilight(javaPlugin: JavaPlugin) {
 
+    private var gsonBuilder: GsonBuilder = GsonBuilder().setPrettyPrinting()
+
     init {
         plugin = javaPlugin
+        Companion.gsonBuilder = gsonBuilder
         run {
             customEventListeners
             ItemBuilder.Companion
@@ -22,6 +26,7 @@ class Twilight(javaPlugin: JavaPlugin) {
 
     companion object {
         lateinit var plugin: JavaPlugin
+        lateinit var gsonBuilder: GsonBuilder
         var usingEnv = false
         val internalPdc by lazy { "_twilight_${plugin.name.lowercase()}" }
     }
@@ -34,6 +39,10 @@ class Twilight(javaPlugin: JavaPlugin) {
     fun mongo(init: MongoDB.Settings.() -> Unit = {}) = MongoDB.mongo(MongoDB.Settings().apply(init))
 
     fun nameCache(init: NameCacheService.Settings.() -> Unit = {}) = NameCacheService.nameCache(NameCacheService.Settings().apply(init))
+
+    fun gson(init: GsonBuilder.() -> Unit) {
+        gsonBuilder.apply(init)
+    }
 
     fun terminate() = customEventListeners.applyForEach { unregister() }
 }
