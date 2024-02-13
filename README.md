@@ -288,7 +288,7 @@ From here you can use the following function to get a collection from your datab
 ```kotlin
 MongoDB.collection("my-collection")
 ```
-And use the standard features of the Mongo Java Driver with your `MongoCollection`.
+And use the standard features of the Mongo Sync Driver with your `MongoCollection`.
 
 **OR** you can use some of our custom features, making communicating with a Mongo database infinitely easier. Here's how you do it:
 
