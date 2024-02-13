@@ -22,7 +22,6 @@ object GUIListener : CustomTwilightListener() {
 
         events += event<InventoryClickEvent>(EventPriority.NORMAL, ignoreCancelled = true) {
             if (inventory.isNotCustom() || view.topInventory != inventory) return@event
-            println("clicked")
             (inventory.holder as CustomGUI).onClick(this)
         }
 
