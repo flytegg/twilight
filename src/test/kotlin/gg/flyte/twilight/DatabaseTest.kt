@@ -7,7 +7,7 @@ import gg.flyte.twilight.data.sql.toListOfObjects
 import gg.flyte.twilight.environment.Environment
 
 
-data class Person(val id: Int = 0, val name: String = "", val age: Int = 0) : SQLSerializable()
+data class Person(val id: Int = 0, val name: String = "", val age: Int = 0) : SQLSerializable
 
 fun main() {
     val person = Person(1, "Test", 13)
