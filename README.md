@@ -261,7 +261,8 @@ repeat(5, 10, TimeUnit.SECONDS, true) {
 
 > Twilight `repeat` conflicting with Kotlin's `repeat`? As an alternative, you can use `repeatingTask`. 
 
-### Databases
+## Databases
+### MongoDB
 Currently we have support for MongoDB. To configure it, you can take one of two routes:
 
 #### Environment variables
@@ -329,6 +330,47 @@ collection.deleteById(id) // id must be the same type as the field marked as the
 ```
 
 If we need something that isn't already wrapped by the TwilightMongoCollection, it exposes us the MongoCollection of Documents, which we can get with `collection.documents`.
+
+### SQL (MySQL, Postgres)
+
+#### Getting Started
+To get started you need to create an instance of the SQL Wrapper like so
+```kotlin
+val db = SQLWrapper(url = "your db url", user="user", password="password")
+db.connect()
+```
+
+#### QueryBuilder
+The QueryBuilder class will help you in creating everything from simple queries like SELECT's to even complex JOIN's.
+All you need to start is an instance of the query builder, here's an example usage
+```kotlin
+val queryBuilder = QueryBuilder()
+
+// Example SELECT query
+val selectQuery = queryBuilder.select("id", "name").from("person").where("age > 18").buildSelectQuery()
+
+// Example INSERT query
+val insertQuery = queryBuilder.insertInto("person", "id", "name").values(1, "John").buildInsertQuery()
+
+// Example UPDATE query
+val updateQuery = queryBuilder.update("person").set("name", "John Doe").where("id = 1").buildUpdateQuery()
+
+// Example DELETE query
+val deleteQuery = queryBuilder.deleteFrom("person").where("id = 1").buildDeleteQuery()
+```
+#### Running queries
+Once you have your query using either the QueryBuilder or your own you can run it like so
+```kotlin
+val result = result.executeQuery(selectQuery)
+```
+once you have run the query it will return a `Results` class, it can be used like so
+```kotlin
+result?.let { res ->
+  println("MyColumn Value: " + res["my_column"])
+}
+```
+The results class contains a list of all the rows and columns returned by the database.
+You can access any of the columns values the same way you would with a map.
 
 ### Ternary Operator
 There is a basic ternary operator implementation added which can be used like so:
