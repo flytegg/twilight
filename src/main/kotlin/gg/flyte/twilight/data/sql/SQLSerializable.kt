@@ -7,6 +7,6 @@ abstract class SQLSerializable {
         val properties = this.javaClass.kotlin.memberProperties
         val columns = properties.joinToString(", ") { it.name }
         val values = properties.joinToString(", ") { "'${it.get(this)}'" }
-        return "INSERT INTO $tableName ($columns) VALUES ($values)"
+        return "INSERT INTO $tableName ($columns) VALUES ($values);"
     }
 }
