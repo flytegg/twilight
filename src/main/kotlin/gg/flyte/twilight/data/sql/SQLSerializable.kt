@@ -19,17 +19,20 @@ interface SQLSerializable {
     }
 
 
-    fun convertToSQLTable(dialect: Dialect = Dialect.DEFAULT): String {
+    fun convertToSQLTable(dialect: Dialect = Dialect.DEFAULT, exclude: List<String> = emptyList()): String {
         val clazz = this::class.java
         val tableName = clazz.simpleName
         val constructor = clazz.kotlin.primaryConstructor
         val fields = constructor!!.parameters.map { it.name }
         val types = clazz.kotlin.declaredMemberProperties.map { it.returnType.toString() }
 
+        val filteredFields = fields.filterNot { exclude.contains(it) }
+        val filteredTypes = types.filterIndexed { index, _ -> !exclude.contains(fields[index]) }
+
         return buildString {
             append("CREATE TABLE IF NOT EXISTS ${pluralize(tableName)} (")
-            fields.indices.joinTo(this) { i ->
-                "${fields[i]} ${convertKotlinTypeToSQLType(types[i], dialect)}"
+            filteredFields.indices.joinTo(this) { i ->
+                "${filteredFields[i]} ${convertKotlinTypeToSQLType(filteredTypes[i], dialect)}"
             }
             append(");")
         }
