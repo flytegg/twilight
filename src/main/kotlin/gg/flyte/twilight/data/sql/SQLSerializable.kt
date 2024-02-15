@@ -1,5 +1,6 @@
 package gg.flyte.twilight.data.sql
 
+import gg.flyte.twilight.string.pluralize
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
@@ -11,11 +12,11 @@ interface SQLSerializable {
         DEFAULT,
     }
 
-    fun toInsertQuery(tableName: String): String {
+    fun toInsertQuery(): String {
         val properties = this.javaClass.kotlin.memberProperties
         val columns = properties.joinToString(", ") { it.name }
         val values = properties.joinToString(", ") { "'${it.get(this)}'" }
-        return "INSERT INTO $tableName ($columns) VALUES ($values)"
+        return "INSERT INTO ${this.javaClass.simpleName.pluralize()} ($columns) VALUES ($values)"
     }
 
 
@@ -30,7 +31,8 @@ interface SQLSerializable {
         val filteredTypes = types.filterIndexed { index, _ -> !exclude.contains(fields[index]) }
 
         return buildString {
-            append("CREATE TABLE IF NOT EXISTS ${pluralize(tableName)} (")
+
+            append("CREATE TABLE IF NOT EXISTS ${tableName.pluralize()} (")
             filteredFields.indices.joinTo(this) { i ->
                 "${filteredFields[i]} ${convertKotlinTypeToSQLType(filteredTypes[i], dialect)}"
             }
@@ -51,22 +53,6 @@ interface SQLSerializable {
             "java.util.UUID" -> if(dialect == Dialect.POSTGRES) "UUID" else "VARCHAR(36)"
             // this needs more testing. "java.util.ArrayList", "java.util.List", "java.util.Vector", "kotlin.collections.List", "kotlin.collections.ArrayList" -> if(dialect == Dialect.POSTGRES) "ARRAY" else "STRING"
             else -> throw IllegalArgumentException("Error: Unsupported type: $kotlinType")
-        }
-    }
-
-    private fun pluralize(word: String, count: Int = 2): String {
-        return when {
-            word.endsWith("s") || word.endsWith("x") || word.endsWith("z") || word.endsWith("ch") || word.endsWith("sh") -> {
-                word + "es"
-            }
-            word.endsWith("y") -> word.dropLast(1) + "ies"
-
-            word.endsWith("f") -> word.dropLast(1) + "ves"
-
-            word.endsWith("fe") -> word.dropLast(2) + "ves"
-
-            word.endsWith("o") -> word + "es"
-            else -> word + "s"
         }
     }
 }

@@ -358,6 +358,31 @@ val updateQuery = queryBuilder.update().table("person").set("name", "John Doe").
 // Example DELETE query
 val deleteQuery = queryBuilder.delete().table("person").where("id = 1").build()
 ```
+#### Using objects in your database
+If you would like to retrieve and store data as objects within your database there a some methods provided for this
+
+
+1 - Your object must implement SQLSerializable 
+2 - You must have a table that fits the structure of your object, you can create by calling `convertToSQLTable()` on your object, then execute the statement like so
+```kotlin
+// NOTE: convertToSQLTable() takes a optional dialect parameter, at this time the only additional dialect is postgres
+val createTable = yourObjectInstace.convertToSQLTable()
+
+if(db.execute(createTable)) {
+    // successfully executed
+}
+```
+3 - To insert your object call `toInsertQuery()` like so
+```kotlin
+val insertToTable = yourObjectInstace.toInsertQuery()
+
+if(db.execute(insertToTable)) {
+    // successfully executed
+}
+```
+
+4 - To retrieve objects from your database you call a select statement like normal but call `toListOfObjects<Type>()` on the returned `Results` class
+
 #### Running queries
 Once you have your query using either the QueryBuilder or your own you can run it like so
 ```kotlin
