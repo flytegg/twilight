@@ -18,9 +18,9 @@ Maven
 </repository>
 
 <dependency>
-<groupId>gg.flyte</groupId>
-<artifactId>twilight</artifactId>
-<version>1.1.4</version>
+    <groupId>gg.flyte</groupId>
+    <artifactId>twilight</artifactId>
+    <version>1.1.4</version>
 </dependency>
 ```
 
