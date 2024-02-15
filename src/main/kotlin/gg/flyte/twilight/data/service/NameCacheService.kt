@@ -21,16 +21,19 @@ object NameCacheService {
     private const val MOJANG_UUID_ENDPOINT = "https://api.mojang.com/users/profiles/minecraft"
 
     private val cache = mutableMapOf<UUID, String>()
+
+    private var useMongoCache = true
     private lateinit var mongoCache: MongoCollection<Document>
 
-    fun nameCache(nameCache: Settings) {
-        mongoCache = MongoDB.collection(nameCache.collectionName)
+    fun nameCache(settings: Settings) {
+        useMongoCache = settings.useMongoCache
+        if (useMongoCache) {
+            mongoCache = MongoDB.collection(settings.collectionName)
+        }
     }
 
     fun nameFromUUID(uuid: UUID): String {
-        return cache[uuid] ?: queryMongoNameByUUID(
-            uuid
-        ) ?: queryMojangNameByUUID(uuid)
+        return cache[uuid] ?: useMongoCache.takeIf { it }?.let { queryMongoNameByUUID(uuid) } ?: queryMojangNameByUUID(uuid)
     }
 
     private fun queryMongoNameByUUID(uuid: UUID): String? {
@@ -46,28 +49,26 @@ object NameCacheService {
     }
 
     private fun queryMojangNameByUUID(uuid: UUID): String {
-        val connection =
-            URL("$MOJANG_PROFILE_ENDPOINT/$uuid").openConnection() as HttpsURLConnection
+        val connection = URL("$MOJANG_PROFILE_ENDPOINT/$uuid").openConnection() as HttpsURLConnection
         connection.doOutput = true
         val name = JsonParser.parseReader(connection.inputStream.reader()).asJsonObject.get("name").asString
         connection.disconnect()
         cache[uuid] = name
-        mongoCache.insertOne(
-            Document(
-                mapOf(
-                    "_id" to uuid.toString(),
-                    "name" to name
+        if (useMongoCache) {
+            mongoCache.insertOne(
+                Document(
+                    mapOf(
+                        "_id" to uuid.toString(),
+                        "name" to name
+                    )
                 )
             )
-        )
+        }
         return name
     }
 
     fun uuidFromName(name: String): UUID {
-        return cache.findKeyByValue(name)
-            ?: queryMongoUUIDByName(
-                name
-            ) ?: queryMojangUUIDByName(name)
+        return cache.findKeyByValue(name) ?: useMongoCache.takeIf { it }?.let { queryMongoUUIDByName(name) } ?: queryMojangUUIDByName(name)
     }
 
     private fun queryMongoUUIDByName(name: String): UUID? {
@@ -93,18 +94,21 @@ object NameCacheService {
         val uuid = JsonParser.parseReader(connection.inputStream.reader()).asJsonObject.get("id").asString.toUUID()
         connection.disconnect()
         cache[uuid] = name
-        mongoCache.insertOne(
-            Document(
-                mapOf(
-                    "_id" to uuid.toString(),
-                    "name" to name
+        if (useMongoCache) {
+            mongoCache.insertOne(
+                Document(
+                    mapOf(
+                        "_id" to uuid.toString(),
+                        "name" to name
+                    )
                 )
             )
-        )
+        }
         return uuid
     }
 
     class Settings {
+        var useMongoCache = true
         var collectionName: String = if (Twilight.usingEnv) Environment.get("NAME_CACHE_COLLECTION") else ("name-cache")
     }
 

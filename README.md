@@ -21,7 +21,7 @@ Maven
 <dependency>
     <groupId>gg.flyte</groupId>
     <artifactId>twilight</artifactId>
-    <version>1.1.4</version>
+    <version>1.1.5</version>
 </dependency>
 ```
 
@@ -31,14 +31,14 @@ maven {
     url "https://repo.flyte.gg/releases"
 }
 
-implementation "gg.flyte:twilight:1.1.4"
+implementation "gg.flyte:twilight:1.1.5"
 ```
 
 Gradle (Kotlin DSL)
 ```kotlin
 maven("https://repo.flyte.gg/releases")
 
-implementation("gg.flyte:twilight:1.1.4")
+implementation("gg.flyte:twilight:1.1.5")
 ```
 
 Certain features of Twilight require configuration, which can be done via the Twilight class. To setup a Twilight class instance, you can use the `twilight` function as shown below:
@@ -357,7 +357,7 @@ Similarly, if you have a name and want to get the UUID, you can call `uuidFromNa
 NameCacheService.uuidFromName("stxphen")
 ```
 
-Currently the only way to configure your MongoDB "cache" for UUIDs and names, is to have an Environment variable called `NAME_CACHE_COLLECTION` with the value being what you want to call the collection.
+Currently the only way to configure your MongoDB "cache" for UUIDs and names, is to have an Environment variable called `NAME_CACHE_COLLECTION` with the value being what you want to call the collection. Don't want to use the Mongo cache? Disable `useMongoCache` in the settings. 
 
 ### Files Extensions
 
