@@ -347,16 +347,16 @@ All you need to start is an instance of the query builder, here's an example usa
 val queryBuilder = QueryBuilder()
 
 // Example SELECT query
-val selectQuery = queryBuilder.select("id", "name").from("person").where("age > 18").buildSelectQuery()
+val selectQuery = queryBuilder.select("id", "name").from("person").where("age" gt 18).build()
 
 // Example INSERT query
-val insertQuery = queryBuilder.insertInto("person", "id", "name").values(1, "John").buildInsertQuery()
+val insertQuery = queryBuilder.insertInto("person", "id", "name").values(1, "John").build()
 
 // Example UPDATE query
-val updateQuery = queryBuilder.update("person").set("name", "John Doe").where("id = 1").buildUpdateQuery()
+val updateQuery = queryBuilder.update().table("person").set("name", "John Doe").where("id" eq 1).build()
 
 // Example DELETE query
-val deleteQuery = queryBuilder.deleteFrom("person").where("id = 1").buildDeleteQuery()
+val deleteQuery = queryBuilder.delete().table("person").where("id = 1").build()
 ```
 #### Running queries
 Once you have your query using either the QueryBuilder or your own you can run it like so
