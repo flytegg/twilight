@@ -1,11 +1,10 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "8.1.1"
     kotlin("jvm") version "1.8.21"
     id("maven-publish")
 }
 
 group = "gg.flyte"
-version = "1.1.0"
+version = "1.1.6"
 
 repositories {
     mavenLocal()
@@ -25,9 +24,10 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
 
-    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
-    implementation("org.mongodb:mongodb-driver-kotlin-sync:4.11.0")
-    implementation("com.google.code.gson:gson:2.10.1")
+    api("io.github.cdimascio:dotenv-kotlin:6.4.1")
+    api("org.mongodb:mongodb-driver-kotlin-sync:4.11.0")
+    api("com.google.code.gson:gson:2.10.1")
+
     implementation(kotlin("reflect"))
 
 //    api("com.github.okkero:Skedule:v1.2.6")
@@ -35,22 +35,9 @@ dependencies {
 }
 
 tasks {
-    build { dependsOn(shadowJar) }
-
     compileJava {
         options.encoding = Charsets.UTF_8.name()
         options.release.set(17)
-    }
-
-    shadowJar {
-        val `package` = "gg.flyte.twilight.shaded"
-        relocate("kotlin", "$`package`.kotlin")
-        relocate("com.mongodb", "$`package`.mongodb")
-        relocate("org.bson", "$`package`.bson")
-        relocate("org.intellij", "$`package`.intellij")
-        relocate("org.jetbrains", "$`package`.jetbrains")
-        relocate("io.github.cdimascio.dotenv", "$`package`.dotenv")
-        relocate("com.google.gson", "$`package`.gson")
     }
 
     javadoc { options.encoding = Charsets.UTF_8.name() }

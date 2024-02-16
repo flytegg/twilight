@@ -1,8 +1,11 @@
+
 # Twilight ✨
 
 Twilight is an API for developers creating plugins for Spigot or Paper based Minecraft servers. It contains a wide range of utilities and QOL improvements, from inventories, to schedulers and databases.
 
 Twilight is built using **Kotlin**, and is recommended for usage with. Many features of Twilight should work with plain Java, though compatability is not guaranteed.
+
+If you have any questions or need any support, head over to the [Flyte Discord](https://discord.gg/CGmMQwfXXN)!
 
 ## Setup
 Twilight should be bundled within your plugin. Add the following repository and dependency to your build tool:
@@ -16,9 +19,9 @@ Maven
 </repository>
 
 <dependency>
-<groupId>gg.flyte</groupId>
-<artifactId>twilight</artifactId>
-<version>1.1.0</version>
+    <groupId>gg.flyte</groupId>
+    <artifactId>twilight</artifactId>
+    <version>1.1.6</version>
 </dependency>
 ```
 
@@ -28,14 +31,14 @@ maven {
     url "https://repo.flyte.gg/releases"
 }
 
-implementation "gg.flyte:twilight:1.1.0"
+implementation "gg.flyte:twilight:1.1.6"
 ```
 
 Gradle (Kotlin DSL)
 ```kotlin
 maven("https://repo.flyte.gg/releases")
 
-implementation("gg.flyte:twilight:1.1.0")
+implementation("gg.flyte:twilight:1.1.6")
 ```
 
 Certain features of Twilight require configuration, which can be done via the Twilight class. To setup a Twilight class instance, you can use the `twilight` function as shown below:
@@ -286,7 +289,7 @@ From here you can use the following function to get a collection from your datab
 ```kotlin
 MongoDB.collection("my-collection")
 ```
-And use the standard features of the Mongo Java Driver with your `MongoCollection`.
+And use the standard features of the Mongo Sync Driver with your `MongoCollection`.
 
 **OR** you can use some of our custom features, making communicating with a Mongo database infinitely easier. Here's how you do it:
 
@@ -354,7 +357,7 @@ Similarly, if you have a name and want to get the UUID, you can call `uuidFromNa
 NameCacheService.uuidFromName("stxphen")
 ```
 
-Currently the only way to configure your MongoDB "cache" for UUIDs and names, is to have an Environment variable called `NAME_CACHE_COLLECTION` with the value being what you want to call the collection.
+Currently the only way to configure your MongoDB "cache" for UUIDs and names, is to have an Environment variable called `NAME_CACHE_COLLECTION` with the value being what you want to call the collection. Don't want to use the Mongo cache? Disable `useMongoCache` in the settings. 
 
 ### Files Extensions
 

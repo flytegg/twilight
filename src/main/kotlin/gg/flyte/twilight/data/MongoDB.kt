@@ -30,9 +30,8 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
-import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.javaField
-import kotlin.reflect.jvm.javaType
 
 object MongoDB {
 
@@ -110,12 +109,7 @@ class TwilightMongoCollection<T : MongoSerializable>(
     fun find(filter: Bson? = null): CompletableFuture<MongoIterable<T>> =
         CompletableFuture.supplyAsync({ findSync(filter) }, executor)
 
-    fun findByIdSync(id: Any): MongoIterable<T> {
-        require(id::class.javaObjectType == idField.type.javaType) {
-            "id must be of type ${idField.type} (Java: ${idField.type.javaType})"
-        }
-        return findSync(eq(idField.name, id))
-    }
+    fun findByIdSync(id: Any): MongoIterable<T> = findSync(eq(idField.name, id))
 
     fun findById(id: Any): CompletableFuture<MongoIterable<T>> =
         CompletableFuture.supplyAsync({ findByIdSync(id) }, executor)
@@ -125,12 +119,7 @@ class TwilightMongoCollection<T : MongoSerializable>(
     fun delete(filter: Bson): CompletableFuture<DeleteResult> =
         CompletableFuture.supplyAsync({ deleteSync(filter) }, executor)
 
-    fun deleteByIdSync(id: Any): DeleteResult {
-        require(id::class.javaObjectType == idField.type.javaType) {
-            "id must be of type ${idField.type} (Java: ${idField.type.javaType})"
-        }
-        return deleteSync(eq(idField.name, id))
-    }
+    fun deleteByIdSync(id: Any): DeleteResult = deleteSync(eq(idField.name, id))
 
     fun deleteById(id: Any): CompletableFuture<DeleteResult> =
         CompletableFuture.supplyAsync({ deleteByIdSync(id) }, executor)
@@ -163,7 +152,7 @@ data class IdField(val clazz: KClass<out MongoSerializable>) {
     val type: KType
 
     init {
-        val idFields = clazz.memberProperties.filter { it.javaField?.isAnnotationPresent(Id::class.java) == true }
+        val idFields = clazz.declaredMemberProperties.filter { it.javaField?.isAnnotationPresent(Id::class.java) == true }
         println(idFields)
 
         require(idFields.size == 1) {
