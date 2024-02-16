@@ -17,7 +17,10 @@ object ExclusionStrategy : ExclusionStrategy {
 @Target(AnnotationTarget.FIELD)
 annotation class Exclude
 
-val GSON: Gson = Twilight.gsonBuilder.addSerializationExclusionStrategy(ExclusionStrategy).create()
+val GSON: Gson = Twilight.gsonBuilder
+    .addSerializationExclusionStrategy(ExclusionStrategy)
+    .addDeserializationExclusionStrategy(ExclusionStrategy)
+    .create()
 
 open class TwilightTypeAdapter<T>(open var allowNull: Boolean = false) : TypeAdapter<T>() {
 
