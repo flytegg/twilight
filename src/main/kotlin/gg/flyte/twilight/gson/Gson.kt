@@ -3,6 +3,7 @@ package gg.flyte.twilight.gson
 import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
@@ -68,3 +69,13 @@ fun Any.toJson(): String = GSON.toJson(this)
  * @return The JSON representation of the object.
  */
 fun Any.toJsonTree(): JsonElement = GSON.toJsonTree(this)
+
+/**
+ * Register multiple TwilightTypeAdapters to a GsonBuilder as a recognised type adapter.
+ *
+ * @receiver The GsonBuilder to register the type adapters to.
+ * @param adapters The set of TwilightTypeAdapters to register.
+ * @return The GsonBuilder with the type adapters registered.
+ */
+fun GsonBuilder.registerTypeAdapters(vararg adapters: TwilightTypeAdapter<*>): GsonBuilder =
+    adapters.fold(this) { builder, adapter -> builder.registerTypeAdapter(adapter::class.java, adapter) }
