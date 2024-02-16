@@ -9,7 +9,6 @@ import org.bukkit.Location
 class LocationTypeAdapter(override var allowNull: Boolean = false) : TwilightTypeAdapter<Location>(allowNull) {
 
     override fun writeSafe(writer: JsonWriter, instance: Location) {
-        require(!allowNull) { "Location cannot be null." }
         writer.apply {
             beginObject()
             property("world", instance.world!!.name)
