@@ -26,6 +26,8 @@ val GSON: Gson = Twilight.gsonBuilder
 
 open class TwilightTypeAdapter<T>(open var allowNull: Boolean = false) : TypeAdapter<T>() {
 
+    val defaultGson: Gson = GsonBuilder().setPrettyPrinting().create()
+
     open fun writeSafe(writer: JsonWriter, instance: T): Unit =
         throw NotImplementedError("Not implemented TwilightTypeAdapter#writeSafe")
 
