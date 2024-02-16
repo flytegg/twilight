@@ -2,6 +2,7 @@ package gg.flyte.twilight.gson
 
 import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
+import com.google.gson.Gson
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
@@ -16,7 +17,7 @@ object ExclusionStrategy : ExclusionStrategy {
 @Target(AnnotationTarget.FIELD)
 annotation class Exclude
 
-val GSON = Twilight.gsonBuilder.addSerializationExclusionStrategy(ExclusionStrategy).create()!!
+val GSON: Gson = Twilight.gsonBuilder.addSerializationExclusionStrategy(ExclusionStrategy).create()
 
 open class TwilightTypeAdapter<T>(open var allowNull: Boolean = false) : TypeAdapter<T>() {
 
