@@ -12,7 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin
 
 class Twilight(javaPlugin: JavaPlugin) {
 
-    private var gsonBuilder: GsonBuilder = GsonBuilder().setPrettyPrinting()
+    private var gsonBuilder: GsonBuilder = GsonBuilder()
 
     init {
         plugin = javaPlugin
@@ -26,7 +26,7 @@ class Twilight(javaPlugin: JavaPlugin) {
 
     companion object {
         lateinit var plugin: JavaPlugin
-        lateinit var gsonBuilder: GsonBuilder
+        var gsonBuilder: GsonBuilder = GsonBuilder().setPrettyPrinting()
         var usingEnv = false
         val internalPdc by lazy { "_twilight_${plugin.name.lowercase()}" }
     }
@@ -38,10 +38,11 @@ class Twilight(javaPlugin: JavaPlugin) {
 
     fun mongo(init: MongoDB.Settings.() -> Unit = {}) = MongoDB.mongo(MongoDB.Settings().apply(init))
 
-    fun nameCache(init: NameCacheService.Settings.() -> Unit = {}) = NameCacheService.nameCache(NameCacheService.Settings().apply(init))
+    fun nameCache(init: NameCacheService.Settings.() -> Unit = {}) =
+        NameCacheService.nameCache(NameCacheService.Settings().apply(init))
 
     fun gson(init: GsonBuilder.() -> Unit) {
-        gsonBuilder.apply(init)
+        gsonBuilder = gsonBuilder.apply(init)
     }
 
     fun terminate() = customEventListeners.applyForEach { unregister() }
