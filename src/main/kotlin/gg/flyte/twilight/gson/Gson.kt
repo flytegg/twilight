@@ -3,6 +3,7 @@ package gg.flyte.twilight.gson
 import com.google.gson.ExclusionStrategy
 import com.google.gson.FieldAttributes
 import com.google.gson.Gson
+import com.google.gson.JsonElement
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
@@ -59,3 +60,11 @@ open class TwilightTypeAdapter<T>(open var allowNull: Boolean = false) : TypeAda
  * @return The JSON representation of the object.
  */
 fun Any.toJson(): String = GSON.toJson(this)
+
+/**
+ * Converts an object to its JSON representation using Google's Gson library.
+ *
+ * @receiver The object to be converted to JSON.
+ * @return The JSON representation of the object.
+ */
+fun Any.toJsonTree(): JsonElement = GSON.toJsonTree(this)
