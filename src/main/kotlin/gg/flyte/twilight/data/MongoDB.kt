@@ -30,9 +30,8 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
-import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.javaField
-import kotlin.reflect.jvm.javaType
 
 object MongoDB {
 
@@ -153,7 +152,7 @@ data class IdField(val clazz: KClass<out MongoSerializable>) {
     val type: KType
 
     init {
-        val idFields = clazz.memberProperties.filter { it.javaField?.isAnnotationPresent(Id::class.java) == true }
+        val idFields = clazz.declaredMemberProperties.filter { it.javaField?.isAnnotationPresent(Id::class.java) == true }
         println(idFields)
 
         require(idFields.size == 1) {
