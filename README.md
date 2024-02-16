@@ -392,6 +392,25 @@ Twilight is bundled with some useful libraries, some include:
 #### GSON
 We're aiming to provide some standard GSON Type Adapters for ease of use. Currently, we have adapters for the following:
 - Location
+- ItemStack
+
+If you want to use these, you can register them to the GsonBuilder in your Twilight builder like so:
+```kotlin
+val twilight = twilight(this) {
+    gson {
+        registerTypeAdapters(LocationTypeAdapter(), ItemStackTypeAdapter())
+    }
+}
+```
+
+The `gson` block just gives you straight up access to the GsonBuilder instance that Twilight uses, so you can use all standard GsonBuilder methods, for example:
+```kotlin
+val twilight = twilight(this) {
+    gson {
+        setPrettyPrinting()
+    }
+}
+```
 
 We have a useful exclusion strategy, allowing you to exclude marked fields of a class from being in serialized JSON. All you need to do is annotate the class field with `@Exclude`!
 
