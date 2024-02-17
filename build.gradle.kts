@@ -24,9 +24,10 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
 
-    api("io.github.cdimascio:dotenv-kotlin:6.4.1")
-    api("org.mongodb:mongodb-driver-kotlin-sync:4.11.0")
-    api("com.google.code.gson:gson:2.10.1")
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+    implementation("org.mongodb:mongodb-driver-kotlin-sync:4.11.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2")
+    implementation("com.google.code.gson:gson:2.10.1")
 
     implementation(kotlin("reflect"))
 
