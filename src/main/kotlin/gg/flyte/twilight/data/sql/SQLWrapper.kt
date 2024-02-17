@@ -32,7 +32,7 @@ class SQLWrapper(private val url: String, private val user: String, private val 
         try {
             val statement: Statement? = connection?.createStatement()
             statement?.execute(sql)
-            result=true
+            result = true
         } catch (e: Exception) {
             e.printStackTrace()
         }

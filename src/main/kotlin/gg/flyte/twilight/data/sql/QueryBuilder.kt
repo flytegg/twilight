@@ -8,28 +8,28 @@ class QueryBuilder {
         data class Condition(val column: String, val condition: String, val value: Any);
 
         infix fun String.eq(value: Any): Condition {
-            if(this.isEmpty()) throw IllegalArgumentException("SQLError: Column cannot be empty!")
+            if (this.isEmpty()) throw IllegalArgumentException("SQLError: Column cannot be empty!")
 
             return Condition(this, "=", value)
         }
 
         infix fun String.gt(value: Any): Condition {
-            if(this.isEmpty()) throw IllegalArgumentException("SQLError: Column cannot be empty!")
+            if (this.isEmpty()) throw IllegalArgumentException("SQLError: Column cannot be empty!")
             return Condition(this, ">", value)
         }
 
         infix fun String.gte(value: Any): Condition {
-            if(this.isEmpty()) throw IllegalArgumentException("SQLError: Column cannot be empty!")
+            if (this.isEmpty()) throw IllegalArgumentException("SQLError: Column cannot be empty!")
             return Condition(this, ">=", value)
         }
 
         infix fun String.lt(value: Any): Condition {
-            if(this.isEmpty()) throw IllegalArgumentException("SQLError: Column cannot be empty!")
+            if (this.isEmpty()) throw IllegalArgumentException("SQLError: Column cannot be empty!")
             return Condition(this, "<", value)
         }
 
         infix fun String.lte(value: Any): Condition {
-            if(this.isEmpty()) throw IllegalArgumentException("SQLError: Column cannot be empty!")
+            if (this.isEmpty()) throw IllegalArgumentException("SQLError: Column cannot be empty!")
             return Condition(this, "<=", value)
         }
     }
@@ -82,7 +82,7 @@ class QueryBuilder {
     }
 
     fun values(vararg values: Any?): QueryBuilder {
-        if(values.size != insertColumns.size) throw IllegalArgumentException("Mismatched columns and value sizes")
+        if (values.size != insertColumns.size) throw IllegalArgumentException("Mismatched columns and value sizes")
         insertValues.addAll(values)
         return this
     }
@@ -175,7 +175,7 @@ class QueryBuilder {
     private fun buildUpdateQuery(): String {
         requireNotNull(tableName) { "Table name must be specified for UPDATE query." }
         require(updateSet.isNotEmpty()) { "At least one column must be updated for UPDATE query." }
-        val setClause = updateSet.entries.joinToString(", ")  { updates ->
+        val setClause = updateSet.entries.joinToString(", ") { updates ->
             "${updates.key} = " + if (updates.value is String) "'${updates.value}'" else updates.value.toString()
         }
         var query = "UPDATE $tableName SET $setClause"
@@ -190,7 +190,7 @@ class QueryBuilder {
         return "$query;"
     }
 
-    private fun buildWhereClause(): String  {
+    private fun buildWhereClause(): String {
         return buildString {
             if (whereClauses.isNotEmpty()) {
                 append(" WHERE ")

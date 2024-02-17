@@ -46,11 +46,11 @@ interface SQLSerializable {
             "string", "kotlin.String", "java.lang.String" -> "TEXT"
             "int", "kotlin.Int", "java.lang.Integer" -> "INTEGER"
             "long", "kotlin.Long", "java.lang.Long" -> "BIGINT"
-            "double", "kotlin.Double", "java.lang.Double", "kotlin.Float", "java.lang.Float" -> if(dialect == Dialect.POSTGRES) "REAL" else "DECIMAL"
+            "double", "kotlin.Double", "java.lang.Double", "kotlin.Float", "java.lang.Float" -> if (dialect == Dialect.POSTGRES) "REAL" else "DECIMAL"
             "boolean", "kotlin.Boolean", "java.lang.Boolean" -> "BOOLEAN"
             "java.util.Date", "java.time.LocalDate", "java.time.LocalTime", "java.time.LocalDateTime", "java.sql.Date", "java.sql.Time", "java.sql.Timestamp" -> "TIMESTAMP"
-            "java.net.InetAddress" -> if(dialect == Dialect.POSTGRES) "INET" else "VARCHAR(43)"
-            "java.util.UUID" -> if(dialect == Dialect.POSTGRES) "UUID" else "VARCHAR(36)"
+            "java.net.InetAddress" -> if (dialect == Dialect.POSTGRES) "INET" else "VARCHAR(43)"
+            "java.util.UUID" -> if (dialect == Dialect.POSTGRES) "UUID" else "VARCHAR(36)"
             // this needs more testing. "java.util.ArrayList", "java.util.List", "java.util.Vector", "kotlin.collections.List", "kotlin.collections.ArrayList" -> if(dialect == Dialect.POSTGRES) "ARRAY" else "STRING"
             else -> throw IllegalArgumentException("Error: Unsupported type: $kotlinType")
         }

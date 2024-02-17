@@ -5,8 +5,8 @@ import java.sql.ResultSet
 data class Results(val columns: List<String>, val rows: List<Map<String, Any?>>) {
     operator fun get(column: String): List<Any?> {
         val colIndex = column.indexOf(column)
-        if(colIndex == -1) throw IllegalArgumentException("Column '$column' was not found in the query result.")
-        return rows.map{ it[column] }
+        if (colIndex == -1) throw IllegalArgumentException("Column '$column' was not found in the query result.")
+        return rows.map { it[column] }
     }
 }
 

@@ -1,9 +1,9 @@
 package gg.flyte.twilight.data.sql
 
-import java.sql.Connection
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.Statement
@@ -35,7 +35,7 @@ class AsyncSQLWrapper(private val url: String, private val user: String, private
             try {
                 val statement: Statement? = connection?.createStatement()
                 statement?.execute(sql)
-                result=true
+                result = true
             } catch (e: Exception) {
                 e.printStackTrace()
             }
