@@ -24,11 +24,11 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
 
-    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
-    implementation("org.mongodb:mongodb-driver-kotlin-sync:4.11.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2")
-    implementation("com.google.code.gson:gson:2.10.1")
+    api("io.github.cdimascio:dotenv-kotlin:6.4.1")
+    api("org.mongodb:mongodb-driver-kotlin-sync:4.11.0")
+    api("com.google.code.gson:gson:2.10.1")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2")
     implementation(kotlin("reflect"))
 
 //    api("com.github.okkero:Skedule:v1.2.6")
