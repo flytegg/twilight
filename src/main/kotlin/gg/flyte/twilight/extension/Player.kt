@@ -1,7 +1,6 @@
 package gg.flyte.twilight.extension
 
 import gg.flyte.twilight.Twilight
-import net.kyori.adventure.text.Component.text
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit

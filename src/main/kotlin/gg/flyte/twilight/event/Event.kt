@@ -1,3 +1,5 @@
+@file:Suppress("RemoveExplicitTypeArguments")
+
 package gg.flyte.twilight.event
 
 import gg.flyte.twilight.Twilight
@@ -121,7 +123,7 @@ open class TwilightEvent(async: Boolean = false) : Event(async), Cancellable {
 /**
  * List of custom Twilight Event Listeners
  */
-val customEventListeners = mutableSetOf<CustomTwilightListener>(
+val customEventListeners = mutableSetOf(
     GUIListener,
     InteractEventListener,
     OpEventListener
