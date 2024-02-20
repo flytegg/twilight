@@ -3,7 +3,7 @@
 
 Twilight is an API for developers creating plugins for Spigot or Paper based Minecraft servers. It contains a wide range of utilities and QOL improvements, from inventories, to schedulers and databases.
 
-Twilight is built using **Kotlin**, and is recommended for usage with. Many features of Twilight should work with plain Java, though compatability is not guaranteed.
+Twilight is built using **Kotlin**, and is recommended for usage with. Many features of Twilight should work with plain Java, though compatibility is not guaranteed.
 
 If you have any questions or need any support, head over to the [Flyte Discord](https://discord.gg/CGmMQwfXXN)!
 
