@@ -82,3 +82,17 @@ fun Player.showPlayer() {
 fun Player.removeActivePotionEffects() {
     activePotionEffects.forEach { removePotionEffect(it.type) }
 }
+/**
+ * Freezes the player.
+ */
+fun Player.freeze() {
+    walkSpeed = 0.0f
+    flySpeed = 0.0f
+}
+/**
+ * Unfreezes the player.
+ */
+fun Player.unfreeze() {
+    walkSpeed = 0.2f
+    flySpeed = 0.2f
+}
