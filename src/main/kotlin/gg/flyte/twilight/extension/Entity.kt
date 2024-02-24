@@ -32,47 +32,6 @@ fun Entity.isOnFire(): Boolean {
 }
 
 /**
- * Gets the nearest player to this entity.
- * @return The nearest player.
- */
-
-fun Entity.getNearestPlayer(): Player? {
-    var nearestDistance = Double.MAX_VALUE
-    var nearestPlayer: Player? = null
-    for (player in world.players) {
-        if (player == this) continue
-        val distance = location.distance(player.location)
-        if (distance < nearestDistance) {
-            nearestDistance = distance
-            nearestPlayer = player
-        }
-    }
-    return nearestPlayer
-}
-
-
-/**
- * Gets the nearest player to this entity within the given radius.
- * @param radius The radius to search.
- * @return The nearest player.
- */
-
-fun Entity.getNearestPlayer(radius: Double): Player? {
-    var nearestDistance = Double.MAX_VALUE
-    var nearestPlayer: Player? = null
-    for (player in world.getNearbyPlayers(location, radius)) {
-        if (player == this) continue
-        val distance = location.distance(player.location)
-        if (distance < nearestDistance) {
-            nearestDistance = distance
-            nearestPlayer = player
-        }
-    }
-    return nearestPlayer
-}
-
-
-/**
  * Gets the nearest player to this entity within the given radius.
  * @param xRadius The x radius to search.
  * @param yRadius The y radius to search.
@@ -80,7 +39,7 @@ fun Entity.getNearestPlayer(radius: Double): Player? {
  * @return The nearest player.
  */
 
-fun Entity.getNearestPlayer(xRadius: Double, yRadius: Double, zRadius: Double): Player? {
+fun Entity.getNearestPlayer(xRadius: Double = Double.MAX_VALUE, yRadius: Double = Double.MAX_VALUE, zRadius: Double = Double.MAX_VALUE): Player? {
     var nearestDistance = Double.MAX_VALUE
     var nearestPlayer: Player? = null
     for (player in world.getNearbyPlayers(location, xRadius, yRadius, zRadius)) {
@@ -96,47 +55,6 @@ fun Entity.getNearestPlayer(xRadius: Double, yRadius: Double, zRadius: Double): 
 
 
 /**
- * Gets the nearest entity to this entity.
- * @return The nearest entity.
- */
-
-fun Entity.getNearestEntity(): Entity? {
-    var nearestDistance = Double.MAX_VALUE
-    var nearestEntity: Entity? = null
-    for (entity in world.entities.also { it.remove(this) }) {
-        if (entity == this) continue
-        val distance = location.distance(entity.location)
-        if (distance < nearestDistance) {
-            nearestDistance = distance
-            nearestEntity = entity
-        }
-    }
-    return nearestEntity
-}
-
-
-/**
- * Gets the nearest entity to this entity within the given radius.
- * @param radius The radius to search.
- * @return The nearest entity.
- */
-
-fun Entity.getNearestEntity(radius: Double): Entity? {
-    var nearestDistance = Double.MAX_VALUE
-    var nearestEntity: Entity? = null
-    for (entity in world.getNearbyEntities(location, radius, radius, radius)) {
-        if (entity == this) continue
-        val distance = location.distance(entity.location)
-        if (distance < nearestDistance) {
-            nearestDistance = distance
-            nearestEntity = entity
-        }
-    }
-    return nearestEntity
-}
-
-
-/**
  * Gets the nearest entity to this entity within the given radius.
  * @param xRadius The x radius to search.
  * @param yRadius The y radius to search.
@@ -144,7 +62,7 @@ fun Entity.getNearestEntity(radius: Double): Entity? {
  * @return The nearest entity.
  */
 
-fun Entity.getNearestEntity(xRadius: Double, yRadius: Double, zRadius: Double): Entity? {
+fun Entity.getNearestEntity(xRadius: Double = Double.MAX_VALUE, yRadius: Double = Double.MAX_VALUE, zRadius: Double = Double.MAX_VALUE): Entity? {
     var nearestDistance = Double.MAX_VALUE
     var nearestEntity: Entity? = null
     for (entity in world.getNearbyEntities(location, xRadius, yRadius, zRadius)) {
@@ -160,47 +78,6 @@ fun Entity.getNearestEntity(xRadius: Double, yRadius: Double, zRadius: Double): 
 
 
 /**
- * Gets the nearest living entity to this entity.
- * @return The nearest living entity.
- */
-
-fun Entity.getNearestLivingEntity(): LivingEntity? {
-    var nearestDistance = Double.MAX_VALUE
-    var nearestEntity: LivingEntity? = null
-    for (entity in world.livingEntities) {
-        if (entity == this) continue
-        val distance = location.distance(entity.location)
-        if (distance < nearestDistance) {
-            nearestDistance = distance
-            nearestEntity = entity
-        }
-    }
-    return nearestEntity
-}
-
-
-/**
- * Gets the nearest living entity to this entity within the given radius.
- * @param radius The radius to search.
- * @return The nearest living entity.
- */
-
-fun Entity.getNearestLivingEntity(radius: Double): LivingEntity? {
-    var nearestDistance = Double.MAX_VALUE
-    var nearestEntity: LivingEntity? = null
-    for (entity in world.getNearbyLivingEntities(location, radius)) {
-        if (entity == this) continue
-        val distance = location.distance(entity.location)
-        if (distance < nearestDistance) {
-            nearestDistance = distance
-            nearestEntity = entity
-        }
-    }
-    return nearestEntity
-}
-
-
-/**
  * Gets the nearest living entity to this entity within the given radius.
  * @param xRadius The x radius to search.
  * @param yRadius The y radius to search.
@@ -208,7 +85,7 @@ fun Entity.getNearestLivingEntity(radius: Double): LivingEntity? {
  * @return The nearest living entity.
  */
 
-fun Entity.getNearestLivingEntity(xRadius: Double, yRadius: Double, zRadius: Double): LivingEntity? {
+fun Entity.getNearestLivingEntity(xRadius: Double = Double.MAX_VALUE, yRadius: Double = Double.MAX_VALUE, zRadius: Double = Double.MAX_VALUE): LivingEntity? {
     var nearestDistance = Double.MAX_VALUE
     var nearestEntity: LivingEntity? = null
     for (entity in world.getNearbyLivingEntities(location, xRadius, yRadius, zRadius)) {
