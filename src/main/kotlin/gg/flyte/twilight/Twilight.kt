@@ -1,12 +1,12 @@
 package gg.flyte.twilight
 
+import gg.flyte.twilight.builders.item.ItemBuilder
 import gg.flyte.twilight.data.MongoDB
 import gg.flyte.twilight.data.service.NameCacheService
 import gg.flyte.twilight.environment.Environment
 import gg.flyte.twilight.event.custom.chat.command.ChatClickCommand
 import gg.flyte.twilight.event.customEventListeners
 import gg.flyte.twilight.extension.applyForEach
-import gg.flyte.twilight.builders.item.ItemBuilder
 import gg.flyte.twilight.listeners.MoveEvent
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -18,7 +18,7 @@ class Twilight(javaPlugin: JavaPlugin) {
             customEventListeners
             ItemBuilder.Companion
             ChatClickCommand.register()
-            plugin.server.pluginManager.registerEvents(MoveEvent(), plugin)
+            MoveEvent()
         }
     }
 

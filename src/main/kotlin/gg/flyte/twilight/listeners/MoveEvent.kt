@@ -1,14 +1,17 @@
 package gg.flyte.twilight.listeners
 
-import com.destroystokyo.paper.event.player.PlayerJumpEvent
-import org.bukkit.event.EventHandler
+import gg.flyte.twilight.event.event
+import io.papermc.paper.event.entity.EntityMoveEvent
 import org.bukkit.event.Listener
+import org.bukkit.event.player.PlayerMoveEvent
 
 class MoveEvent : Listener {
-    @EventHandler
-    fun onJump(event: PlayerJumpEvent) {
-        val player = event.player
-        if (player.hasMetadata("frozen")) event.isCancelled = true
+    init {
+        event<PlayerMoveEvent> {
+            if (player.hasMetadata("frozen")) isCancelled = true
+        }
+        event<EntityMoveEvent> {
+            if (entity.hasMetadata("frozen")) isCancelled = true
+        }
     }
-
 }
