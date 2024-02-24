@@ -76,7 +76,6 @@ fun Entity.getNearestEntity(xRadius: Double = Double.MAX_VALUE, yRadius: Double 
     return nearestEntity
 }
 
-
 /**
  * Gets the nearest living entity to this entity within the given radius.
  * @param xRadius The x radius to search.
