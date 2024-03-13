@@ -8,15 +8,21 @@ import io.papermc.paper.event.entity.EntityMoveEvent
 import org.bukkit.event.player.PlayerMoveEvent
 
 object EntityMoveEventListener : CustomTwilightListener() {
+
     init {
         if (isPaper()) {
+
             event<EntityMoveEvent> {
                 if (entity.frozen()) isCancelled = true
             }
+
         } else {
+
             event<PlayerMoveEvent> {
                 if (player.frozen()) isCancelled = true
             }
+
         }
     }
+
 }
