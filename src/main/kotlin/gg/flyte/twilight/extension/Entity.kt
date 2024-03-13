@@ -2,7 +2,6 @@ package gg.flyte.twilight.extension
 
 import gg.flyte.twilight.Twilight
 import org.bukkit.entity.Entity
-import org.bukkit.entity.Player
 import org.bukkit.metadata.FixedMetadataValue
 
 /**
@@ -38,9 +37,17 @@ fun Entity.isOnFire(): Boolean {
 fun Entity.freeze() {
     setMetadata("frozen", FixedMetadataValue(Twilight.plugin, true))
 }
+
 /**
  * Unfreezes the entity.
  */
 fun Entity.unfreeze() {
     removeMetadata("frozen", Twilight.plugin)
 }
+
+/**
+ * Checks if the player is currently frozen.
+ *
+ * @return `true` if the player is frozen, `false` otherwise.
+ */
+fun Entity.frozen(): Boolean = hasMetadata("frozen")
