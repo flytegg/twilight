@@ -27,6 +27,7 @@ class Twilight(javaPlugin: JavaPlugin) {
         var usingEnv = false
         val internalPdc by lazy { "_twilight_${plugin.name.lowercase()}" }
 
+        fun isFolia(): Boolean = ServerSoftware.isFolia()
         fun isPaper(): Boolean = ServerSoftware.isPaper()
         fun isSpigot(): Boolean = ServerSoftware.isSpigot()
         fun isCraftBukkit(): Boolean = ServerSoftware.isCraftBukkit()
