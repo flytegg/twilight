@@ -8,7 +8,6 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.metadata.FixedMetadataValue
-import org.bukkit.metadata.MetadataValue
 
 /**
  * Plays a sound at the player's current location with default volume and pitch.
@@ -84,6 +83,7 @@ fun Player.showPlayer() {
 fun Player.removeActivePotionEffects() {
     activePotionEffects.forEach { removePotionEffect(it.type) }
 }
+
 /**
  * Freezes the player.
  */
