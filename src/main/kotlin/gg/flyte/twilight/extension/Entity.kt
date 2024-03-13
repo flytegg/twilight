@@ -1,8 +1,10 @@
 package gg.flyte.twilight.extension
 
+import gg.flyte.twilight.Twilight
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import org.bukkit.metadata.FixedMetadataValue
 
 /**
  * Retrieves a list of nearby entities within the specified range from the current entity.
@@ -98,3 +100,23 @@ fun Entity.getNearestLivingEntity(xRadius: Double = Double.MAX_VALUE, yRadius: D
     return nearestEntity
 }
 
+/**
+ * Freezes the entity.
+ */
+fun Entity.freeze() {
+    setMetadata("frozen", FixedMetadataValue(Twilight.plugin, true))
+}
+
+/**
+ * Unfreezes the entity.
+ */
+fun Entity.unfreeze() {
+    removeMetadata("frozen", Twilight.plugin)
+}
+
+/**
+ * Checks if the player is currently frozen.
+ *
+ * @return `true` if the player is frozen, `false` otherwise.
+ */
+fun Entity.frozen(): Boolean = hasMetadata("frozen")
