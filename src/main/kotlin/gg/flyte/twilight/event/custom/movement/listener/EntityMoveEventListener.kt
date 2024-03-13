@@ -11,17 +11,13 @@ object EntityMoveEventListener : CustomTwilightListener() {
 
     init {
         if (isPaper()) {
-
             event<EntityMoveEvent> {
                 if (entity.frozen()) isCancelled = true
             }
-
         } else {
-
             event<PlayerMoveEvent> {
                 if (player.frozen()) isCancelled = true
             }
-
         }
     }
 
