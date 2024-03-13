@@ -5,6 +5,7 @@ package gg.flyte.twilight.event
 import gg.flyte.twilight.Twilight
 import gg.flyte.twilight.event.custom.admin.listener.OpEventListener
 import gg.flyte.twilight.event.custom.interact.listener.InteractEventListener
+import gg.flyte.twilight.event.custom.movement.listener.EntityMoveEventListener
 import gg.flyte.twilight.extension.applyForEach
 import gg.flyte.twilight.inventory.GUIListener
 import org.bukkit.event.*
@@ -126,7 +127,8 @@ open class TwilightEvent(async: Boolean = false) : Event(async), Cancellable {
 val customEventListeners = mutableSetOf(
     GUIListener,
     InteractEventListener,
-    OpEventListener
+    OpEventListener,
+    EntityMoveEventListener
 )
 
 /**
