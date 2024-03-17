@@ -16,7 +16,7 @@ object Redis {
         jedis = Jedis(redis.host, redis.port, redis.timeout)
     }
 
-    fun publishSync(channel: String, message: String){
+    private fun publishSync(channel: String, message: String){
         jedis.publish(channel, message)
     }
 
@@ -54,6 +54,7 @@ class RedisListener(channel: String, val block: RedisMessage.() -> Unit): Twilig
     }
 
 }
+
 
 
 

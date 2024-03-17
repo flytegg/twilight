@@ -9,7 +9,6 @@ import gg.flyte.twilight.event.customEventListeners
 import gg.flyte.twilight.extension.applyForEach
 import gg.flyte.twilight.redis.Redis
 import gg.flyte.twilight.server.ServerSoftware
-import org.bukkit.Material
 import org.bukkit.plugin.java.JavaPlugin
 
 class Twilight(javaPlugin: JavaPlugin) {
@@ -38,6 +37,7 @@ class Twilight(javaPlugin: JavaPlugin) {
     fun env(init: Environment.Settings.() -> Unit = {}) {
         usingEnv = true
         Environment.env(Environment.Settings().apply(init))
+
     }
 
     fun mongo(init: MongoDB.Settings.() -> Unit = {}) = MongoDB.mongo(MongoDB.Settings().apply(init))
@@ -48,6 +48,5 @@ class Twilight(javaPlugin: JavaPlugin) {
 
     fun terminate() = customEventListeners.applyForEach { unregister() }
 }
-
 
 fun twilight(plugin: JavaPlugin, init: Twilight.() -> Unit = {}): Twilight = Twilight(plugin).apply(init)
