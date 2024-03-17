@@ -458,7 +458,7 @@ Redis.publish("channel", "message") // Async Publishing
 You are also able to listen to incoming message on specific channels, using the 'TwilightRedisListener' Class:
 ```kotlin
 // Extend the 'TwilightRedisListener' class and override the 'onMessage' function.
-class PlayerConnectionRedisListener(): TwilightRedisListener("player_connection") {
+class PlayerConnectionRedisListener(): TwilightRedisListener("player-connection") {
     override fun onMessage(message: String) {
         // do stuff
     }
