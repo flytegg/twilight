@@ -49,8 +49,5 @@ class Twilight(javaPlugin: JavaPlugin) {
     fun terminate() = customEventListeners.applyForEach { unregister() }
 }
 
-fun hello(){
-    val builder = ItemBuilder(Material.DIAMOND_SWORD)
-}
 
 fun twilight(plugin: JavaPlugin, init: Twilight.() -> Unit = {}): Twilight = Twilight(plugin).apply(init)
