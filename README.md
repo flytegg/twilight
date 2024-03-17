@@ -463,6 +463,7 @@ class PlayerConnectionRedisListener(): TwilightRedisListener("player_connection"
         // do stuff
     }
 }
+```
 Adding The Listner:
 ```kotlin
 Redis.addListener(PlayerConnectionRedisListener())
@@ -470,6 +471,7 @@ Redis.addListener(PlayerConnectionRedisListener())
 Alternativley, instead of extending the listener class, you can add a listener using a block of code, which returns the 'RedisMessage' data class, which contains the channel and the message:
 ```kotlin
 Redis.addListener("cool-channel"){
+    // whatever happens when a message on "cool-channel" is published
     val channel = this.channel
     val message = this.message
 }
