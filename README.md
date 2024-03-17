@@ -430,7 +430,7 @@ Currently the only way to configure your MongoDB "cache" for UUIDs and names, is
 Twilight has a Redis system that lets you publish messages and listen to incoming messages on any channel you'd like.
 
 #### Environment variables
-You can use the following Environment variables for your MongoDB:
+You can use the following Environment variables for your Redis Server:
 ```env
 REDIS_HOST="your redis server host"
 REDIS_PORT="your redis server port"
