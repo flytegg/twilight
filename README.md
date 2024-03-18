@@ -447,8 +447,8 @@ val twilight = twilight(plugin) {
         timeout = 500 // 500 Milliseconds Timeout
     }
 }
-#### String Key-Value Pairs
 ```
+#### String Key-Value Pairs
 You can Set/Get/Delete String Key-Value pairs on your Redis server like so: (All of those functions are Async and return a CompleteableFuture)
 ```kotlin
 Redis.set("cool-key", "super-secret-value")
