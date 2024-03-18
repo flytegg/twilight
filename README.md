@@ -435,8 +435,19 @@ You can use the following Environment variables for your Redis Server:
 REDIS_HOST="your redis server host"
 REDIS_PORT="your redis server port"
 REDIS_TIMEOUT="your redis connection timeout"
+REDIS_USING_PASSWORD="false"
+REDIS_USERNAME:""
+REDIS_PASSWORD:""
 ```
-
+Alternativley, if your Redis server requires a Username + Password in order to access, you can use the following:
+```env
+REDIS_HOST="your redis server host"
+REDIS_PORT="your redis server port"
+REDIS_TIMEOUT="your redis connection timeout"
+REDIS_USING_PASSWORD="true"
+REDIS_USERNAME:"coolUsername"
+REDIS_PASSWORD:"coolPassword"
+```
 #### Builder
 When building your Twilight instance, you can specify your host and port like so:
 ```kotlin
@@ -445,6 +456,20 @@ val twilight = twilight(plugin) {
         host = "your redis server host"
         port = 6379 // Default Redis Port
         timeout = 500 // 500 Milliseconds Timeout
+        isUsingPassword = false // False by default
+    }
+}
+```
+Alternativley, if your Redis server requires a Username + Password in order to access, you can use the following:
+```kotlin
+val twilight = twilight(plugin) {
+    redis {
+        host = "your redis server host"
+        port = 6379 // Default Redis Port
+        timeout = 500 // 500 Milliseconds Timeout
+        isUsingPassword = true
+        username = "coolUsername"
+        password = "coolPassword"
     }
 }
 ```
@@ -494,7 +519,6 @@ val listener = Redis.addListener("cool-channel"){
     this.listener.unregister() // unregistering the listener after we recieved the message.
 }
 ```
-
 
 ### Files Extensions
 
