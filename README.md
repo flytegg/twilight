@@ -452,9 +452,15 @@ You can Set/Get/Delete String Key-Value pairs on your Redis server like so: (All
 ```kotlin
 Redis.set("cool-key", "super-secret-value")
 
-val value = Redis.get("cool-key") // Returns a completable future
-    
-println("The value is: ${value.get()}") // Prints "The value is: super-secret-value"
+val future = Redis.get("cool-key") // Returns a Completable Future
+
+future.thenApplyAsync {
+    value -> println("The value is: $value") // Prints: "The value is: super-secret-value"
+}.exceptionally {
+    e -> println("An exception occurred: ${e.message}") // Handle the Exception
+}
+
+Thread.sleep(1000)
 
 Redis.delete("cool-key")
 ```
