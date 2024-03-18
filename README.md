@@ -471,8 +471,9 @@ You can publish messages like so:
 ```kotlin
 Redis.publish("channel", "message") // Async Publishing
 ```
-
-You are also able to listen to incoming message on specific channels, using the 'TwilightRedisListener' Class:
+#### Redis Listeners (PubSub)
+##### Listen to incoming messages
+You are able to listen to incoming message on specific channels, using the 'TwilightRedisListener' Class:
 ```kotlin
 // Extend the 'TwilightRedisListener' class and override the 'onMessage' function.
 class PlayerConnectionRedisListener(): TwilightRedisListener("player-connection") {
@@ -481,8 +482,7 @@ class PlayerConnectionRedisListener(): TwilightRedisListener("player-connection"
     }
 }
 ```
-# Redis Listeners (PubSub)
-You can add add/register the listener like this: (which also returns the listener which lets you unregister if if you'd like)
+You can add add/register the listener like this: (which also returns the listener which lets you unregister it if you'd like)
 ```kotlin
 val listener = Redis.addListener(PlayerConnectionRedisListener())
 listener.unregister() // unregistering the listener.
