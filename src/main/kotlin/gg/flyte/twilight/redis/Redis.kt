@@ -15,7 +15,7 @@ object Redis {
         jedis = Jedis(redis.host, redis.port, redis.timeout)
     }
     private fun publishSync(channel: String, message: String) = jedis.publish(channel, message)
-    fun publish(channel: String, message: String) = CompletableFuture.supplyAsync({ publishSync(channel, message) }, executor)
+    fun publish(channel: String, message: String): CompletableFuture<Long> = CompletableFuture.supplyAsync({ publishSync(channel, message) }, executor)
     private fun setSync(key: String, value: String) = jedis.set(key, value)
     fun set(key: String, value: String): CompletableFuture<String> = CompletableFuture.supplyAsync({ setSync(key, value) }, executor)
     private fun getSync(key: String) = jedis.get(key)
