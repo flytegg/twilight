@@ -426,6 +426,58 @@ NameCacheService.uuidFromName("stxphen")
 
 Currently the only way to configure your MongoDB "cache" for UUIDs and names, is to have an Environment variable called `NAME_CACHE_COLLECTION` with the value being what you want to call the collection. Don't want to use the Mongo cache? Disable `useMongoCache` in the settings. 
 
+# Redis
+Twilight has a Redis system that lets you publish messages and listen to incoming messages on any channel you'd like.
+
+#### Environment variables
+You can use the following Environment variables for your Redis Server:
+```env
+REDIS_HOST="your redis server host"
+REDIS_PORT="your redis server port"
+REDIS_TIMEOUT="your redis connection timeout"
+```
+
+#### Builder
+When building your Twilight instance, you can specify your host and port like so:
+```kotlin
+val twilight = twilight(plugin) {
+    redis {
+        host = "your redis server host"
+        port = 6379 // Default Redis Port
+        timeout = 500 // 500 Milliseconds Timeout
+    }
+}
+```
+
+From here you can publish messages like so:
+
+```kotlin
+Redis.publish("channel", "message") // Async Publishing
+```
+
+You are also able to listen to incoming message on specific channels, using the 'TwilightRedisListener' Class:
+```kotlin
+// Extend the 'TwilightRedisListener' class and override the 'onMessage' function.
+class PlayerConnectionRedisListener(): TwilightRedisListener("player-connection") {
+    override fun onMessage(message: String) {
+        // do stuff
+    }
+}
+```
+Adding The Listner:
+```kotlin
+Redis.addListener(PlayerConnectionRedisListener())
+```
+Alternativley, instead of extending the listener class, you can add a listener using a block of code, which returns the 'RedisMessage' data class, which contains the channel and the message:
+```kotlin
+Redis.addListener("cool-channel"){
+    // whatever happens when a message on "cool-channel" is published
+    val channel = this.channel
+    val message = this.message
+}
+```
+
+
 ### Files Extensions
 
 #### File.hash()
