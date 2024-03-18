@@ -427,7 +427,7 @@ NameCacheService.uuidFromName("stxphen")
 Currently the only way to configure your MongoDB "cache" for UUIDs and names, is to have an Environment variable called `NAME_CACHE_COLLECTION` with the value being what you want to call the collection. Don't want to use the Mongo cache? Disable `useMongoCache` in the settings. 
 
 # Redis
-Twilight has a Redis system that lets you publish messages and listen to incoming messages on any channel you'd like.
+Twilight has a Redis system that lets you set/get/delete string key value pairs, additionally, you are able to publish messages and listen to incoming messages on any channel you'd like.
 
 #### Environment variables
 You can use the following Environment variables for your Redis Server:
@@ -448,8 +448,25 @@ val twilight = twilight(plugin) {
     }
 }
 ```
+#### String Key-Value Pairs
+You can Set/Get/Delete String Key-Value pairs on your Redis server like so: (All of those functions are Async and return a CompleteableFuture)
+```kotlin
+Redis.set("cool-key", "super-secret-value")
 
-From here you can publish messages like so:
+val future = Redis.get("cool-key") // Returns a Completable Future
+
+future.thenApplyAsync {
+    value -> println("The value is: $value") // Prints: "The value is: super-secret-value"
+}.exceptionally {
+    e -> println("An exception occurred: ${e.message}") // Handle the Exception
+}
+
+Thread.sleep(1000)
+
+Redis.delete("cool-key")
+```
+#### Publishing Messages
+You can publish messages like so:
 
 ```kotlin
 Redis.publish("channel", "message") // Async Publishing
@@ -464,16 +481,17 @@ class PlayerConnectionRedisListener(): TwilightRedisListener("player-connection"
     }
 }
 ```
-Adding The Listner:
+# Redis Listeners (PubSub)
+You can add add/register the listener like this: (which also returns the listener which lets you unregister if if you'd like)
 ```kotlin
-Redis.addListener(PlayerConnectionRedisListener())
+val listener = Redis.addListener(PlayerConnectionRedisListener())
+listener.unregister() // unregistering the listener.
 ```
-Alternativley, instead of extending the listener class, you can add a listener using a block of code, which returns the 'RedisMessage' data class, which contains the channel and the message:
+Alternativley, instead of extending the listener class, you can add a listener using a block of code, which returns the 'RedisMessage' data class, which contains the channel, the message, and the listener:
 ```kotlin
-Redis.addListener("cool-channel"){
-    // whatever happens when a message on "cool-channel" is published
-    val channel = this.channel
-    val message = this.message
+val listener = Redis.addListener("cool-channel"){
+    println("The following message was received: '$message' on channel '$channel'")
+    this.listener.unregister() // unregistering the listener after we recieved the message.
 }
 ```
 
