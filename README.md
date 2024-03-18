@@ -482,7 +482,7 @@ class PlayerConnectionRedisListener(): TwilightRedisListener("player-connection"
     }
 }
 ```
-You can add add/register the listener like this: (which also returns the listener which lets you unregister if if you'd like)
+You can add add/register the listener like this: (which also returns the listener which lets you unregister it if you'd like)
 ```kotlin
 val listener = Redis.addListener(PlayerConnectionRedisListener())
 listener.unregister() // unregistering the listener.
