@@ -448,8 +448,18 @@ val twilight = twilight(plugin) {
     }
 }
 ```
+You can Set/Get/Delete String Key-Value pairs on your Redis server like so: (All of those functions are Async and return a CompleteableFuture)
+```kotlin
+Redis.set("cool-key", "super-secret-value")
 
-From here you can publish messages like so:
+val value = Redis.get("cool-key") // Returns a completable future
+    
+println("The value is: ${value.get()}") // Prints "The value is: super-secret-value"
+
+Redis.delete("cool-key")
+```
+
+You can publish messages like so:
 
 ```kotlin
 Redis.publish("channel", "message") // Async Publishing
@@ -464,16 +474,16 @@ class PlayerConnectionRedisListener(): TwilightRedisListener("player-connection"
     }
 }
 ```
-Adding The Listner:
+You can add add/register the listener like this: (which also returns the listener which lets you unregister if if you'd like)
 ```kotlin
-Redis.addListener(PlayerConnectionRedisListener())
+val listener = Redis.addListener(PlayerConnectionRedisListener())
+listener.unregister() // unregistering the listener.
 ```
-Alternativley, instead of extending the listener class, you can add a listener using a block of code, which returns the 'RedisMessage' data class, which contains the channel and the message:
+Alternativley, instead of extending the listener class, you can add a listener using a block of code, which returns the 'RedisMessage' data class, which contains the channel, the message, and the listener:
 ```kotlin
-Redis.addListener("cool-channel"){
-    // whatever happens when a message on "cool-channel" is published
-    val channel = this.channel
-    val message = this.message
+val listener = Redis.addListener("cool-channel"){
+    println("The following message was received: '$message' on channel '$channel'")
+    this.listener.unregister() // unregistering the listener after we recieved the message.
 }
 ```
 
