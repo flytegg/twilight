@@ -427,7 +427,7 @@ NameCacheService.uuidFromName("stxphen")
 Currently the only way to configure your MongoDB "cache" for UUIDs and names, is to have an Environment variable called `NAME_CACHE_COLLECTION` with the value being what you want to call the collection. Don't want to use the Mongo cache? Disable `useMongoCache` in the settings. 
 
 # Redis
-Twilight has a Redis system that lets you publish messages and listen to incoming messages on any channel you'd like.
+Twilight has a Redis system that lets you set/get/delete string key value pairs, additionally, you are able to publish messages and listen to incoming messages on any channel you'd like.
 
 #### Environment variables
 You can use the following Environment variables for your Redis Server:
@@ -447,6 +447,7 @@ val twilight = twilight(plugin) {
         timeout = 500 // 500 Milliseconds Timeout
     }
 }
+#### String Key-Value Pairs
 ```
 You can Set/Get/Delete String Key-Value pairs on your Redis server like so: (All of those functions are Async and return a CompleteableFuture)
 ```kotlin
@@ -464,7 +465,7 @@ Thread.sleep(1000)
 
 Redis.delete("cool-key")
 ```
-
+#### Publishing Messages
 You can publish messages like so:
 
 ```kotlin
@@ -480,6 +481,7 @@ class PlayerConnectionRedisListener(): TwilightRedisListener("player-connection"
     }
 }
 ```
+# Redis Listeners (PubSub)
 You can add add/register the listener like this: (which also returns the listener which lets you unregister if if you'd like)
 ```kotlin
 val listener = Redis.addListener(PlayerConnectionRedisListener())
