@@ -2,6 +2,7 @@ package gg.flyte.twilight.redis
 
 import gg.flyte.twilight.Twilight
 import gg.flyte.twilight.environment.Environment
+import redis.clients.jedis.DefaultJedisClientConfig
 import redis.clients.jedis.Jedis
 import redis.clients.jedis.JedisPubSub
 import java.util.concurrent.CompletableFuture
@@ -12,6 +13,11 @@ object Redis {
     private lateinit var jedis: Jedis
     private val executor: Executor = Executors.newCachedThreadPool()
     fun redis(redis: Settings) {
+        if (redis.isUsingPassword){
+            val config = DefaultJedisClientConfig.builder().user(redis.username).password(redis.password).timeoutMillis(redis.timeout).build()
+            jedis = Jedis(redis.host, redis.port, config)
+            return
+        }
         jedis = Jedis(redis.host, redis.port, redis.timeout)
     }
     private fun publishSync(channel: String, message: String) = jedis.publish(channel, message)
@@ -36,6 +42,9 @@ object Redis {
         var host: String = if (Twilight.usingEnv) Environment.get("REDIS_HOST") else "localhost"
         var port: Int = if (Twilight.usingEnv) Environment.get("REDIS_PORT").toInt() else 6379
         var timeout: Int = if (Twilight.usingEnv) Environment.get("REDIS_TIMEOUT").toInt() else 0
+        var isUsingPassword: Boolean = if (Twilight.usingEnv) Environment.get("REDIS_USING_PASSWORD").toBoolean() else false
+        val username: String = if (Twilight.usingEnv && isUsingPassword) Environment.get("REDIS_USERNAME") else ""
+        var password: String = if (Twilight.usingEnv && isUsingPassword) Environment.get("REDIS_PASSWORD") else ""
     }
 }
 
