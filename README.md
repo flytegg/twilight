@@ -5,7 +5,9 @@ Twilight is an API for developers creating plugins for Spigot or Paper based Min
 
 Twilight is built using **Kotlin**, and is recommended for usage with. Many features of Twilight should work with plain Java, though compatibility is not guaranteed.
 
-If you have any questions or need any support, head over to the [Flyte Discord](https://discord.gg/CGmMQwfXXN)!
+For support, questions or to chat with the team, come join the Discord:
+
+[![Discord Banner](https://discordapp.com/api/guilds/835561528299880518/widget.png?style=banner2)](https://discord.gg/flyte)
 
 ## Setup
 Twilight should be bundled within your plugin. Add the following repository and dependency to your build tool:
