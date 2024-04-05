@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "gg.flyte"
-version = "1.1.9"
+version = "1.1.10"
 
 repositories {
     mavenLocal()
@@ -27,6 +27,8 @@ dependencies {
     api("io.github.cdimascio:dotenv-kotlin:6.4.1")
     api("org.mongodb:mongodb-driver-kotlin-sync:4.11.0")
     api("com.google.code.gson:gson:2.10.1")
+    api("redis.clients:jedis:5.1.2")
+
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0-RC2")
     implementation(kotlin("reflect"))

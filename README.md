@@ -23,7 +23,7 @@ Maven
 <dependency>
     <groupId>gg.flyte</groupId>
     <artifactId>twilight</artifactId>
-    <version>1.1.9</version>
+    <version>1.1.10</version>
 </dependency>
 ```
 
@@ -33,14 +33,14 @@ maven {
     url "https://repo.flyte.gg/releases"
 }
 
-implementation "gg.flyte:twilight:1.1.9"
+implementation "gg.flyte:twilight:1.1.10"
 ```
 
 Gradle (Kotlin DSL)
 ```kotlin
 maven("https://repo.flyte.gg/releases")
 
-implementation("gg.flyte:twilight:1.1.9")
+implementation("gg.flyte:twilight:1.1.10")
 ```
 
 Certain features of Twilight require configuration, which can be done via the Twilight class. To setup a Twilight class instance, you can use the `twilight` function as shown below:
@@ -427,6 +427,100 @@ NameCacheService.uuidFromName("stxphen")
 ```
 
 Currently the only way to configure your MongoDB "cache" for UUIDs and names, is to have an Environment variable called `NAME_CACHE_COLLECTION` with the value being what you want to call the collection. Don't want to use the Mongo cache? Disable `useMongoCache` in the settings. 
+
+# Redis
+Twilight has a Redis system that lets you set/get/delete string key value pairs, additionally, you are able to publish messages and listen to incoming messages on any channel you'd like.
+
+#### Environment variables
+You can use the following Environment variables for your Redis Server:
+```env
+REDIS_HOST="your redis server host"
+REDIS_PORT="your redis server port"
+REDIS_TIMEOUT="your redis connection timeout"
+REDIS_USING_PASSWORD="false"
+REDIS_USERNAME:""
+REDIS_PASSWORD:""
+```
+Alternativley, if your Redis server requires a Username + Password in order to access, you can use the following:
+```env
+REDIS_HOST="your redis server host"
+REDIS_PORT="your redis server port"
+REDIS_TIMEOUT="your redis connection timeout"
+REDIS_USING_PASSWORD="true"
+REDIS_USERNAME:"coolUsername"
+REDIS_PASSWORD:"coolPassword"
+```
+#### Builder
+When building your Twilight instance, you can specify your host and port like so:
+```kotlin
+val twilight = twilight(plugin) {
+    redis {
+        host = "your redis server host"
+        port = 6379 // Default Redis Port
+        timeout = 500 // 500 Milliseconds Timeout
+        isUsingPassword = false // False by default
+    }
+}
+```
+Alternativley, if your Redis server requires a Username + Password in order to access, you can use the following:
+```kotlin
+val twilight = twilight(plugin) {
+    redis {
+        host = "your redis server host"
+        port = 6379 // Default Redis Port
+        timeout = 500 // 500 Milliseconds Timeout
+        isUsingPassword = true
+        username = "coolUsername"
+        password = "coolPassword"
+    }
+}
+```
+#### String Key-Value Pairs
+You can Set/Get/Delete String Key-Value pairs on your Redis server like so: (All of those functions are Async and return a CompleteableFuture)
+```kotlin
+Redis.set("cool-key", "super-secret-value")
+
+val future = Redis.get("cool-key") // Returns a Completable Future
+
+future.thenApplyAsync {
+    value -> println("The value is: $value") // Prints: "The value is: super-secret-value"
+}.exceptionally {
+    e -> println("An exception occurred: ${e.message}") // Handle the Exception
+}
+
+Thread.sleep(1000)
+
+Redis.delete("cool-key")
+```
+#### Publishing Messages
+You can publish messages like so:
+
+```kotlin
+Redis.publish("channel", "message") // Async Publishing
+```
+#### Redis Listeners (PubSub)
+##### Listen to incoming messages
+You are able to listen to incoming message on specific channels, using the 'TwilightRedisListener' Class:
+```kotlin
+// Extend the 'TwilightRedisListener' class and override the 'onMessage' function.
+class PlayerConnectionRedisListener(): TwilightRedisListener("player-connection") {
+    override fun onMessage(message: String) {
+        // do stuff
+    }
+}
+```
+You can add add/register the listener like this: (which also returns the listener which lets you unregister it if you'd like)
+```kotlin
+val listener = Redis.addListener(PlayerConnectionRedisListener())
+listener.unregister() // unregistering the listener.
+```
+Alternativley, instead of extending the listener class, you can add a listener using a block of code, which returns the 'RedisMessage' data class, which contains the channel, the message, and the listener:
+```kotlin
+val listener = Redis.addListener("cool-channel"){
+    println("The following message was received: '$message' on channel '$channel'")
+    this.listener.unregister() // unregistering the listener after we recieved the message.
+}
+```
 
 ### Files Extensions
 
