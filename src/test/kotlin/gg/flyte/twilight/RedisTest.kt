@@ -1,6 +1,6 @@
 package gg.flyte.twilight
 
-import gg.flyte.twilight.redis.Redis
+import gg.flyte.twilight.data.Redis
 
 fun addingListenersTest(){
 

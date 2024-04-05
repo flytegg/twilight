@@ -7,7 +7,7 @@ import gg.flyte.twilight.environment.Environment
 import gg.flyte.twilight.event.custom.chat.command.ChatClickCommand
 import gg.flyte.twilight.event.customEventListeners
 import gg.flyte.twilight.extension.applyForEach
-import gg.flyte.twilight.redis.Redis
+import gg.flyte.twilight.data.Redis
 import gg.flyte.twilight.server.ServerSoftware
 import org.bukkit.plugin.java.JavaPlugin
 

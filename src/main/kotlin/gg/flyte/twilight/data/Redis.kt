@@ -1,4 +1,4 @@
-package gg.flyte.twilight.redis
+package gg.flyte.twilight.data
 
 import gg.flyte.twilight.Twilight
 import gg.flyte.twilight.environment.Environment
