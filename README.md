@@ -437,41 +437,60 @@ You can use the following Environment variables for your Redis Server:
 REDIS_HOST="your redis server host"
 REDIS_PORT="your redis server port"
 REDIS_TIMEOUT="your redis connection timeout"
-REDIS_USING_PASSWORD="false"
-REDIS_USERNAME:""
-REDIS_PASSWORD:""
+REDIS_AUTHENTICATION="NONE"
 ```
-Alternativley, if your Redis server requires a Username + Password in order to access, you can use the following:
+Alternatively, if your Redis server requires a Username + Password in order to access, you can use the following:
 ```env
 REDIS_HOST="your redis server host"
 REDIS_PORT="your redis server port"
 REDIS_TIMEOUT="your redis connection timeout"
-REDIS_USING_PASSWORD="true"
+REDIS_AUTHENTICATION="USERNAME_PASSWORD"
 REDIS_USERNAME:"coolUsername"
 REDIS_PASSWORD:"coolPassword"
 ```
+Alternatively, if your Redis server requires a URL in order to access, you can use the following:
+```env
+REDIS_HOST="your redis server host"
+REDIS_PORT="your redis server port"
+REDIS_TIMEOUT="your redis connection timeout"
+REDIS_AUTHENTICATION="URL"
+REDIS_URL="coolURL"
+```
+
 #### Builder
 When building your Twilight instance, you can specify your host and port like so:
 ```kotlin
 val twilight = twilight(plugin) {
     redis {
+        authentication = Authentication.NONE
         host = "your redis server host"
         port = 6379 // Default Redis Port
         timeout = 500 // 500 Milliseconds Timeout
-        isUsingPassword = false // False by default
     }
 }
 ```
-Alternativley, if your Redis server requires a Username + Password in order to access, you can use the following:
+Alternatively, if your Redis server requires a Username + Password in order to access, you can use the following:
 ```kotlin
 val twilight = twilight(plugin) {
     redis {
+        authentication = Authentication.USERNAME_PASSWORD
         host = "your redis server host"
         port = 6379 // Default Redis Port
         timeout = 500 // 500 Milliseconds Timeout
-        isUsingPassword = true
         username = "coolUsername"
         password = "coolPassword"
+    }
+}
+```
+Alternatively, if your Redis server requires a URL in order to access, you can use the following:
+```kotlin
+val twilight = twilight(plugin) {
+    redis {
+        authentication = Authentication.URL
+        host = "your redis server host"
+        port = 6379 // Default Redis Port
+        timeout = 500 // 500 Milliseconds Timeout
+        url = "coolURL"
     }
 }
 ```
