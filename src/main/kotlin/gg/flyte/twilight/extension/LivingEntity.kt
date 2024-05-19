@@ -1,9 +1,11 @@
 package gg.flyte.twilight.extension
 
+import gg.flyte.twilight.Twilight
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
+import org.bukkit.metadata.FixedMetadataValue
 
 /**
  * Kills the living entity.
@@ -47,4 +49,23 @@ fun LivingEntity.isOnLadder(): Boolean {
  */
 fun LivingEntity.teleport(x: Number, y: Number, z: Number) {
     teleport(Location(world, x.toDouble(), y.toDouble(), z.toDouble()))
+}
+
+/**
+ * Sets a metadata value in the implementing object's metadata store.
+ *
+ * @param key A unique key to identify this metadata.
+ * @param value The metadata value to apply.
+ */
+fun LivingEntity.setMetadata(key: String, value: Any) {
+    setMetadata(key, FixedMetadataValue(Twilight.plugin, value))
+}
+
+/**
+ * Removes the given metadata value from the implementing object's metadata store.
+ *
+ * @param key The unique metadata key identifying the metadata to remove.
+ */
+fun LivingEntity.removeMetadata(key: String) {
+    removeMetadata(key, Twilight.plugin)
 }
