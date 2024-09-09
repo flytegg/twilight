@@ -266,6 +266,58 @@ repeat(5, 10, TimeUnit.SECONDS, true) {
 
 > Twilight `repeat` conflicting with Kotlin's `repeat`? As an alternative, you can use `repeatingTask`. 
 
+### GUI Builder
+Creating GUI's can be an incredibly long and tedious process, however, in Twilight we offer a clean and efficient way to build GUIs.
+
+Here's an example of a simple, bog-standard GUI:
+```kotlin
+val basicGui = gui(Component.text("Click the apple!"), 9) {
+    set(4, ItemStack(Material.APPLE)) {
+        isCancelled = true
+        viewer.sendMessage(Component.text("This is an apple!"))
+    }
+}
+player.openInventory(basicGui)
+```
+As you can see, setting the click event logic has never been easier. You can reference the player at any time using `viewer`.
+
+Here's an example of a gui implementing the pattern feature, making it much easier to visualise:
+```kotlin
+val complexGui = gui {
+    pattern(
+        "#########",
+        "#   S   #",
+        "#########"
+    )
+
+    set('S', ItemStack(Material.PLAYER_HEAD).apply {
+        val meta = itemMeta as SkullMeta
+        meta.displayName(Component.text("${viewer.name}'s Head!"))
+        meta.owningPlayer = viewer
+        itemMeta = meta
+    }) {
+        isCancelled = true
+        viewer.sendMessage(Component.text("Ouch!", NamedTextColor.RED))
+    }
+
+    set('#', ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE).apply {
+        val meta = itemMeta
+        meta.displayName(Component.empty())
+        itemMeta = meta
+    }) { isCancelled = true }
+}
+player.openInventory(complexGui)
+```
+You can, of course, also implement GUIs for other inventory types:
+```kotlin
+val dropperGui = gui(Component.text("Title"), 9, InventoryType.DROPPER) {
+    // You can also set multiple indexes at once
+    set(listOf(1, 3, 4, 5, 7), ItemStack(Material.GRAY_STAINED_GLASS_PANE))
+}
+player.openInventory(dropperGui)
+```
+To open the gui, simply do `Player#openInventory(GUI)` like shown in the examples.
+
 ## Databases
 ### MongoDB
 Currently we have support for MongoDB. To configure it, you can take one of two routes:
