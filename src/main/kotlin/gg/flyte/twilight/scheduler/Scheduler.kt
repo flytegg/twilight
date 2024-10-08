@@ -12,20 +12,20 @@ import org.bukkit.scheduler.BukkitTask
  * Schedules a synchronous task to be executed by the Bukkit scheduler.
  *
  * @param runnable The function representing the task to be executed.
- * @return The BukkitTask representing the scheduled task.
+ * @return The TwilightRunnable representing the scheduled task.
  */
-fun sync(runnable: BukkitRunnable.() -> Unit): BukkitTask {
-    return createBukkitRunnable(runnable).runTask(Twilight.plugin)
+fun sync(runnable: TwilightRunnable.() -> Unit): TwilightRunnable {
+    return TwilightRunnable(runnable, false).apply { schedule() }
 }
 
 /**
  * Schedules an asynchronous task to be executed by the Bukkit scheduler.
  *
  * @param runnable The function representing the task to be executed.
- * @return The BukkitTask representing the scheduled task.
+ * @return The TwilightRunnable representing the scheduled task.
  */
-fun async(runnable: BukkitRunnable.() -> Unit): BukkitTask {
-    return createBukkitRunnable(runnable).runTaskAsynchronously(Twilight.plugin)
+fun async(runnable: TwilightRunnable.() -> Unit): TwilightRunnable {
+    return TwilightRunnable(runnable, true).apply { schedule() }
 }
 
 /**
@@ -35,19 +35,15 @@ fun async(runnable: BukkitRunnable.() -> Unit): BukkitTask {
  * @param unit The TimeUnit representing the time unit of the delay (default: MILLISECONDS).
  * @param async Whether the task should be executed asynchronously (default: false).
  * @param runnable The function representing the task to be executed.
- * @return The BukkitTask representing the scheduled task.
+ * @return The TwilightRunnable representing the scheduled task.
  */
 fun delay(
     value: Int,
     unit: TimeUnit = TimeUnit.TICKS,
     async: Boolean = false,
-    runnable: BukkitRunnable.() -> Unit
-): BukkitTask {
-    return if (async) {
-        createBukkitRunnable(runnable).runTaskLaterAsynchronously(Twilight.plugin, unit.toTicks(value.toLong()))
-    } else {
-        createBukkitRunnable(runnable).runTaskLater(Twilight.plugin, unit.toTicks(value.toLong()))
-    }
+    runnable: TwilightRunnable.() -> Unit
+): TwilightRunnable {
+    return TwilightRunnable(runnable, async, unit.toTicks(value.toLong())).apply { schedule() }
 }
 
 /**
@@ -56,10 +52,10 @@ fun delay(
  *
  * @param ticks The number of ticks for the delay (default: 1).
  * @param runnable The function representing the task to be executed.
- * @return The BukkitTask representing the scheduled task.
+ * @return The TwilightRunnable representing the scheduled task.
  * @see delay
  */
-fun delay(ticks: Int = 1, runnable: BukkitRunnable.() -> Unit): BukkitTask {
+fun delay(ticks: Int = 1, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
     return delay(ticks, TimeUnit.TICKS, false, runnable)
 }
 
@@ -71,10 +67,10 @@ fun delay(ticks: Int = 1, runnable: BukkitRunnable.() -> Unit): BukkitTask {
  * @param ticks The number of ticks for the delay (default: 1).
  * @param async Whether the task should be executed asynchronously.
  * @param runnable The function representing the task to be executed.
- * @return The BukkitTask representing the scheduled task.
+ * @return The TwilightRunnable representing the scheduled task.
  * @see delay
  */
-fun delay(ticks: Int = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): BukkitTask {
+fun delay(ticks: Int = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
     return delay(ticks, TimeUnit.TICKS, async, runnable)
 }
 
