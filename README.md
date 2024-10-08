@@ -23,7 +23,7 @@ Maven
 <dependency>
     <groupId>gg.flyte</groupId>
     <artifactId>twilight</artifactId>
-    <version>1.1.13</version>
+    <version>1.1.14</version>
 </dependency>
 ```
 
@@ -33,14 +33,14 @@ maven {
     url "https://repo.flyte.gg/releases"
 }
 
-implementation "gg.flyte:twilight:1.1.13"
+implementation "gg.flyte:twilight:1.1.14"
 ```
 
 Gradle (Kotlin DSL)
 ```kotlin
 maven("https://repo.flyte.gg/releases")
 
-implementation("gg.flyte:twilight:1.1.13")
+implementation("gg.flyte:twilight:1.1.14")
 ```
 
 Certain features of Twilight require configuration, which can be done via the Twilight class. To setup a Twilight class instance, you can use the `twilight` function as shown below:
@@ -265,6 +265,32 @@ repeat(5, 10, TimeUnit.SECONDS, true) {
 ```
 
 > Twilight `repeat` conflicting with Kotlin's `repeat`? As an alternative, you can use `repeatingTask`. 
+
+You can also chain runnables together using `onComplete` to nicely nest sync/async executions. Here's an example:
+```kotlin
+async {
+    println("I am an async BukkitRunnable called Atom")
+}.onComplete() {
+    println("I am an async BukkitRunnable called Brandon running immediately after Atom finishes executing")
+}.onCompleteSync(10) {
+    println("I am a sync BukkitRunnable called Charlie running 10 ticks after Brandon finishes executing")
+}.onComplete(5, TimeUnit.SECONDS) {
+    println("I am a sync BukkitRunnable called Dawson running 5 seconds after Charlie finishes executing")
+}.onCompleteAsync {
+    println("I am an async BukkitRunnable called Enid running immediately after Dawson finishes executing")
+}
+```
+As you can see, you can specify whether sync/async (if unspecified, it will not change) and you can pass in an optional delay.
+<br>This also works with a delay from the get-go:
+```kotlin
+delay(20, TimeUnit.SECONDS) {
+    println("I am a sync BukkitRunnable delayed by 20 seconds")
+}.onCompleteAsync(10, TimeUnit.SECONDS) {
+    println("I am an async BukkitRunnable delayed by a further 10 seconds")
+}
+```
+
+> Currently, onComplete is incompatible with repeating tasks.
 
 ### GUI Builder
 Creating GUI's can be an incredibly long and tedious process, however, in Twilight we offer a clean and efficient way to build GUIs.
