@@ -23,8 +23,9 @@ class TwilightRunnable(
 
     // Executes main task and schedules the next runnable if one exists
     override fun run() {
-        task()
-        nextRunnable?.schedule()
+        try {
+            task()
+        } finally { nextRunnable?.schedule() }
     }
 
     /**
