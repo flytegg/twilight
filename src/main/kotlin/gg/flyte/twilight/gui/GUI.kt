@@ -30,7 +30,7 @@ class GUI(val title: Component, val size: Int, val type: InventoryType, val cont
     lateinit var viewer: Player
 
     private val clickEvent = event<InventoryClickEvent> {
-        if (inventory != this@GUI.inventory) return@event
+        if (clickedInventory != this@GUI.inventory) return@event
         slotAction[slot]?.invoke(this)
     }
 
