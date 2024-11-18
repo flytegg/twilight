@@ -2,14 +2,8 @@ package gg.flyte.twilight.scoreboards
 
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
-import org.bukkit.entity.Player
 import org.bukkit.scoreboard.DisplaySlot
-import org.bukkit.scoreboard.Scoreboard
 import java.util.UUID
-
-/**
- * Create a static sidebar for multiple players
- */
 
 object Scoreboard {
     fun createStaticSidebar(players: MutableList<UUID>, title: String, lines: MutableMap<String, Int>) {
@@ -19,11 +13,18 @@ object Scoreboard {
         obj.displayName(Component.text(title))
         obj.displaySlot = DisplaySlot.SIDEBAR
 
+        /*
+        We need to add a different amount of spaces
+        for every word otherwise it won't support
+        same words repeated.
+         */
         lines.forEach { (text, score) ->
             val team = board.registerNewTeam("line_${score}")
             val entry = "§${score}"
 
-            team.prefix(Component.text(text))
+            val spacedText = "$text${" ".repeat(score)}"
+
+            team.prefix(Component.text(spacedText))
             team.addEntry(entry)
 
             obj.getScore(entry).score = score
@@ -38,18 +39,12 @@ object Scoreboard {
         }
     }
 
-    /**
-     * Remove scoreboard from a player
-     */
     fun removeScoreboard(uuid: UUID) {
         val player = Bukkit.getPlayer(uuid)
         player?.scoreboard = Bukkit.getScoreboardManager().mainScoreboard
         ScoreboardSaver.remove(uuid)
     }
 
-    /**
-     * Clear all active scoreboards
-     */
     fun clearBoards() {
         ScoreboardSaver.clear()
     }
