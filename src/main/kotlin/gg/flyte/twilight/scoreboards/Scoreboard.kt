@@ -22,13 +22,8 @@ object Scoreboard {
             val score = lines.size - index
             val team = board.registerNewTeam("line_$score")
             val entry = "§$score"
-            /*
-            Adding different amounts of
-            White Spaces to handle same
-            String.
-             */
-            val spacedLine = "$line${" ".repeat(index)}"
-            team.prefix(Component.text(spacedLine))
+
+            team.prefix(Component.text(line))
             team.addEntry(entry)
             objective.getScore(entry).score = score
         }
