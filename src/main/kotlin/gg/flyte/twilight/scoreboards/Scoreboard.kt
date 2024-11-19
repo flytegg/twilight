@@ -6,43 +6,46 @@ import org.bukkit.scoreboard.DisplaySlot
 import java.util.UUID
 
 object Scoreboard {
-    fun createStaticSidebar(players: MutableList<UUID>, title: String, lines: MutableMap<String, Int>) {
+    /*
+    @param players:List<UUID> players that will be able to see this scoreboard
+    @param title:String Title of the actual scoreboard, you can use ChatColors.
+    @param lines:List<String> all the actual content of the scoreboard, Max strings for scoreboard is 16.
+     */
+    fun createStaticSidebar(players: List<UUID>, title: String, lines: List<String>) {
         val board = Bukkit.getScoreboardManager().newScoreboard
+        val objective = board.registerNewObjective("title", "dummy").apply {
+            displayName(Component.text(title))
+            displaySlot = DisplaySlot.SIDEBAR
+        }
 
-        val obj = board.registerNewObjective("title", "dummy")
-        obj.displayName(Component.text(title))
-        obj.displaySlot = DisplaySlot.SIDEBAR
-
-        /*
-        We need to add a different amount of spaces
-        for every word otherwise it won't support
-        same words repeated.
-         */
-        lines.forEach { (text, score) ->
-            val team = board.registerNewTeam("line_${score}")
-            val entry = "§${score}"
-
-            val spacedText = "$text${" ".repeat(score)}"
-
-            team.prefix(Component.text(spacedText))
+        lines.forEachIndexed { index, line ->
+            val score = lines.size - index
+            val team = board.registerNewTeam("line_$score")
+            val entry = "§$score"
+            /*
+            Adding different amounts of
+            White Spaces to handle same
+            String.
+             */
+            val spacedLine = "$line${" ".repeat(index)}"
+            team.prefix(Component.text(spacedLine))
             team.addEntry(entry)
-
-            obj.getScore(entry).score = score
+            objective.getScore(entry).score = score
         }
 
         players.forEach { uuid ->
-            val player = Bukkit.getPlayer(uuid)
-            player?.scoreboard = board
-            player?.let {
+            Bukkit.getPlayer(uuid)?.let { player ->
+                player.scoreboard = board
                 ScoreboardSaver.add(uuid, board)
             }
         }
     }
 
-    fun removeScoreboard(uuid: UUID) {
-        val player = Bukkit.getPlayer(uuid)
-        player?.scoreboard = Bukkit.getScoreboardManager().mainScoreboard
-        ScoreboardSaver.remove(uuid)
+    fun removeScoreboard(players: List<UUID>) {
+        players.forEach { uuid ->
+            Bukkit.getPlayer(uuid)?.scoreboard = Bukkit.getScoreboardManager().mainScoreboard
+            ScoreboardSaver.remove(uuid)
+        }
     }
 
     fun clearBoards() {
