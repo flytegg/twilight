@@ -10,9 +10,6 @@ object TwilightScoreboard {
     /* Player-specific sidebar scoreboards */
     private val sidebarBoards = mutableMapOf<UUID, Scoreboard>()
 
-    /* Player-specific tablist scoreboards */
-    private val tablistBoards = mutableMapOf<UUID, Scoreboard>()
-
     /* Sidebar methods */
     fun addSideboardPlayer(uuid: UUID, scoreboard: Scoreboard) {
         sidebarBoards[uuid] = scoreboard
@@ -24,19 +21,10 @@ object TwilightScoreboard {
 
     fun clearSideboards() {
         sidebarBoards.clear()
-    }
-
-    /* Tablist methods */
-    fun addTablistPlayer(uuid: UUID, scoreboard: Scoreboard) {
-        tablistBoards[uuid] = scoreboard
-    }
-
-    fun removeTablistPlayer(uuid: UUID) {
-        tablistBoards.remove(uuid)
-    }
-
-    fun clearTablists() {
-        tablistBoards.clear()
+        for (uuid in sidebarBoards.keys) {
+            val player = Bukkit.getPlayer(uuid)
+            player?.scoreboard = Bukkit.getScoreboardManager().mainScoreboard
+        }
     }
 
 }
