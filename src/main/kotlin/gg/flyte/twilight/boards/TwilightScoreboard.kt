@@ -20,11 +20,11 @@ object TwilightScoreboard {
     }
 
     fun clearSideboards() {
-        sidebarBoards.clear()
         for (uuid in sidebarBoards.keys) {
             val player = Bukkit.getPlayer(uuid)
             player?.scoreboard = Bukkit.getScoreboardManager().mainScoreboard
         }
+        sidebarBoards.clear()
     }
 
 }
