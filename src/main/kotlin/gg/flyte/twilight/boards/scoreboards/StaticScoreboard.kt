@@ -7,14 +7,14 @@ import org.bukkit.scoreboard.DisplaySlot
 import java.util.UUID
 
 
-class StaticScoreboard(val players: List<UUID>, val title: Component, val lines: List<Component>) {
+class StaticScoreboard(private val player:UUID, private val title: Component, private val lines: List<Component>) {
     /*
-    @param players:List<UUID> players that will be able to see this scoreboard
+    @param player:UUID player that will be able to see this scoreboard
     @param title:String Title of the actual scoreboard, you can use ChatColors.
     @param lines:List<Component> all the actual content of the scoreboard, Max raws for scoreboard is 16.
     */
+    val board = Bukkit.getScoreboardManager().newScoreboard
     fun createStaticSidebar() {
-        val board = Bukkit.getScoreboardManager().newScoreboard
         val objective = board.registerNewObjective("title", "dummy").apply {
             displayName(title)
             displaySlot = DisplaySlot.SIDEBAR
@@ -29,13 +29,11 @@ class StaticScoreboard(val players: List<UUID>, val title: Component, val lines:
             team.addEntry(entry)
             objective.getScore(entry).score = score
         }
-
-        players.forEach { uuid ->
-            Bukkit.getPlayer(uuid)?.let { player ->
-                player.scoreboard = board
-                addSideboardPlayer(uuid, board)
-            }
-        }
     }
 
+    fun assignPlayer() {
+        val player = Bukkit.getPlayer(player) ?: return
+        player.scoreboard = board
+        addSideboardPlayer(player.uniqueId, board)
+    }
 }

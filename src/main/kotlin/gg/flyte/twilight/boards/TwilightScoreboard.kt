@@ -38,4 +38,5 @@ object TwilightScoreboard {
     fun clearTablists() {
         tablistBoards.clear()
     }
+
 }
