@@ -16,7 +16,6 @@ import java.util.*
 * @param plugin:JavaPlugin Instance of a class extending JavaPlugin for the Runnable.
 */
 class DynamicScoreboard(
-    private val players:List<UUID>,
     private val title:Component,
     private val linesList:List<List<Component>>,
     private val delay:Long,
@@ -62,12 +61,9 @@ class DynamicScoreboard(
     }
 
     /* Assign scoreboard to player */
-    fun assignPlayer() {
-        players.forEach { playeruuid ->
-            val player = Bukkit.getPlayer(playeruuid)
-            player?.scoreboard = board
-            addSideboardPlayer(playeruuid, board)
-        }
-
+    fun assignPlayer(uuid: UUID) {
+        val player = Bukkit.getPlayer(uuid)
+        player?.scoreboard = board
+        addSideboardPlayer(uuid, board)
     }
 }
