@@ -30,6 +30,7 @@ class GUI(val title: Component, val size: Int, val type: InventoryType, val cont
     lateinit var viewer: Player
 
     private val clickEvent = event<InventoryClickEvent> {
+        if (inventory == this@GUI.inventory) slotAction[-1]?.invoke(this)
         if (clickedInventory != this@GUI.inventory) return@event
         slotAction[slot]?.invoke(this)
     }
@@ -38,6 +39,13 @@ class GUI(val title: Component, val size: Int, val type: InventoryType, val cont
         for ((index, value) in pattern.joinToString("").withIndex()) {
             keySlot.getOrPut(value) { mutableListOf() }.add(index)
         }
+    }
+
+    /**
+     * Set the action to be executed when the player clicks on any slot while the GUI is open.
+     */
+    fun onClick(action: InventoryClickEvent.() -> Unit) {
+        slotAction[-1] = action
     }
 
     @JvmName("setSlot")

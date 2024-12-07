@@ -339,6 +339,9 @@ You can, of course, also implement GUIs for other inventory types:
 val dropperGui = gui(Component.text("Title"), 9, InventoryType.DROPPER) {
     // You can also set multiple indexes at once
     set(listOf(1, 3, 4, 5, 7), ItemStack(Material.GRAY_STAINED_GLASS_PANE))
+
+    // You can also cancel all clicks that occur while the GUI is open
+    onClick { isCancelled = true }
 }
 player.openInventory(dropperGui)
 ```
