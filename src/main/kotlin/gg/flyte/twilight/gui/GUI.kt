@@ -31,6 +31,7 @@ class GUI(val title: Component, val size: Int, val type: InventoryType, val cont
 
     private val clickEvent = event<InventoryClickEvent> {
         if (clickedInventory != this@GUI.inventory) return@event
+        slotAction[-1]?.invoke(this)
         slotAction[slot]?.invoke(this)
     }
 
@@ -38,6 +39,10 @@ class GUI(val title: Component, val size: Int, val type: InventoryType, val cont
         for ((index, value) in pattern.joinToString("").withIndex()) {
             keySlot.getOrPut(value) { mutableListOf() }.add(index)
         }
+    }
+
+    fun onClick(action: InventoryClickEvent.() -> Unit) {
+        slotAction[-1] = action
     }
 
     @JvmName("setSlot")
