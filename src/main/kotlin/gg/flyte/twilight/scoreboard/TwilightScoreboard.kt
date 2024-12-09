@@ -27,12 +27,19 @@ class TwilightScoreboard(private val plugin: JavaPlugin) {
         objective.displaySlot = DisplaySlot.SIDEBAR
     }
 
-    /* Set the title of the scoreboard */
+    /**
+     * @param title:Component the displayname of the scoreboard
+     * Used for setting the displayname of a scoreboard
+     */
     fun setName(title:Component) {
         objective.displayName(title)
     }
 
-    /* Used for setting specific lines */
+    /**
+     * @param text:Component the component you want to use at that line
+     * @param score:Int the score you want to set
+     * Used to change a specific line.
+     */
     fun set(text:Component, score:Int) {
         scoreboard.getTeam(" ".repeat(score))?.unregister()
         val team = scoreboard.registerNewTeam(" ".repeat(score))
@@ -44,6 +51,7 @@ class TwilightScoreboard(private val plugin: JavaPlugin) {
 
     /**
      * @param lines:Component actual components that you want in your scoreboard
+     * Used to add how many lines you want to the scoreboard
     */
     fun setAll(vararg lines:Component) {
         scoreboard.entries.filter {
@@ -61,7 +69,10 @@ class TwilightScoreboard(private val plugin: JavaPlugin) {
         }
     }
 
-    /* get a specific line */
+    /**
+     * @param score:Int the number of the line you want to get.
+     * Return a component at a specific line.
+     */
     fun get(score: Int): Component? {
         return scoreboard.entries.find {
             objective.getScore(it).score == score
@@ -70,7 +81,10 @@ class TwilightScoreboard(private val plugin: JavaPlugin) {
         }
     }
 
-    /* remove a specific line */
+    /**
+     * @param score:Int the line you want to remove.
+     * Remove a specific line.
+     */
     fun remove(score: Int) {
         scoreboard.entries.find {
             objective.getScore(it).score == score
@@ -79,18 +93,26 @@ class TwilightScoreboard(private val plugin: JavaPlugin) {
         }
     }
 
+    /**
+     * Clear the scoreboard, just leaves the displayname
+     */
     fun clear() {
         scoreboard.entries.forEach {
             scoreboard.resetScores(it)
         }
     }
 
-    /* Delete every objective of the scoreboard */
+    /**
+     * Remove every objective of the score
+     */
     fun delete() {
         scoreboard.objectives.forEach { it.unregister() }
     }
 
-    /* Assign the scoreboard to a specific player */
+    /**
+     * @param player:Player the player you want to assign the scoreboard to
+     * Assign the scoreboard to a player (Use a for Loop if you want to assign this to multiple players)
+     */
     fun assignTo(player:Player) {
         player.scoreboard = scoreboard
     }
@@ -98,26 +120,28 @@ class TwilightScoreboard(private val plugin: JavaPlugin) {
     /**
     * @param updateInterval:Long the refresh rate of the scoreboard (In Ticks)
     * @param lineUpdates:Pair<Int, () -> Component> The actual lines to update
+     * Used to create dynamic scoreboard, if you want, feel free to make the whole scoreboard with this
+     * instead of with the #setAll, works the same except here it updates!
      */
     fun updateLines(updateInterval:Long, vararg lineUpdates:Pair<Int, () -> Component>) {
-        lineUpdates.forEach { (score, _) ->
-            remove(score)
-        }
-
         updatableLines.clear()
 
         lineUpdates.forEach { (score, updateFunc) ->
             updatableLines[score] = LineUpdate(
-                get(score) ?: Component.empty(),
-                updateFunc
+                initialLine = Component.empty(),
+                updateFunction = updateFunc
             )
         }
 
         object : BukkitRunnable() {
             override fun run() {
-                updatableLines.forEach { (score, lineUpdate) ->
-                    val newComponent = lineUpdate.updateFunction()
-                    set(newComponent, score)
+                try {
+                    updatableLines.forEach { (score, lineUpdate) ->
+                        val newComponent = lineUpdate.updateFunction()
+                        set(newComponent, score)
+                    }
+                } catch (e: Exception) {
+                    cancel()
                 }
             }
         }.runTaskTimer(plugin, 0L, updateInterval)
