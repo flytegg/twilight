@@ -14,7 +14,7 @@ import org.bukkit.scoreboard.Scoreboard
 
 class TwilightScoreboard(private val plugin: JavaPlugin) {
     private val scoreboard: Scoreboard = Bukkit.getScoreboardManager().newScoreboard
-    private val objective = scoreboard.registerNewObjective("sidebar", "dummy")
+    private var objective = scoreboard.registerNewObjective("sidebar", "dummy")
 
     private val updatableLines = mutableMapOf<Int, LineUpdate>()
 
@@ -127,6 +127,13 @@ class TwilightScoreboard(private val plugin: JavaPlugin) {
         updatableLines.clear()
 
         lineUpdates.forEach { (score, updateFunc) ->
+            val uniqueEntry = "§${score}"
+
+            scoreboard.getTeam(uniqueEntry)?.unregister()
+
+            val team = scoreboard.registerNewTeam(uniqueEntry)
+            team.addEntry(uniqueEntry)
+
             updatableLines[score] = LineUpdate(
                 initialLine = Component.empty(),
                 updateFunction = updateFunc
@@ -136,9 +143,32 @@ class TwilightScoreboard(private val plugin: JavaPlugin) {
         object : BukkitRunnable() {
             override fun run() {
                 try {
+                    if (!scoreboard.objectives.contains(objective)) {
+                        cancel()
+                        return
+                    }
+
                     updatableLines.forEach { (score, lineUpdate) ->
                         val newComponent = lineUpdate.updateFunction()
-                        set(newComponent, score)
+                        val uniqueEntry = "§${score}"
+
+                        if (!scoreboard.entries.contains(uniqueEntry)) {
+                            return@forEach
+                        }
+
+                        var team = scoreboard.getTeam(uniqueEntry)
+                        if (team == null) {
+                            team = scoreboard.registerNewTeam(uniqueEntry)
+                            team.addEntry(uniqueEntry)
+                        }
+
+                        team.prefix(newComponent)
+
+                        try {
+                            objective.getScore(uniqueEntry).score = score
+                        } catch (e: IllegalStateException) {
+
+                        }
                     }
                 } catch (e: Exception) {
                     cancel()
