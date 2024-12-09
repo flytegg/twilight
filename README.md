@@ -292,6 +292,58 @@ delay(20, TimeUnit.SECONDS) {
 
 > Currently, onComplete is incompatible with repeating tasks.
 
+### SCOREBOARD Creator
+
+Creating Custom Scoreboards can be time-consuming, but with Twilight, we can optimize this process and make it easy!
+With Twilight, you can either create a Static Scoreboard or a Dynamic Scoreboard, and both are extremely easy to create:
+
+# Static Scoreboard
+```kotlin
+private val scoreboard = TwilightScoreboard(javaPlugin)
+
+val playerJoin = event {
+    scoreboard.apply {
+        setName(Component.text("Twilight Scoreboard", NamedTextColor.BLUE, TextDecoration.BOLD))
+
+        setAll(
+            Component.text("-------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH),
+            Component.text("Online Players: ${Bukkit.getOnlinePlayers().size}", NamedTextColor.YELLOW),
+            Component.text("Name: ${player.name}", NamedTextColor.YELLOW),
+            Component.text("-------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH)
+        )
+
+        assignTo(player)
+    }
+}
+
+```
+# Dynamic Scoreboard
+```kotlin
+private val scoreboard = TwilightScoreboard(testTwilight2)
+
+val playerJoin = event {
+    scoreboard.apply {
+        setName(Component.text("Twilight Scoreboard", NamedTextColor.BLUE, TextDecoration.BOLD))
+    
+        updateLines(
+            20, // After how many ticks should the scoreboard update? 20 = 1 second; do the math.
+            1 to { Component.text("-------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH) },
+            2 to { Component.text("Online Players: ${Bukkit.getOnlinePlayers().size}", NamedTextColor.YELLOW) },
+            3 to { Component.text("Name: ${player.name}", NamedTextColor.YELLOW) },
+            4 to { Component.text("-------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH) }
+        )
+        
+
+        assignTo(player)
+    }
+}
+```
+In the `#updateLines` method, you specify the line number you want to edit, followed by the actual Component for that line.
+
+There are also additional methods like `#delete` and `#get` that allow you to delete or get specific lines as needed.
+
+I hope this helps you reduce the time required to create a scoreboard using traditional Paper methods.
+
 ### GUI Builder
 Creating GUI's can be an incredibly long and tedious process, however, in Twilight we offer a clean and efficient way to build GUIs.
 
