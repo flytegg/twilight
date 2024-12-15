@@ -28,7 +28,7 @@ class TwilightScoreboard(private val plugin: JavaPlugin) {
     }
 
     /**
-     * @param title:Component the displayname of the scoreboard
+     * @param title the displayname of the scoreboard
      * Used for setting the displayname of a scoreboard
      */
     fun setName(title:Component) {
@@ -36,8 +36,8 @@ class TwilightScoreboard(private val plugin: JavaPlugin) {
     }
 
     /**
-     * @param text:Component the component you want to use at that line
-     * @param score:Int the score you want to set
+     * @param text the component you want to use at that line
+     * @param score the score you want to set
      * Used to change a specific line.
      */
     fun set(text:Component, score:Int) {
@@ -50,7 +50,7 @@ class TwilightScoreboard(private val plugin: JavaPlugin) {
     }
 
     /**
-     * @param lines:Component actual components that you want in your scoreboard
+     * @param lines actual components that you want in your scoreboard
      * Used to add how many lines you want to the scoreboard
     */
     fun setAll(vararg lines:Component) {
@@ -70,7 +70,7 @@ class TwilightScoreboard(private val plugin: JavaPlugin) {
     }
 
     /**
-     * @param score:Int the number of the line you want to get.
+     * @param score the number of the line you want to get.
      * Return a component at a specific line.
      */
     fun get(score: Int): Component? {
@@ -82,7 +82,7 @@ class TwilightScoreboard(private val plugin: JavaPlugin) {
     }
 
     /**
-     * @param score:Int the line you want to remove.
+     * @param score the line you want to remove.
      * Remove a specific line.
      */
     fun remove(score: Int) {
@@ -110,7 +110,7 @@ class TwilightScoreboard(private val plugin: JavaPlugin) {
     }
 
     /**
-     * @param player:Player the player you want to assign the scoreboard to
+     * @param player the player you want to assign the scoreboard to
      * Assign the scoreboard to a player (Use a for Loop if you want to assign this to multiple players)
      */
     fun assignTo(player:Player) {
@@ -118,60 +118,57 @@ class TwilightScoreboard(private val plugin: JavaPlugin) {
     }
 
     /**
-    * @param updateInterval:Long the refresh rate of the scoreboard (In Ticks)
+    * @param updateInterval the refresh rate of the scoreboard (In Ticks)
     * @param lineUpdates:Pair<Int, () -> Component> The actual lines to update
      * Used to create dynamic scoreboard, if you want, feel free to make the whole scoreboard with this
      * instead of with the #setAll, works the same except here it updates!
      */
-    fun updateLines(updateInterval:Long, vararg lineUpdates:Pair<Int, () -> Component>) {
+    fun updateLines(updateInterval: Long, vararg lineUpdates: Pair<Int, () -> Component>) {
         updatableLines.clear()
 
         lineUpdates.forEach { (score, updateFunc) ->
-            val uniqueEntry = "§${score}"
+            val initialComponent = updateFunc()
+            val uniqueEntry = " ".repeat(score)
 
             scoreboard.getTeam(uniqueEntry)?.unregister()
 
             val team = scoreboard.registerNewTeam(uniqueEntry)
+            team.prefix(initialComponent)
             team.addEntry(uniqueEntry)
 
             updatableLines[score] = LineUpdate(
-                initialLine = Component.empty(),
+                initialLine = initialComponent,
                 updateFunction = updateFunc
             )
+
+            objective.getScore(uniqueEntry).score = score
         }
 
         object : BukkitRunnable() {
             override fun run() {
-                try {
-                    if (!scoreboard.objectives.contains(objective)) {
-                        cancel()
-                        return
-                    }
+                if (!scoreboard.objectives.contains(objective)) {
+                    cancel()
+                    return
+                }
 
-                    updatableLines.forEach { (score, lineUpdate) ->
+                updatableLines.toSortedMap(reverseOrder()).forEach { (score, lineUpdate) ->
+                    val uniqueEntry = " ".repeat(score)
+                    if (!scoreboard.entries.contains(uniqueEntry)) return@forEach
+
+                    try {
                         val newComponent = lineUpdate.updateFunction()
-                        val uniqueEntry = "§${score}"
 
-                        if (!scoreboard.entries.contains(uniqueEntry)) {
-                            return@forEach
-                        }
-
-                        var team = scoreboard.getTeam(uniqueEntry)
-                        if (team == null) {
-                            team = scoreboard.registerNewTeam(uniqueEntry)
-                            team.addEntry(uniqueEntry)
-                        }
+                        val team = scoreboard.getTeam(uniqueEntry)
+                            ?: scoreboard.registerNewTeam(uniqueEntry).apply {
+                                addEntry(uniqueEntry)
+                            }
 
                         team.prefix(newComponent)
 
-                        try {
-                            objective.getScore(uniqueEntry).score = score
-                        } catch (e: IllegalStateException) {
-
-                        }
+                        objective.getScore(uniqueEntry).score = score
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
-                } catch (e: Exception) {
-                    cancel()
                 }
             }
         }.runTaskTimer(plugin, 0L, updateInterval)
