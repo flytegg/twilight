@@ -1,7 +1,7 @@
 
 # Twilight ✨
 
-Twilight is an API for developers creating plugins for Spigot or Paper based Minecraft servers. It contains a wide range of utilities and QOL improvements, from inventories, to schedulers and databases.
+Twilight is an API for developers creating plugins for Spigot (or forks like Paper, Purpur, Pufferfish etc) based Minecraft servers. It contains a wide range of utilities and QOL improvements, from inventories, to schedulers and databases.
 
 Twilight is built using **Kotlin**, and is recommended for usage with. Many features of Twilight should work with plain Java, though compatibility is not guaranteed.
 
@@ -23,7 +23,7 @@ Maven
 <dependency>
     <groupId>gg.flyte</groupId>
     <artifactId>twilight</artifactId>
-    <version>1.1.16</version>
+    <version>1.1.17</version>
 </dependency>
 ```
 
@@ -33,14 +33,14 @@ maven {
     url "https://repo.flyte.gg/releases"
 }
 
-implementation "gg.flyte:twilight:1.1.16"
+implementation "gg.flyte:twilight:1.1.17"
 ```
 
 Gradle (Kotlin DSL)
 ```kotlin
 maven("https://repo.flyte.gg/releases")
 
-implementation("gg.flyte:twilight:1.1.16")
+implementation("gg.flyte:twilight:1.1.17")
 ```
 
 Certain features of Twilight require configuration, which can be done via the Twilight class. To setup a Twilight class instance, you can use the `twilight` function as shown below:

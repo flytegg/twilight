@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "gg.flyte"
-version = "1.1.16"
+version = "1.1.17"
 
 repositories {
     mavenLocal()
@@ -77,5 +77,3 @@ publishing {
         }
     }
 }
-
-
