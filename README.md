@@ -1,7 +1,7 @@
 
 # Twilight ✨
 
-Twilight is an API for developers creating plugins for Spigot (or forks like Paper, Purpur, Pufferfish etc) based Minecraft servers. It contains a wide range of utilities and QOL improvements, from inventories, to schedulers and databases.
+Twilight is an API for developers creating plugins for Spigot (or forks like Paper, Purpur, Pufferfish etc.) based Minecraft servers. It contains a wide range of utilities and QOL improvements, from inventories, to schedulers and databases.
 
 Twilight is built using **Kotlin**, and is recommended for usage with. Many features of Twilight should work with plain Java, though compatibility is not guaranteed.
 
@@ -43,7 +43,7 @@ maven("https://repo.flyte.gg/releases")
 implementation("gg.flyte:twilight:1.1.17")
 ```
 
-Certain features of Twilight require configuration, which can be done via the Twilight class. To setup a Twilight class instance, you can use the `twilight` function as shown below:
+Certain features of Twilight require configuration, which can be done via the Twilight class. To set up a Twilight class instance, you can use the `twilight` function as shown below:
 ```kotlin
 val twilight = twilight(this)
 ```
@@ -76,10 +76,10 @@ Other features that can be configured in the Twilight class builder will have th
 
 ### Extension Functions
 
-Twilight takes advantage of Kotlin's extension functions to add additional functions to various classes used within the API. Many of these are convenience functions, and some add complete new functionality. To see all of the functions added, view them [inside the code](https://github.com/flytegg/twilight/tree/master/src/main/kotlin/gg/flyte/twilight/extension).
+Twilight takes advantage of Kotlin's extension functions to add additional functions to various classes used within the API. Many of these are convenience functions, and some add complete new functionality. To see all the functions added, view them [inside the code](https://github.com/flytegg/twilight/tree/master/src/main/kotlin/gg/flyte/twilight/extension).
 
 ### Events
-We have a neat way to handle code for events, which register by themselves so you don't have to!
+We have a neat way to handle code for events, which register by themselves, so you don't have to!
 
 You can make use of it like so:
 ```kt
@@ -115,7 +115,7 @@ class MyCustomEvent : TwilightEvent() {
 
 This is much easier than the standard Bukkit Event, as you don't have to worry about defining handles, etc.
 
-The TwilightEvent also includes a timestamp which provides an Instant for when the event was ran:
+The TwilightEvent also includes a timestamp which provides an Instant for when the event was run:
 
 ```kt
 // with the above event example
@@ -154,7 +154,7 @@ disableCustomEventListeners(OpEventListener, InteractEventListener)
 
 Due to limitations imposed by the Minecraft server software, when interacting with a clickable message in chat or in a book the only response options are `RUN_COMMAND`, `SUGGEST_COMMAND`, `CHANGE_PAGE`, `COPY_TO_CLIPBOARD`, `OPEN_FILE` and `OPEN_URL`. None of these match the most common use case: running custom code. Twilight utilizes the `RUN_COMMAND` response to call a custom `ChatClickEvent` which can be listened to like a regular event.
 
-To use this feature, where you would normally build your clickable message, use the Twilight extension functions to add a custom click event. Twilight will then redirect any data which you  put in the parameters to be accessable as a variable from within the `ChatClickEvent` when the player clicks the message.
+To use this feature, where you would normally build your clickable message, use the Twilight extension functions to add a custom click event. Twilight will then redirect any data which you  put in the parameters to be accessible as a variable from within the `ChatClickEvent` when the player clicks the message.
 
 For Paper/Adventure (recommended):
 ```kotlin
@@ -266,7 +266,7 @@ repeat(5, 10, TimeUnit.SECONDS, true) {
 
 > Is Twilight's `repeat` conflicting with Kotlin's `repeat`? As an alternative, you can use `repeatingTask`. 
 
-You can chain runnables together using `onComplete` to nicely nest sync/async executions. Here's an example:
+You can chain tasks together using `onComplete` to nicely nest sync/async executions. Here's an example:
 ```kotlin
 async {
     println("I am an async BukkitRunnable called Atom")
@@ -452,7 +452,7 @@ If you would like to retrieve and store data as objects within your database the
 
 2 - You must have a table that fits the structure of your object, you can create by calling `convertToSQLTable()` on your object, then execute the statement like so:
 ```kotlin
-// NOTE: convertToSQLTable() takes a optional dialect parameter, at this time the only additional dialect is postgres
+// NOTE: convertToSQLTable() takes an optional dialect parameter, at this time the only additional dialect is postgres
 val createTable = yourObjectInstace.convertToSQLTable()
 
 if(db.execute(createTable)) {
@@ -621,7 +621,7 @@ Alternatively, instead of extending the listener class, you can add a listener u
 ```kotlin
 val listener = Redis.addListener("cool-channel"){
     println("The following message was received: '$message' on channel '$channel'")
-    this.listener.unregister() // unregistering the listener after we recieved the message.
+    this.listener.unregister() // unregistering the listener after we received the message.
 }
 ```
 
