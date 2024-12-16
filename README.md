@@ -298,9 +298,8 @@ With Twilight, you can either create a Static Scoreboard or a Dynamic Scoreboard
 
 # Static Scoreboard
 ```kotlin
-private val scoreboard = TwilightScoreboard(javaPlugin)
-
 val playerJoin = event<PlayerJoinEvent> {
+    private val scoreboard = TwilightScoreboard(javaPlugin)
     scoreboard.apply {
         // Display name of the scoreboard
         setName(Component.text("Twilight Scoreboard", NamedTextColor.BLUE, TextDecoration.BOLD))
@@ -318,9 +317,8 @@ val playerJoin = event<PlayerJoinEvent> {
 ```
 # Dynamic Scoreboard
 ```kotlin
-private val scoreboard = TwilightScoreboard(javaPlugin)
-
 val playerJoin = event<PlayerJoinEvent> {
+    private val scoreboard = TwilightScoreboard(javaPlugin)
     scoreboard.apply {
         // Display name of the scoreboard
         setName(Component.text("Twilight Scoreboard", NamedTextColor.BLUE, TextDecoration.BOLD))
