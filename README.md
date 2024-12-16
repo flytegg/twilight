@@ -66,7 +66,7 @@ ENVIRONMENT=DEV # or PROD
 ```
 This file determines whether to use your dev .env or your prod .env.
 
-If you do not use this different environments feature, then it will just use the .env (or whatever you specify the name as with `prodEnvFileName`)
+If you do not use this different environments feature, then it will just use the .env (or whatever you specify the name as with `prodEnvFileName`).
 
 Throughout your project you can use `Environment.get("VARIABLE")` to retrieve a value from your environment variables.
 
@@ -103,8 +103,8 @@ val listener = event<PlayerJoinEvent> {
 listener.unregister()
 ```
 
-### Making your own events with Twilight
-Instead of having to extend the org.bukkit.event.Event yourself, you can extend TwilightEvent!
+### Custom Events
+Instead of having to extend the org.bukkit.event.Event and adding all the extra boilerplate yourself, you can simply extend `TwilightEvent`!
 
 Here's an example:
 ```kt
@@ -120,11 +120,11 @@ The TwilightEvent also includes a timestamp which provides an Instant for when t
 ```kt
 // with the above event example
 event<MyCustomEvent> {
-    println("time event was executed: $timestamp")
+    println("Time event was executed: $timestamp")
 }
 ```
 
-You can declare that it should be asyncronous by passing a `true` value to the TwilightEvent constructor:
+You can declare that it should be asynchronous by passing a `true` value to the TwilightEvent constructor:
 ```kt
 class MyCustomEvent : TwilightEvent(true) {
 
@@ -180,17 +180,17 @@ event<ChatClickEvent> {
     if (data[0] != "openGUI") return@event
     when (data[1]) {
         "warps" -> GUIManager.openWarps(player)
-            ..
+         ...
     }
 }
 
 ```
 
 ### Scheduler
-Bukkit's built in scheduler is tedious at best, so Twilight takes advantage of beautiful Kotlin syntax to make it easier to write, as well as adding a custom TimeUnit to save you calculating ticks.
+Bukkit's built-in scheduler is tedious at best, so Twilight takes advantage of beautiful Kotlin syntax to make it easier to write, as well as adding a custom TimeUnit to save you calculating ticks.
 
 How to schedule a single task to run on Bukkit's main thread either sync or async:
-`
+
 ```kotlin
 sync {
     println("I am a sync BukkitRunnable")
@@ -264,7 +264,7 @@ repeat(5, 10, TimeUnit.SECONDS, true) {
 }
 ```
 
-> Twilight `repeat` conflicting with Kotlin's `repeat`? As an alternative, you can use `repeatingTask`. 
+> Is Twilight's `repeat` conflicting with Kotlin's `repeat`? As an alternative, you can use `repeatingTask`. 
 
 You can chain runnables together using `onComplete` to nicely nest sync/async executions. Here's an example:
 ```kotlin
@@ -280,8 +280,7 @@ async {
     println("I am an async BukkitRunnable called Enid running immediately after Dawson finishes executing")
 }
 ```
-As you can see, you can specify whether sync/async (if unspecified, it will not change) and you can pass in an optional delay.
-<br>This also works with a delay from the get-go:
+As you can see, you can specify whether sync/async (if unspecified, it will not change) and you can pass in an optional delay. This also works with a delay from the get-go:
 ```kotlin
 delay(20, TimeUnit.SECONDS) {
     println("I am a sync BukkitRunnable delayed by 20 seconds")
@@ -293,9 +292,9 @@ delay(20, TimeUnit.SECONDS) {
 > Currently, onComplete is incompatible with repeating tasks.
 
 ### GUI Builder
-Creating GUI's can be an incredibly long and tedious process, however, in Twilight we offer a clean and efficient way to build GUIs.
+Creating GUI's can be an incredibly long and tedious process, however, Twilight offers a clean and efficient way.
 
-Here's an example of a simple, bog-standard GUI:
+Here's an example of a simple, standard GUI:
 ```kotlin
 val basicGui = gui(Component.text("Click the apple!"), 9) {
     set(4, ItemStack(Material.APPLE)) {
@@ -305,9 +304,9 @@ val basicGui = gui(Component.text("Click the apple!"), 9) {
 }
 player.openInventory(basicGui)
 ```
-As you can see, setting the click event logic has never been easier. You can reference the player at any time using `viewer`.
+As you can see, Setting the click event logic has never been easier. You can reference the player using `viewer`.
 
-Here's an example of a gui implementing the pattern feature, making it much easier to visualise:
+Here's an example of a more complex GUI implementing the pattern feature, making it much easier to visualise:
 ```kotlin
 val complexGui = gui {
     pattern(
@@ -334,22 +333,22 @@ val complexGui = gui {
 }
 player.openInventory(complexGui)
 ```
-You can, of course, also implement GUIs for other inventory types:
+You can also implement GUIs for other inventory types:
 ```kotlin
 val dropperGui = gui(Component.text("Title"), 9, InventoryType.DROPPER) {
     // You can set multiple indexes at once
     set(listOf(1, 3, 4, 5, 7), ItemStack(Material.GRAY_STAINED_GLASS_PANE))
 
-    // You can set default actions that run on every click (before your other code)
+    // You can set default actions that run on every click (before your item-specific code)
     onClick { isCancelled = true }
 }
 player.openInventory(dropperGui)
 ```
-To open the gui, simply do `Player#openInventory(GUI)` like shown in the examples.
+To open the gui, simply run `Player#openInventory(GUI)` like shown in the examples.
 
 ## Databases
 ### MongoDB
-Currently we have support for MongoDB. To configure it, you can take one of two routes:
+Twilight has support for MongoDB. To configure it, you can take one of two routes:
 
 #### Environment variables
 You can use the following Environment variables for your MongoDB:
@@ -384,7 +383,7 @@ class Profile(
 ) : MongoSerializable
 ```
 
-What's happening here? We're declaring what should be used as the key identifier for our class in the database, we can do so by annotating a field with `@field:Id`.
+In the above example, we're declaring what should be used as the key identifier for our class in the database. We do so by annotating a field with `@field:Id`.
 
 We also implement an interface `MongoSerializable`. This gives us access to a bunch of methods which make our lives really easy when it comes to moving between our class instance and our database.
 
@@ -427,8 +426,9 @@ db.connect()
 ```
 
 #### QueryBuilder
-The QueryBuilder class will help you in creating everything from simple queries like SELECT's to even complex JOIN's.
-All you need to start is an instance of the query builder, here's an example usage
+The QueryBuilder class will help you in creating everything from simple queries like SELECTs to even complex JOINs. 
+
+All you need to start is an instance of `QueryBuilder`. Here's an example usage:
 ```kotlin
 val queryBuilder = QueryBuilder()
 
@@ -449,7 +449,8 @@ If you would like to retrieve and store data as objects within your database the
 
 
 1 - Your object must implement SQLSerializable 
-2 - You must have a table that fits the structure of your object, you can create by calling `convertToSQLTable()` on your object, then execute the statement like so
+
+2 - You must have a table that fits the structure of your object, you can create by calling `convertToSQLTable()` on your object, then execute the statement like so:
 ```kotlin
 // NOTE: convertToSQLTable() takes a optional dialect parameter, at this time the only additional dialect is postgres
 val createTable = yourObjectInstace.convertToSQLTable()
@@ -458,7 +459,7 @@ if(db.execute(createTable)) {
     // successfully executed
 }
 ```
-3 - To insert your object call `toInsertQuery()` like so
+3 - To insert your object call `toInsertQuery()` like so:
 ```kotlin
 val insertToTable = yourObjectInstace.toInsertQuery()
 
@@ -467,14 +468,14 @@ if(db.execute(insertToTable)) {
 }
 ```
 
-4 - To retrieve objects from your database you call a select statement like normal but call `toListOfObjects<Type>()` on the returned `Results` class
+4 - To retrieve objects from your database you call a select statement like normal but call `toListOfObjects<Type>()` on the returned `Results` class.
 
 #### Running queries
-Once you have your query using either the QueryBuilder or your own you can run it like so
+Once you have your query using either the QueryBuilder or your own you can run it like so:
 ```kotlin
 val result = result.executeQuery(selectQuery)
 ```
-once you have run the query it will return a `Results` class, it can be used like so
+Once you have run the query it will return a `Results` class, it can be used like so:
 ```kotlin
 result?.let { res ->
   println("MyColumn Value: " + res["my_column"])
@@ -489,7 +490,7 @@ There is a basic ternary operator implementation added which can be used like so
 val test = false
 println(test then "yes" or "no")
 ```
-This doesn't yet work for evaluating functions either side of the ternary though, we plan to figure this out in the near future.
+> This doesn't yet work for evaluating functions either side of the ternary.
 
 ### UUID ⟷ Name
 Twilight can do the heavy lifting and query the Mojang API to find the UUID from name or name from UUID of a player, particularly useful for networks. Twilight will cache responses in an attempt to not break the rate limit imposed by Mojang.
@@ -498,7 +499,7 @@ If you have a UUID and you want to get a name, you can call `nameFromUUID`:
 ```kotlin
 NameCacheService.nameFromUUID(UUID.fromString("a008c892-e7e1-48e1-8235-8aa389318b7a"))
 ```
-This will look up your cache to see if we already know the name, otherwise we will check the MongoDB "cache" of key, value pairs, and finally, we'll query Mojang if we still don't know it.
+This will look up your cache to see if we already know the name, otherwise we will check the MongoDB cache of key, value pairs, and finally, we'll query Mojang if we still don't know it.
 
 After each step the key, value pair will be stored so the next call is just on the cache.
 
@@ -507,10 +508,12 @@ Similarly, if you have a name and want to get the UUID, you can call `uuidFromNa
 NameCacheService.uuidFromName("stxphen")
 ```
 
-Currently the only way to configure your MongoDB "cache" for UUIDs and names, is to have an Environment variable called `NAME_CACHE_COLLECTION` with the value being what you want to call the collection. Don't want to use the Mongo cache? Disable `useMongoCache` in the settings. 
+Currently, the only way to configure your MongoDB "cache" for UUIDs and names, is to have an Environment variable called `NAME_CACHE_COLLECTION` with the value being what you want to call the collection. 
+
+Don't want to use the Mongo cache? Disable `useMongoCache` in the settings. 
 
 # Redis
-Twilight has a Redis system that lets you set/get/delete string key value pairs, additionally, you are able to publish messages and listen to incoming messages on any channel you'd like.
+Twilight has a Redis system that lets you set/get/delete string key value pairs, additionally, you can publish messages and listen to incoming messages on any channel you'd like.
 
 #### Environment variables
 You can use the following Environment variables for your Redis Server:
@@ -576,7 +579,7 @@ val twilight = twilight(plugin) {
 }
 ```
 #### String Key-Value Pairs
-You can Set/Get/Delete String Key-Value pairs on your Redis server like so: (All of those functions are Async and return a CompleteableFuture)
+You can Set/Get/Delete String Key-Value pairs on your Redis server like so (all of these functions are Async and return a CompletableFuture):
 ```kotlin
 Redis.set("cool-key", "super-secret-value")
 
@@ -609,12 +612,12 @@ class PlayerConnectionRedisListener(): TwilightRedisListener("player-connection"
     }
 }
 ```
-You can add add/register the listener like this: (which also returns the listener which lets you unregister it if you'd like)
+You can add/register the listener like this (which also returns the listener which lets you unregister it if you'd like):
 ```kotlin
 val listener = Redis.addListener(PlayerConnectionRedisListener())
 listener.unregister() // unregistering the listener.
 ```
-Alternativley, instead of extending the listener class, you can add a listener using a block of code, which returns the 'RedisMessage' data class, which contains the channel, the message, and the listener:
+Alternatively, instead of extending the listener class, you can add a listener using a block of code, which returns the 'RedisMessage' data class, which contains the channel, the message, and the listener:
 ```kotlin
 val listener = Redis.addListener("cool-channel"){
     println("The following message was received: '$message' on channel '$channel'")
