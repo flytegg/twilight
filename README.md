@@ -318,7 +318,7 @@ val playerJoin = event<PlayerJoinEvent> {
 ```
 # Dynamic Scoreboard
 ```kotlin
-private val scoreboard = TwilightScoreboard(testTwilight2)
+private val scoreboard = TwilightScoreboard(javaPlugin)
 
 val playerJoin = event<PlayerJoinEvent> {
     scoreboard.apply {
