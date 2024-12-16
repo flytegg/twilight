@@ -12,7 +12,6 @@ import org.bukkit.scoreboard.Scoreboard
 class TwilightScoreboard(private val plugin: JavaPlugin) {
     private val scoreboard: Scoreboard = Bukkit.getScoreboardManager().newScoreboard
     private var objective = scoreboard.registerNewObjective("sidebar", "dummy")
-    private val updatableLines = mutableMapOf<Int, LineUpdate>()
 
     private var updateTask: BukkitTask? = null
 
@@ -29,7 +28,7 @@ class TwilightScoreboard(private val plugin: JavaPlugin) {
      * @param title the displayname of the scoreboard
      * Used for setting the displayname of a scoreboard
      */
-    fun setName(title: Component) {
+    fun title(title: Component) {
         objective.displayName(title)
     }
 
@@ -118,6 +117,14 @@ class TwilightScoreboard(private val plugin: JavaPlugin) {
      */
     fun assignTo(player: Player) {
         player.scoreboard = scoreboard
+    }
+
+    /**
+     * @param player the player you want to remove the scoreboard to
+     * Assign the scoreboard to a player (Use a for Loop if you want to assign this to multiple players)
+     */
+    fun removeTo(player: Player) {
+        player.scoreboard = Bukkit.getScoreboardManager().mainScoreboard
     }
 
     /**
