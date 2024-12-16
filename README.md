@@ -294,55 +294,79 @@ delay(20, TimeUnit.SECONDS) {
 
 ### SCOREBOARD Creator
 
-Creating Custom Scoreboards can be time-consuming, but with Twilight, we can optimize this process and make it easy!
+Creating Custom Scoreboards can be time-consuming and boring, but with Twilight, we can optimize this process and make it easy!
 With Twilight, you can either create a Static Scoreboard or a Dynamic Scoreboard, and both are extremely easy to create:
 
 # Static Scoreboard
 ```kotlin
 private val scoreboard = TwilightScoreboard(javaPlugin)
 
-val playerJoin = event {
+val playerJoin = event<PlayerJoinEvent> {
     scoreboard.apply {
+        // Display name of the scoreboard
         setName(Component.text("Twilight Scoreboard", NamedTextColor.BLUE, TextDecoration.BOLD))
-
+        // Here feel free to set your own components!
         setAll(
             Component.text("-------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH),
             Component.text("Online Players: ${Bukkit.getOnlinePlayers().size}", NamedTextColor.YELLOW),
             Component.text("Name: ${player.name}", NamedTextColor.YELLOW),
             Component.text("-------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH)
         )
-
+        // Make the player see the scoreboard
         assignTo(player)
     }
 }
-
 ```
 # Dynamic Scoreboard
 ```kotlin
 private val scoreboard = TwilightScoreboard(testTwilight2)
 
-val playerJoin = event {
+val playerJoin = event<PlayerJoinEvent> {
     scoreboard.apply {
+        // Display name of the scoreboard
         setName(Component.text("Twilight Scoreboard", NamedTextColor.BLUE, TextDecoration.BOLD))
     
+        // Same as setAll method of the static scoreboard, just with one more param.
         updateLines(
             20, // After how many ticks should the scoreboard update? 20 = 1 second; do the math.
-            1 to { Component.text("-------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH) },
-            2 to { Component.text("Online Players: ${Bukkit.getOnlinePlayers().size}", NamedTextColor.YELLOW) },
-            3 to { Component.text("Name: ${player.name}", NamedTextColor.YELLOW) },
-            4 to { Component.text("-------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH) }
+            Component.text("-------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH),
+            Component.text("Online Players: ${Bukkit.getOnlinePlayers().size}", NamedTextColor.YELLOW),
+            Component.text("Name: ${player.name}", NamedTextColor.YELLOW),
+            Component.text("-------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH)
         )
-        
-
+        // Make the player see the scoreboard
         assignTo(player)
     }
 }
 ```
-In the `#updateLines` method, you specify the line number you want to edit, followed by the actual Component for that line.
+As you can see, it's pretty easy, you can even combine both setAll and updateLines with something like this:
 
-There are also additional methods like `#delete` and `#get` that allow you to delete or get specific lines as needed.
+```kotlin
+val playerjoin = event<PlayerJoinEvent> {
+    scoreboard.apply {
+            setName(Component.text("Twilight Scoreboard", NamedTextColor.BLUE, TextDecoration.BOLD))
 
-I hope this helps you reduce the time required to create a scoreboard using traditional Paper methods.
+            scoreboard.setAll(
+                Component.text("§7Online:"),
+                Component.text("§bAdmin"),
+                Component.text("§7Name:")
+            )
+
+            updateLines(
+                20,
+                Component.text("§7Online: ${Bukkit.getOnlinePlayers().size}"),
+                null,
+                Component.text("§7Name: " + player.name),
+            )
+            assignTo(player)
+        }
+    }
+```
+With this code, only the "Online" and "Name" lines will update. The null line will remain the same. 
+Although there might not be many use cases for this approach, feel free to use whichever method suits your needs!
+
+There are a few more intuitive methods you can use like `delete` or `set`, as you can probably guess `delete` delete the whole scoreboard
+and cancel the runnable of the updateLines (if it is valid) and `set` let you change a specific line manually.
 
 ### GUI Builder
 Creating GUI's can be an incredibly long and tedious process, however, in Twilight we offer a clean and efficient way to build GUIs.
