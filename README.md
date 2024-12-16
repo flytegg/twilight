@@ -124,7 +124,7 @@ event<MyCustomEvent> {
 }
 ```
 
-You can also declare that it should be asyncronous by passing a `true` value to the TwilightEvent constructor:
+You can declare that it should be asyncronous by passing a `true` value to the TwilightEvent constructor:
 ```kt
 class MyCustomEvent : TwilightEvent(true) {
 
@@ -266,7 +266,7 @@ repeat(5, 10, TimeUnit.SECONDS, true) {
 
 > Twilight `repeat` conflicting with Kotlin's `repeat`? As an alternative, you can use `repeatingTask`. 
 
-You can also chain runnables together using `onComplete` to nicely nest sync/async executions. Here's an example:
+You can chain runnables together using `onComplete` to nicely nest sync/async executions. Here's an example:
 ```kotlin
 async {
     println("I am an async BukkitRunnable called Atom")
@@ -337,10 +337,10 @@ player.openInventory(complexGui)
 You can, of course, also implement GUIs for other inventory types:
 ```kotlin
 val dropperGui = gui(Component.text("Title"), 9, InventoryType.DROPPER) {
-    // You can also set multiple indexes at once
+    // You can set multiple indexes at once
     set(listOf(1, 3, 4, 5, 7), ItemStack(Material.GRAY_STAINED_GLASS_PANE))
 
-    // You can also cancel all clicks that occur while the GUI is open
+    // You can set default actions that run on every click (before your other code)
     onClick { isCancelled = true }
 }
 player.openInventory(dropperGui)
