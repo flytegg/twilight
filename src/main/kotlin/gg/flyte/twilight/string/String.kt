@@ -1,5 +1,9 @@
 package gg.flyte.twilight.string
 
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextComponent
+import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder
 import org.bukkit.ChatColor
 import java.math.BigInteger
 import java.util.*
@@ -212,4 +216,19 @@ fun String.formatCase(case: Case): String = CASE_DELIMITER_REGEX.split(this)
  */
 fun String.capitalizeFirstLetter(): String = replaceFirstChar {
     if (it.isLowerCase()) it.titlecase() else it.toString()
+}
+
+/**
+ * Minimessage builder
+ * Some useful methods to use around the code if needed.
+ */
+val miniMessage = MiniMessage.builder().build()
+
+fun String.toComponent(): TextComponent = Component.text(this)
+
+fun String.toMini(): Component = miniMessage.deserialize(this)
+
+fun String.toMini(vararg placeholders: Component): Component {
+    val components = placeholders.mapIndexed { i, it -> Placeholder.component(i.toString(), it) }.toTypedArray()
+    return miniMessage.deserialize(this, *components)
 }
