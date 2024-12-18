@@ -23,7 +23,7 @@ Maven
 <dependency>
     <groupId>gg.flyte</groupId>
     <artifactId>twilight</artifactId>
-    <version>1.1.17</version>
+    <version>1.1.18</version>
 </dependency>
 ```
 
@@ -33,14 +33,14 @@ maven {
     url "https://repo.flyte.gg/releases"
 }
 
-implementation "gg.flyte:twilight:1.1.17"
+implementation "gg.flyte:twilight:1.1.18"
 ```
 
 Gradle (Kotlin DSL)
 ```kotlin
 maven("https://repo.flyte.gg/releases")
 
-implementation("gg.flyte:twilight:1.1.17")
+implementation("gg.flyte:twilight:1.1.18")
 ```
 
 Certain features of Twilight require configuration, which can be done via the Twilight class. To set up a Twilight class instance, you can use the `twilight` function as shown below:
@@ -290,6 +290,80 @@ delay(20, TimeUnit.SECONDS) {
 ```
 
 > Currently, onComplete is incompatible with repeating tasks.
+
+### SCOREBOARD Creator
+
+Creating Custom Scoreboards can be time-consuming and boring, but with Twilight, we can optimize this process and make it easy!
+With Twilight, you can either create a Static Scoreboard or a Dynamic Scoreboard, and both are extremely easy to create:
+
+# Static Scoreboard
+```kotlin
+val playerJoin = event<PlayerJoinEvent> {
+    private val scoreboard = TwilightScoreboard(javaPlugin)
+    scoreboard.apply {
+        // Display name of the scoreboard
+        setName(Component.text("Twilight Scoreboard", NamedTextColor.BLUE, TextDecoration.BOLD))
+        // Here feel free to set your own components!
+        setAll(
+            Component.text("-------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH),
+            Component.text("Online Players: ${Bukkit.getOnlinePlayers().size}", NamedTextColor.YELLOW),
+            Component.text("Name: ${player.name}", NamedTextColor.YELLOW),
+            Component.text("-------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH)
+        )
+        // Make the player see the scoreboard
+        assignTo(player)
+    }
+}
+```
+# Dynamic Scoreboard
+```kotlin
+val playerJoin = event<PlayerJoinEvent> {
+    private val scoreboard = TwilightScoreboard(javaPlugin)
+    scoreboard.apply {
+        // Display name of the scoreboard
+        setName(Component.text("Twilight Scoreboard", NamedTextColor.BLUE, TextDecoration.BOLD))
+    
+        // Same as setAll method of the static scoreboard, just with one more param.
+        updateLines(
+            20, // After how many ticks should the scoreboard update? 20 = 1 second; do the math.
+            Component.text("-------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH),
+            Component.text("Online Players: ${Bukkit.getOnlinePlayers().size}", NamedTextColor.YELLOW),
+            Component.text("Name: ${player.name}", NamedTextColor.YELLOW),
+            Component.text("-------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH)
+        )
+        // Make the player see the scoreboard
+        assignTo(player)
+    }
+}
+```
+As you can see, it's pretty easy, you can even combine both setAll and updateLines with something like this:
+
+```kotlin
+val playerjoin = event<PlayerJoinEvent> {
+    scoreboard.apply {
+            setName(Component.text("Twilight Scoreboard", NamedTextColor.BLUE, TextDecoration.BOLD))
+
+            scoreboard.setAll(
+                Component.text("§7Online:"),
+                Component.text("§bAdmin"),
+                Component.text("§7Name:")
+            )
+
+            updateLines(
+                20,
+                Component.text("§7Online: ${Bukkit.getOnlinePlayers().size}"),
+                null,
+                Component.text("§7Name: " + player.name),
+            )
+            assignTo(player)
+        }
+    }
+```
+With this code, only the "Online" and "Name" lines will update. The null line will remain the same. 
+Although there might not be many use cases for this approach, feel free to use whichever method suits your needs!
+
+There are a few more intuitive methods you can use like `delete` or `set`, as you can probably guess `delete` delete the whole scoreboard
+and cancel the runnable of the updateLines (if it is valid) and `set` let you change a specific line manually.
 
 ### GUI Builder
 Creating GUI's can be an incredibly long and tedious process, however, Twilight offers a clean and efficient way.
