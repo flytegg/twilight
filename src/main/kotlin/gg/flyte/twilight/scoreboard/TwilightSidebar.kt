@@ -9,9 +9,9 @@ import org.bukkit.scheduler.BukkitTask
 import org.bukkit.scoreboard.DisplaySlot
 import org.bukkit.scoreboard.Scoreboard
 
-class TwilightScoreboard(private val plugin: JavaPlugin) {
+class TwilightSidebar(private val plugin: JavaPlugin) {
     private val scoreboard: Scoreboard = Bukkit.getScoreboardManager().newScoreboard
-    private var objective = scoreboard.registerNewObjective("sidebar", "dummy")
+    private var objective = scoreboard.registerNewObjective("twilight-sidebar", "dummy")
 
     private var updateTask: BukkitTask? = null
 
