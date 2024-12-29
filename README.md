@@ -291,79 +291,80 @@ delay(20, TimeUnit.SECONDS) {
 
 > Currently, onComplete is incompatible with repeating tasks.
 
-### SCOREBOARD Creator
+### Scoreboard Creation
+Creating the various Scoreboard can be extremely boring and difficult.
+Twilight came to the rescue, you have a list of options you can choose from:
+- Sidebar
+- Below_Name 
+- PlayerList (Even thought it is not in the scoreboard package, a lot of people work with them together)
 
-Creating Custom Scoreboards can be time-consuming and boring, but with Twilight, we can optimize this process and make it easy!
-With Twilight, you can either create a Static Scoreboard or a Dynamic Scoreboard, and both are extremely easy to create:
+# Siderbar Creation
 
-# Static Scoreboard
+Creating a Sidebar is really simple, you can either create them static or dynamic, let's start with the Dynamic one:
 ```kotlin
 val playerJoin = event<PlayerJoinEvent> {
-    private val scoreboard = TwilightScoreboard(javaPlugin)
+    // New instance of TwilightScoreboard
+    val scoreboard = TwilightScoreboard(javaPlugin)
     scoreboard.apply {
-        // Display name of the scoreboard
-        setName(Component.text("Twilight Scoreboard", NamedTextColor.BLUE, TextDecoration.BOLD))
-        // Here feel free to set your own components!
-        setAll(
-            Component.text("-------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH),
-            Component.text("Online Players: ${Bukkit.getOnlinePlayers().size}", NamedTextColor.YELLOW),
-            Component.text("Name: ${player.name}", NamedTextColor.YELLOW),
-            Component.text("-------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH)
-        )
-        // Make the player see the scoreboard
-        assignTo(player)
-    }
-}
-```
-# Dynamic Scoreboard
-```kotlin
-val playerJoin = event<PlayerJoinEvent> {
-    private val scoreboard = TwilightScoreboard(javaPlugin)
-    scoreboard.apply {
-        // Display name of the scoreboard
-        setName(Component.text("Twilight Scoreboard", NamedTextColor.BLUE, TextDecoration.BOLD))
-    
-        // Same as setAll method of the static scoreboard, just with one more param.
+        // Title of the sidebar.
+        title("Twilight Scoreboard")
+
         updateLines(
-            20, // After how many ticks should the scoreboard update? 20 = 1 second; do the math.
-            Component.text("-------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH),
-            Component.text("Online Players: ${Bukkit.getOnlinePlayers().size}", NamedTextColor.YELLOW),
-            Component.text("Name: ${player.name}", NamedTextColor.YELLOW),
-            Component.text("-------------", NamedTextColor.GRAY, TextDecoration.STRIKETHROUGH)
+            20, // Update interval in ticks (20 ticks = 1 second)
+            "-------------",
+            "Online Players: ${Bukkit.getOnlinePlayers().size}",
+            "Name: ${player.name}",
+            "-------------"
         )
-        // Make the player see the scoreboard
+        // Method to assign the scoreboard to a specific player.
         assignTo(player)
     }
 }
 ```
-As you can see, it's pretty easy, you can even combine both setAll and updateLines with something like this:
+As you can see, it's fairly easy, you don't have to worry about teams, dummy etc..
+Let's continue to the Static one then:
+```kotlin
+val playerJoin = event<PlayerJoinEvent> {
+    // New instance of TwilightScoreboard
+    val scoreboard = TwilightScoreboard(javaPlugin)
+    scoreboard.apply {
+        // Title of the sidebar.
+        title("Twilight Scoreboard")
+
+        setAll(
+            "-------------",
+            "Online Players: ${Bukkit.getOnlinePlayers().size}",
+            "Name: ${player.name}",
+            "-------------"
+        )
+        // Method to assign the scoreboard to a specific player.
+        assignTo(player)
+    }
+}
+```
+
+# Below Name Scoreboard
+Creating a Below Name scoreboard is even easier as you can see!
 
 ```kotlin
-val playerjoin = event<PlayerJoinEvent> {
-    scoreboard.apply {
-            setName(Component.text("Twilight Scoreboard", NamedTextColor.BLUE, TextDecoration.BOLD))
+private val belowName:TwilightBelowName = TwilightBelowName(testTwilight2)
+val playerJoin2 = event<PlayerJoinEvent> {
+    // Actual content of the BELOW_NAME scoreboard!
+    belowName.displayName("Health")
+    // Player you want to assign the scoreboard to
+    belowName.assignTo(player)
+    // Use this method to update the score when needed.
+    belowName.set(player, player.health.toInt())
+}
 
-            scoreboard.setAll(
-                Component.text("§7Online:"),
-                Component.text("§bAdmin"),
-                Component.text("§7Name:")
-            )
-
-            updateLines(
-                20,
-                Component.text("§7Online: ${Bukkit.getOnlinePlayers().size}"),
-                null,
-                Component.text("§7Name: " + player.name),
-            )
-            assignTo(player)
-        }
+val damage = event<EntityDamageEvent> {
+    if (entity is Player) {
+        val player = entity as Player
+        belowName.set(player, player.health.toInt())
     }
+}
 ```
-With this code, only the "Online" and "Name" lines will update. The null line will remain the same. 
-Although there might not be many use cases for this approach, feel free to use whichever method suits your needs!
 
-There are a few more intuitive methods you can use like `delete` or `set`, as you can probably guess `delete` delete the whole scoreboard
-and cancel the runnable of the updateLines (if it is valid) and `set` let you change a specific line manually.
 
 ### GUI Builder
 Creating GUI's can be an incredibly long and tedious process, however, Twilight offers a clean and efficient way.

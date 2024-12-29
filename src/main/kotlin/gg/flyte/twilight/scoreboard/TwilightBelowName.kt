@@ -16,9 +16,7 @@ class TwilightBelowName(private val plugin: JavaPlugin) {
     /**
      * @param text Display name of the scoreboard.
      */
-    fun displayName(text: String) {
-        objective.displayName(text.toMini())
-    }
+    fun displayName(text: String) = objective.displayName(text.toMini())
 
     /**
      * @param player The player to want to assign the score
@@ -44,16 +42,12 @@ class TwilightBelowName(private val plugin: JavaPlugin) {
     /**
      * Reset the scoreboard and remove every objective
      */
-    fun delete() {
-        scoreboard.objectives.forEach { it.unregister() }
-    }
+    fun delete() = scoreboard.objectives.forEach { it.unregister() }
 
     /**
      * @param player The player you want to assign the scoreboard to.
      */
-    fun assignTo(player: Player) {
-        player.scoreboard = scoreboard
-    }
+    fun assignTo(player: Player) { player.scoreboard = scoreboard }
 
     /**
      * @param player The one you want to remove the scoreboard from
