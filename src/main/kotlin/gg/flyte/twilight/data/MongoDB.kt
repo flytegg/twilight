@@ -5,6 +5,8 @@ import com.mongodb.MongoClientSettings
 import com.mongodb.MongoClientSettings.getDefaultCodecRegistry
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.ReplaceOptions
+import com.mongodb.client.model.UpdateOptions
+import com.mongodb.client.model.Updates
 import com.mongodb.client.result.DeleteResult
 import com.mongodb.client.result.UpdateResult
 import com.mongodb.kotlin.client.MongoClient
@@ -89,16 +91,43 @@ class TwilightMongoCollection<T : MongoSerializable>(
     val idField = IdField(clazz)
     val documents: MongoCollection<Document> = MongoDB.database.getCollection(name, Document::class.java)
 
-    fun saveSync(serializable: MongoSerializable): UpdateResult = with(serializable.toDocument()) {
-        documents.replaceOne(
-            eq(idField.name, this[idField.name]),
-            this,
-            ReplaceOptions().upsert(true)
-        )
+    fun saveSync(serializable: MongoSerializable, replace: Boolean = false): UpdateResult = with(serializable.toDocument()) {
+        if (replace) {
+            documents.replaceOne(
+                eq(idField.name, this[idField.name]),
+                this,
+                ReplaceOptions().upsert(true)
+            )
+        } else {
+            val updates = mutableListOf<Bson>()
+
+            forEach { (key, value) ->
+                when {
+                    key == "_id" -> return@forEach
+                    value !is Document -> {
+                        updates.add(Updates.set(key, value))
+                    }
+                    else -> {
+                        // For document fields, create updates with escaped keys
+                        value.entries.forEach { (childKey, childValue) ->
+                            // Replace dots with / in the key to prevent MongoDB from creating nested objects from class paths
+                            val escapedKey = childKey.replace('.', '/')
+                            updates.add(Updates.set("$key.$escapedKey", childValue))
+                        }
+                    }
+                }
+            }
+
+            documents.updateOne(
+                eq(idField.name, this[idField.name]),
+                Updates.combine(updates),
+                UpdateOptions().upsert(true)
+            )
+        }
     }
 
-    fun save(serializable: MongoSerializable): CompletableFuture<UpdateResult> =
-        CompletableFuture.supplyAsync({ saveSync(serializable) }, executor)
+    fun save(serializable: MongoSerializable, replace: Boolean = false): CompletableFuture<UpdateResult> =
+        CompletableFuture.supplyAsync({ saveSync(serializable, replace) }, executor)
 
     fun findSync(filter: Bson? = null): MongoIterable<T> =
         (if (filter == null) documents.find() else documents.find(filter)).map {
@@ -127,9 +156,9 @@ class TwilightMongoCollection<T : MongoSerializable>(
 }
 
 interface MongoSerializable {
-    fun saveSync(): UpdateResult = MongoDB.collection(this::class).saveSync(this)
+    fun saveSync(replace: Boolean = false): UpdateResult = MongoDB.collection(this::class).saveSync(this, replace)
 
-    fun save(): CompletableFuture<UpdateResult> = MongoDB.collection(this::class).save(this)
+    fun save(replace: Boolean = false): CompletableFuture<UpdateResult> = MongoDB.collection(this::class).save(this, replace)
 
     fun deleteSync(): DeleteResult = with(MongoDB.collection(this::class)) {
         deleteSync(eq(idField.name, idField.value(this@MongoSerializable)))
