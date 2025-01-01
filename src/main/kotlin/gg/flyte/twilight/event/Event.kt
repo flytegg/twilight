@@ -1,10 +1,14 @@
+@file:Suppress("RemoveExplicitTypeArguments")
+
 package gg.flyte.twilight.event
 
 import gg.flyte.twilight.Twilight
 import gg.flyte.twilight.event.custom.admin.listener.OpEventListener
 import gg.flyte.twilight.event.custom.interact.listener.InteractEventListener
+import gg.flyte.twilight.event.custom.movement.listener.EntityMoveEventListener
 import gg.flyte.twilight.extension.applyForEach
 import gg.flyte.twilight.inventory.GUIListener
+import gg.flyte.twilight.scheduler.TwilightRunnable
 import org.bukkit.event.*
 import org.bukkit.scheduler.BukkitTask
 import java.time.Instant
@@ -49,7 +53,7 @@ open class CustomTwilightListener {
      * The list of events registered to this custom Twilight Event
      */
     val events = mutableListOf<TwilightListener>()
-    val runnables = mutableListOf<BukkitTask>()
+    val runnables = mutableListOf<TwilightRunnable>()
 
     /**
      * Unregisters this custom Twilight listener, removing all registered events and associated runnables.
@@ -121,10 +125,11 @@ open class TwilightEvent(async: Boolean = false) : Event(async), Cancellable {
 /**
  * List of custom Twilight Event Listeners
  */
-val customEventListeners = mutableSetOf<CustomTwilightListener>(
+val customEventListeners = mutableSetOf(
     GUIListener,
     InteractEventListener,
-    OpEventListener
+    OpEventListener,
+    EntityMoveEventListener
 )
 
 /**

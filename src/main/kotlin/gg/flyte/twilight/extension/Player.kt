@@ -1,13 +1,17 @@
 package gg.flyte.twilight.extension
 
 import gg.flyte.twilight.Twilight
-import net.kyori.adventure.text.Component.text
-import net.md_5.bungee.api.ChatMessageType
-import net.md_5.bungee.api.chat.TextComponent
+import gg.flyte.twilight.scheduler.TwilightRunnable
+import gg.flyte.twilight.scheduler.async
+import gg.flyte.twilight.scheduler.delay
+import gg.flyte.twilight.scheduler.repeat
+import gg.flyte.twilight.time.TimeUnit
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.metadata.FixedMetadataValue
 
 /**
  * Plays a sound at the player's current location with default volume and pitch.
@@ -26,15 +30,40 @@ fun Player.playSound(sound: Sound) {
  *
  * @param message The message to be displayed on the action bar.
  */
-fun Player.sendActionBar(message: String) {
-    spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(message))
+fun Player.sendActionBar(
+    message: String,
+    duration: Int = 40,
+    timeUnit: TimeUnit = TimeUnit.TICKS,
+    infinite: Boolean = false
+): TwilightRunnable = sendActionBar(message.toComponent(), duration, timeUnit, infinite)
+
+/**
+ * Sends a message to the player's action bar.
+ *
+ * @param message The message to be displayed on the action bar.
+ */
+fun Player.sendActionBar(
+    message: Component,
+    duration: Int = 40,
+    timeUnit: TimeUnit = TimeUnit.TICKS,
+    infinite: Boolean = false
+): TwilightRunnable {
+    if (infinite) return repeat(40, true) { sendActionBar(message) }
+    if (duration <= 40) return async { sendActionBar(message) }
+    return repeat(40) {
+        sendActionBar(message)
+    }.also {
+        delay(duration, timeUnit, true) {
+            cancel()
+        }
+    }
 }
 
 /**
- * Removes any existing action bar for the player.
+ * Removes any existing action bar for the player, unless an infinite one has been scheduled
  */
 fun Player.clearActionBar() {
-    spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(""))
+    sendActionBar(Component.empty())
 }
 
 /**
@@ -44,9 +73,17 @@ fun Player.clearActionBar() {
  * filling the player's hunger bar completely. The player will be fully fed after
  * calling this method.
  */
-fun Player.feed() { foodLevel = 20 }
-fun Player.resetWalkSpeed() { walkSpeed = 0.2F }
-fun Player.resetFlySpeed() { flySpeed = 0.1F}
+fun Player.feed() {
+    foodLevel = 20
+}
+
+fun Player.resetWalkSpeed() {
+    walkSpeed = 0.2F
+}
+
+fun Player.resetFlySpeed() {
+    flySpeed = 0.1F
+}
 
 /**
  * Adds the specified [itemStack] to the player's inventory and/or drops remaining on the ground once inventory is full.
@@ -82,4 +119,22 @@ fun Player.showPlayer() {
  */
 fun Player.removeActivePotionEffects() {
     activePotionEffects.forEach { removePotionEffect(it.type) }
+}
+
+/**
+ * Freezes the player.
+ */
+fun Player.freeze() {
+    setMetadata("frozen", FixedMetadataValue(Twilight.plugin, true))
+    walkSpeed = 0.0f
+    flySpeed = 0.0f
+}
+
+/**
+ * Unfreezes the player.
+ */
+fun Player.unfreeze() {
+    removeMetadata("frozen", Twilight.plugin)
+    walkSpeed = 0.2f
+    flySpeed = 0.2f
 }

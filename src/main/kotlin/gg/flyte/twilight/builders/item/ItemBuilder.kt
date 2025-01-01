@@ -1,9 +1,8 @@
-package gg.flyte.twilight.itembuilder
+package gg.flyte.twilight.builders.item
 
 import gg.flyte.twilight.Twilight
 import gg.flyte.twilight.event.event
 import net.kyori.adventure.text.Component
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.attribute.Attribute
@@ -15,6 +14,9 @@ import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
+import java.util.*
+import kotlin.collections.HashMap
+import kotlin.collections.HashSet
 
 class ItemBuilder(
     var type: Material,
@@ -24,7 +26,7 @@ class ItemBuilder(
     var unbreakable: Boolean = false,
     val enchantments: MutableMap<Enchantment, Int> = HashMap(),
     var customModelData: Int? = null,
-    var attributes: MutableMap<Attribute, AttributeModifier> = HashMap(),
+    var attributes: MutableMap<Attribute, AttributeModifier> = EnumMap(org.bukkit.attribute.Attribute::class.java),
 
     val persistentStrings: MutableMap<String, String> = HashMap<String, String>().apply {
         put(INTERACTION_UUID_KEY, uuidPdc())

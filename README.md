@@ -1,11 +1,13 @@
 
 # Twilight ✨
 
-Twilight is an API for developers creating plugins for Spigot or Paper based Minecraft servers. It contains a wide range of utilities and QOL improvements, from inventories, to schedulers and databases.
+Twilight is an API for developers creating plugins for Spigot (or forks like Paper, Purpur, Pufferfish etc.) based Minecraft servers. It contains a wide range of utilities and QOL improvements, from inventories, to schedulers and databases.
 
-Twilight is built using **Kotlin**, and is recommended for usage with. Many features of Twilight should work with plain Java, though compatability is not guaranteed.
+Twilight is built using **Kotlin**, and is recommended for usage with. Many features of Twilight should work with plain Java, though compatibility is not guaranteed.
 
-If you have any questions or need any support, head over to the [Flyte Discord](https://discord.gg/CGmMQwfXXN)!
+For support, questions or to chat with the team, come join the Discord:
+
+[![Discord Banner](https://discordapp.com/api/guilds/835561528299880518/widget.png?style=banner2)](https://discord.gg/flyte)
 
 ## Setup
 Twilight should be bundled within your plugin. Add the following repository and dependency to your build tool:
@@ -15,33 +17,33 @@ Maven
 <repository>
     <id>flyte-repository-releases</id>
     <name>Flyte Repository</name>
-    <url>https://repo.flyte.gg/releases</url>
+    <url>https://repo.flyte.gg/snapshots</url>
 </repository>
 
 <dependency>
     <groupId>gg.flyte</groupId>
     <artifactId>twilight</artifactId>
-    <version>1.1.8</version>
+    <version>1.1.18-SNAPSHOT</version>
 </dependency>
 ```
 
 Gradle (Groovy DSL)
 ```groovy
 maven {
-    url "https://repo.flyte.gg/releases"
+    url "https://repo.flyte.gg/snapshots"
 }
 
-implementation "gg.flyte:twilight:1.1.8"
+implementation "gg.flyte:twilight:1.1.18-SNAPSHOT"
 ```
 
 Gradle (Kotlin DSL)
 ```kotlin
-maven("https://repo.flyte.gg/releases")
+maven("https://repo.flyte.gg/snapshots")
 
-implementation("gg.flyte:twilight:1.1.8")
+implementation("gg.flyte:twilight:1.1.18-SNAPSHOT")
 ```
 
-Certain features of Twilight require configuration, which can be done via the Twilight class. To setup a Twilight class instance, you can use the `twilight` function as shown below:
+Certain features of Twilight require configuration, which can be done via the Twilight class. To set up a Twilight class instance, you can use the `twilight` function as shown below:
 ```kotlin
 val twilight = twilight(this)
 ```
@@ -64,7 +66,7 @@ ENVIRONMENT=DEV # or PROD
 ```
 This file determines whether to use your dev .env or your prod .env.
 
-If you do not use this different environments feature, then it will just use the .env (or whatever you specify the name as with `prodEnvFileName`)
+If you do not use this different environments feature, then it will just use the .env (or whatever you specify the name as with `prodEnvFileName`).
 
 Throughout your project you can use `Environment.get("VARIABLE")` to retrieve a value from your environment variables.
 
@@ -74,10 +76,10 @@ Other features that can be configured in the Twilight class builder will have th
 
 ### Extension Functions
 
-Twilight takes advantage of Kotlin's extension functions to add additional functions to various classes used within the API. Many of these are convenience functions, and some add complete new functionality. To see all of the functions added, view them [inside the code](https://github.com/flytegg/twilight/tree/master/src/main/kotlin/gg/flyte/twilight/extension).
+Twilight takes advantage of Kotlin's extension functions to add additional functions to various classes used within the API. Many of these are convenience functions, and some add complete new functionality. To see all the functions added, view them [inside the code](https://github.com/flytegg/twilight/tree/master/src/main/kotlin/gg/flyte/twilight/extension).
 
 ### Events
-We have a neat way to handle code for events, which register by themselves so you don't have to!
+We have a neat way to handle code for events, which register by themselves, so you don't have to!
 
 You can make use of it like so:
 ```kt
@@ -101,8 +103,8 @@ val listener = event<PlayerJoinEvent> {
 listener.unregister()
 ```
 
-### Making your own events with Twilight
-Instead of having to extend the org.bukkit.event.Event yourself, you can extend TwilightEvent!
+### Custom Events
+Instead of having to extend the org.bukkit.event.Event and adding all the extra boilerplate yourself, you can simply extend `TwilightEvent`!
 
 Here's an example:
 ```kt
@@ -113,16 +115,16 @@ class MyCustomEvent : TwilightEvent() {
 
 This is much easier than the standard Bukkit Event, as you don't have to worry about defining handles, etc.
 
-The TwilightEvent also includes a timestamp which provides an Instant for when the event was ran:
+The TwilightEvent also includes a timestamp which provides an Instant for when the event was run:
 
 ```kt
 // with the above event example
 event<MyCustomEvent> {
-    println("time event was executed: $timestamp")
+    println("Time event was executed: $timestamp")
 }
 ```
 
-You can also declare that it should be asyncronous by passing a `true` value to the TwilightEvent constructor:
+You can declare that it should be asynchronous by passing a `true` value to the TwilightEvent constructor:
 ```kt
 class MyCustomEvent : TwilightEvent(true) {
 
@@ -152,7 +154,7 @@ disableCustomEventListeners(OpEventListener, InteractEventListener)
 
 Due to limitations imposed by the Minecraft server software, when interacting with a clickable message in chat or in a book the only response options are `RUN_COMMAND`, `SUGGEST_COMMAND`, `CHANGE_PAGE`, `COPY_TO_CLIPBOARD`, `OPEN_FILE` and `OPEN_URL`. None of these match the most common use case: running custom code. Twilight utilizes the `RUN_COMMAND` response to call a custom `ChatClickEvent` which can be listened to like a regular event.
 
-To use this feature, where you would normally build your clickable message, use the Twilight extension functions to add a custom click event. Twilight will then redirect any data which you  put in the parameters to be accessable as a variable from within the `ChatClickEvent` when the player clicks the message.
+To use this feature, where you would normally build your clickable message, use the Twilight extension functions to add a custom click event. Twilight will then redirect any data which you  put in the parameters to be accessible as a variable from within the `ChatClickEvent` when the player clicks the message.
 
 For Paper/Adventure (recommended):
 ```kotlin
@@ -178,17 +180,17 @@ event<ChatClickEvent> {
     if (data[0] != "openGUI") return@event
     when (data[1]) {
         "warps" -> GUIManager.openWarps(player)
-            ..
+         ...
     }
 }
 
 ```
 
 ### Scheduler
-Bukkit's built in scheduler is tedious at best, so Twilight takes advantage of beautiful Kotlin syntax to make it easier to write, as well as adding a custom TimeUnit to save you calculating ticks.
+Bukkit's built-in scheduler is tedious at best, so Twilight takes advantage of beautiful Kotlin syntax to make it easier to write, as well as adding a custom TimeUnit to save you calculating ticks.
 
 How to schedule a single task to run on Bukkit's main thread either sync or async:
-`
+
 ```kotlin
 sync {
     println("I am a sync BukkitRunnable")
@@ -262,10 +264,91 @@ repeat(5, 10, TimeUnit.SECONDS, true) {
 }
 ```
 
-> Twilight `repeat` conflicting with Kotlin's `repeat`? As an alternative, you can use `repeatingTask`. 
+> Is Twilight's `repeat` conflicting with Kotlin's `repeat`? As an alternative, you can use `repeatingTask`. 
 
-### Databases
-Currently we have support for MongoDB. To configure it, you can take one of two routes:
+You can chain tasks together using `onComplete` to nicely nest sync/async executions. Here's an example:
+```kotlin
+async {
+    println("I am an async BukkitRunnable called Atom")
+}.onComplete() {
+    println("I am an async BukkitRunnable called Brandon running immediately after Atom finishes executing")
+}.onCompleteSync(10) {
+    println("I am a sync BukkitRunnable called Charlie running 10 ticks after Brandon finishes executing")
+}.onComplete(5, TimeUnit.SECONDS) {
+    println("I am a sync BukkitRunnable called Dawson running 5 seconds after Charlie finishes executing")
+}.onCompleteAsync {
+    println("I am an async BukkitRunnable called Enid running immediately after Dawson finishes executing")
+}
+```
+As you can see, you can specify whether sync/async (if unspecified, it will not change) and you can pass in an optional delay. This also works with a delay from the get-go:
+```kotlin
+delay(20, TimeUnit.SECONDS) {
+    println("I am a sync BukkitRunnable delayed by 20 seconds")
+}.onCompleteAsync(10, TimeUnit.SECONDS) {
+    println("I am an async BukkitRunnable delayed by a further 10 seconds")
+}
+```
+
+> Currently, onComplete is incompatible with repeating tasks.
+
+### GUI Builder
+Creating GUI's can be an incredibly long and tedious process, however, Twilight offers a clean and efficient way.
+
+Here's an example of a simple, standard GUI:
+```kotlin
+val basicGui = gui(Component.text("Click the apple!"), 9) {
+    set(4, ItemStack(Material.APPLE)) {
+        isCancelled = true
+        viewer.sendMessage(Component.text("This is an apple!"))
+    }
+}
+player.openInventory(basicGui)
+```
+As you can see, Setting the click event logic has never been easier. You can reference the player using `viewer`.
+
+Here's an example of a more complex GUI implementing the pattern feature, making it much easier to visualise:
+```kotlin
+val complexGui = gui {
+    pattern(
+        "#########",
+        "#   S   #",
+        "#########"
+    )
+
+    set('S', ItemStack(Material.PLAYER_HEAD).apply {
+        val meta = itemMeta as SkullMeta
+        meta.displayName(Component.text("${viewer.name}'s Head!"))
+        meta.owningPlayer = viewer
+        itemMeta = meta
+    }) {
+        isCancelled = true
+        viewer.sendMessage(Component.text("Ouch!", NamedTextColor.RED))
+    }
+
+    set('#', ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE).apply {
+        val meta = itemMeta
+        meta.displayName(Component.empty())
+        itemMeta = meta
+    }) { isCancelled = true }
+}
+player.openInventory(complexGui)
+```
+You can also implement GUIs for other inventory types:
+```kotlin
+val dropperGui = gui(Component.text("Title"), 9, InventoryType.DROPPER) {
+    // You can set multiple indexes at once
+    set(listOf(1, 3, 4, 5, 7), ItemStack(Material.GRAY_STAINED_GLASS_PANE))
+
+    // You can set default actions that run on every click (before your item-specific code)
+    onClick { isCancelled = true }
+}
+player.openInventory(dropperGui)
+```
+To open the gui, simply run `Player#openInventory(GUI)` like shown in the examples.
+
+## Databases
+### MongoDB
+Twilight has support for MongoDB. To configure it, you can take one of two routes:
 
 #### Environment variables
 You can use the following Environment variables for your MongoDB:
@@ -300,7 +383,7 @@ class Profile(
 ) : MongoSerializable
 ```
 
-What's happening here? We're declaring what should be used as the key identifier for our class in the database, we can do so by annotating a field with `@field:Id`.
+In the above example, we're declaring what should be used as the key identifier for our class in the database. We do so by annotating a field with `@field:Id`.
 
 We also implement an interface `MongoSerializable`. This gives us access to a bunch of methods which make our lives really easy when it comes to moving between our class instance and our database.
 
@@ -333,13 +416,81 @@ collection.deleteById(id) // id must be the same type as the field marked as the
 
 If we need something that isn't already wrapped by the TwilightMongoCollection, it exposes us the MongoCollection of Documents, which we can get with `collection.documents`.
 
+### SQL (MySQL, Postgres)
+
+#### Getting Started
+To get started you need to create an instance of the SQL Wrapper like so
+```kotlin
+val db = SQLWrapper(url = "your db url", user="user", password="password")
+db.connect()
+```
+
+#### QueryBuilder
+The QueryBuilder class will help you in creating everything from simple queries like SELECTs to even complex JOINs. 
+
+All you need to start is an instance of `QueryBuilder`. Here's an example usage:
+```kotlin
+val queryBuilder = QueryBuilder()
+
+// Example SELECT query
+val selectQuery = queryBuilder.select("id", "name").from("person").where("age" gt 18).build()
+
+// Example INSERT query
+val insertQuery = queryBuilder.insertInto("person", "id", "name").values(1, "John").build()
+
+// Example UPDATE query
+val updateQuery = queryBuilder.update().table("person").set("name", "John Doe").where("id" eq 1).build()
+
+// Example DELETE query
+val deleteQuery = queryBuilder.delete().table("person").where("id = 1").build()
+```
+#### Using objects in your database
+If you would like to retrieve and store data as objects within your database there a some methods provided for this
+
+
+1 - Your object must implement SQLSerializable 
+
+2 - You must have a table that fits the structure of your object, you can create by calling `convertToSQLTable()` on your object, then execute the statement like so:
+```kotlin
+// NOTE: convertToSQLTable() takes an optional dialect parameter, at this time the only additional dialect is postgres
+val createTable = yourObjectInstace.convertToSQLTable()
+
+if(db.execute(createTable)) {
+    // successfully executed
+}
+```
+3 - To insert your object call `toInsertQuery()` like so:
+```kotlin
+val insertToTable = yourObjectInstace.toInsertQuery()
+
+if(db.execute(insertToTable)) {
+    // successfully executed
+}
+```
+
+4 - To retrieve objects from your database you call a select statement like normal but call `toListOfObjects<Type>()` on the returned `Results` class.
+
+#### Running queries
+Once you have your query using either the QueryBuilder or your own you can run it like so:
+```kotlin
+val result = result.executeQuery(selectQuery)
+```
+Once you have run the query it will return a `Results` class, it can be used like so:
+```kotlin
+result?.let { res ->
+  println("MyColumn Value: " + res["my_column"])
+}
+```
+The results class contains a list of all the rows and columns returned by the database.
+You can access any of the columns values the same way you would with a map.
+
 ### Ternary Operator
 There is a basic ternary operator implementation added which can be used like so:
 ```kotlin
 val test = false
 println(test then "yes" or "no")
 ```
-This doesn't yet work for evaluating functions either side of the ternary though, we plan to figure this out in the near future.
+> This doesn't yet work for evaluating functions either side of the ternary.
 
 ### UUID ⟷ Name
 Twilight can do the heavy lifting and query the Mojang API to find the UUID from name or name from UUID of a player, particularly useful for networks. Twilight will cache responses in an attempt to not break the rate limit imposed by Mojang.
@@ -348,7 +499,7 @@ If you have a UUID and you want to get a name, you can call `nameFromUUID`:
 ```kotlin
 NameCacheService.nameFromUUID(UUID.fromString("a008c892-e7e1-48e1-8235-8aa389318b7a"))
 ```
-This will look up your cache to see if we already know the name, otherwise we will check the MongoDB "cache" of key, value pairs, and finally, we'll query Mojang if we still don't know it.
+This will look up your cache to see if we already know the name, otherwise we will check the MongoDB cache of key, value pairs, and finally, we'll query Mojang if we still don't know it.
 
 After each step the key, value pair will be stored so the next call is just on the cache.
 
@@ -357,7 +508,122 @@ Similarly, if you have a name and want to get the UUID, you can call `uuidFromNa
 NameCacheService.uuidFromName("stxphen")
 ```
 
-Currently the only way to configure your MongoDB "cache" for UUIDs and names, is to have an Environment variable called `NAME_CACHE_COLLECTION` with the value being what you want to call the collection. Don't want to use the Mongo cache? Disable `useMongoCache` in the settings. 
+Currently, the only way to configure your MongoDB "cache" for UUIDs and names, is to have an Environment variable called `NAME_CACHE_COLLECTION` with the value being what you want to call the collection. 
+
+Don't want to use the Mongo cache? Disable `useMongoCache` in the settings. 
+
+# Redis
+Twilight has a Redis system that lets you set/get/delete string key value pairs, additionally, you can publish messages and listen to incoming messages on any channel you'd like.
+
+#### Environment variables
+You can use the following Environment variables for your Redis Server:
+```env
+REDIS_HOST="your redis server host"
+REDIS_PORT="your redis server port"
+REDIS_TIMEOUT="your redis connection timeout"
+REDIS_AUTHENTICATION="NONE"
+```
+Alternatively, if your Redis server requires a Username + Password in order to access, you can use the following:
+```env
+REDIS_HOST="your redis server host"
+REDIS_PORT="your redis server port"
+REDIS_TIMEOUT="your redis connection timeout"
+REDIS_AUTHENTICATION="USERNAME_PASSWORD"
+REDIS_USERNAME:"coolUsername"
+REDIS_PASSWORD:"coolPassword"
+```
+Alternatively, if your Redis server requires a URL in order to access, you can use the following:
+```env
+REDIS_HOST="your redis server host"
+REDIS_PORT="your redis server port"
+REDIS_TIMEOUT="your redis connection timeout"
+REDIS_AUTHENTICATION="URL"
+REDIS_URL="coolURL"
+```
+
+#### Builder
+When building your Twilight instance, you can specify your host and port like so:
+```kotlin
+val twilight = twilight(plugin) {
+    redis {
+        authentication = Authentication.NONE
+        host = "your redis server host"
+        port = 6379 // Default Redis Port
+        timeout = 500 // 500 Milliseconds Timeout
+    }
+}
+```
+Alternatively, if your Redis server requires a Username + Password in order to access, you can use the following:
+```kotlin
+val twilight = twilight(plugin) {
+    redis {
+        authentication = Authentication.USERNAME_PASSWORD
+        host = "your redis server host"
+        port = 6379 // Default Redis Port
+        timeout = 500 // 500 Milliseconds Timeout
+        username = "coolUsername"
+        password = "coolPassword"
+    }
+}
+```
+Alternatively, if your Redis server requires a URL in order to access, you can use the following:
+```kotlin
+val twilight = twilight(plugin) {
+    redis {
+        authentication = Authentication.URL
+        host = "your redis server host"
+        port = 6379 // Default Redis Port
+        timeout = 500 // 500 Milliseconds Timeout
+        url = "coolURL"
+    }
+}
+```
+#### String Key-Value Pairs
+You can Set/Get/Delete String Key-Value pairs on your Redis server like so (all of these functions are Async and return a CompletableFuture):
+```kotlin
+Redis.set("cool-key", "super-secret-value")
+
+val future = Redis.get("cool-key") // Returns a Completable Future
+
+future.thenApplyAsync {
+    value -> println("The value is: $value") // Prints: "The value is: super-secret-value"
+}.exceptionally {
+    e -> println("An exception occurred: ${e.message}") // Handle the Exception
+}
+
+Thread.sleep(1000)
+
+Redis.delete("cool-key")
+```
+#### Publishing Messages
+You can publish messages like so:
+
+```kotlin
+Redis.publish("channel", "message") // Async Publishing
+```
+#### Redis Listeners (PubSub)
+##### Listen to incoming messages
+You are able to listen to incoming message on specific channels, using the 'TwilightRedisListener' Class:
+```kotlin
+// Extend the 'TwilightRedisListener' class and override the 'onMessage' function.
+class PlayerConnectionRedisListener(): TwilightRedisListener("player-connection") {
+    override fun onMessage(message: String) {
+        // do stuff
+    }
+}
+```
+You can add/register the listener like this (which also returns the listener which lets you unregister it if you'd like):
+```kotlin
+val listener = Redis.addListener(PlayerConnectionRedisListener())
+listener.unregister() // unregistering the listener.
+```
+Alternatively, instead of extending the listener class, you can add a listener using a block of code, which returns the 'RedisMessage' data class, which contains the channel, the message, and the listener:
+```kotlin
+val listener = Redis.addListener("cool-channel"){
+    println("The following message was received: '$message' on channel '$channel'")
+    this.listener.unregister() // unregistering the listener after we received the message.
+}
+```
 
 ### Files Extensions
 

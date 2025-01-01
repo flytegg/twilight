@@ -38,14 +38,15 @@ object NameCacheService {
 
     private fun queryMongoNameByUUID(uuid: UUID): String? {
         mongoCache.let {
-            mongoCache.find(Filters.eq("_id", uuid.toString())).first()
+            mongoCache.find(Filters.eq("_id", uuid.toString())).firstOrNull()
                 ?.let {
                     val name =
                         it.getString("name") ?: throw MongoException("Document with '_id' '$uuid' has no field 'name'.")
                     cache[uuid] = name
                     return name
-                } ?: return null
+                }
         }
+        return null
     }
 
     private fun queryMojangNameByUUID(uuid: UUID): String {
@@ -78,13 +79,14 @@ object NameCacheService {
                     "name",
                     Pattern.compile("^$name$", Pattern.CASE_INSENSITIVE)
                 )
-            ).first()?.let {
+            ).firstOrNull()?.let {
                 val uuid = UUID.fromString(it.getString("_id"))
                     ?: throw MongoException("Document with 'name' '$name' has no valid UUID at '_id'.")
                 cache[uuid] = name
                 return uuid
-            } ?: return null
+            }
         }
+        return null
     }
 
     private fun queryMojangUUIDByName(name: String): UUID {
