@@ -26,7 +26,11 @@ val GSON: Gson = Twilight.gsonBuilder
 
 open class TwilightTypeAdapter<T>(open var allowNull: Boolean = false) : TypeAdapter<T>() {
 
-    val defaultGson: Gson = GsonBuilder().setPrettyPrinting().create()
+    val defaultGson: Gson = GsonBuilder()
+        .addSerializationExclusionStrategy(ExclusionStrategy)
+        .addDeserializationExclusionStrategy(ExclusionStrategy)
+        .setPrettyPrinting()
+        .create()
 
     open fun writeSafe(writer: JsonWriter, instance: T): Unit =
         throw NotImplementedError("Not implemented TwilightTypeAdapter#writeSafe")
@@ -71,13 +75,3 @@ fun Any.toJson(): String = GSON.toJson(this)
  * @return The JSON representation of the object.
  */
 fun Any.toJsonTree(): JsonElement = GSON.toJsonTree(this)
-
-/**
- * Register multiple TwilightTypeAdapters to a GsonBuilder as a recognised type adapter.
- *
- * @receiver The GsonBuilder to register the type adapters to.
- * @param adapters The set of TwilightTypeAdapters to register.
- * @return The GsonBuilder with the type adapters registered.
- */
-fun GsonBuilder.registerTypeAdapters(vararg adapters: TwilightTypeAdapter<*>): GsonBuilder =
-    adapters.fold(this) { builder, adapter -> builder.registerTypeAdapter(adapter::class.java, adapter) }
