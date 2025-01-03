@@ -91,7 +91,7 @@ class TwilightMongoCollection<T : MongoSerializable>(
     val idField = IdField(clazz)
     val documents: MongoCollection<Document> = MongoDB.database.getCollection(name, Document::class.java)
 
-    fun saveSync(serializable: MongoSerializable, replace: Boolean = false): UpdateResult = with(serializable.toDocument()) {
+    fun saveSync(serializable: MongoSerializable, replace: Boolean = true): UpdateResult = with(serializable.toDocument()) {
         if (replace) {
             documents.replaceOne(
                 eq(idField.name, this[idField.name]),
