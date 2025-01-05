@@ -23,9 +23,7 @@ class TwilightSidebar(private val plugin: JavaPlugin) {
      * @param title the displayname of the scoreboard
      * Used for setting the displayname of a scoreboard
      */
-    fun title(title: String) {
-        objective.displayName(title.toMini())
-    }
+    fun title(title: String) = objective.displayName(title.toMini())
 
     /**
      * @param text the string you want to use at that line

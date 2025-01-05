@@ -7,6 +7,11 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scoreboard.DisplaySlot
 import org.bukkit.scoreboard.Scoreboard
 
+
+/**
+ * Manages below-name scoreboard display
+ * @param plugin The JavaPlugin instance
+ */
 class TwilightBelowName(private val plugin: JavaPlugin) {
     private val scoreboard: Scoreboard = Bukkit.getScoreboardManager().newScoreboard
     private val objective = scoreboard.registerNewObjective("twilight-below-name", "dummy").apply {
@@ -14,45 +19,54 @@ class TwilightBelowName(private val plugin: JavaPlugin) {
     }
 
     /**
-     * @param text Display name of the scoreboard.
+     * Sets the display name for the below-name objective
+     * @param text Display name (supports MiniMessage format)
      */
     fun displayName(text: String) = objective.displayName(text.toMini())
 
     /**
-     * @param player The player to want to assign the score
-     * @param score the score you want to set
+     * Sets a score for a player
+     * @param player Target player
+     * @param score Numeric score to display
      */
     fun set(player: Player, score: Int) {
-        scoreboard.entries.forEach { entry ->
-            if (scoreboard.getObjective(DisplaySlot.BELOW_NAME)?.getScore(entry)?.score == 0) {
-                scoreboard.resetScores(entry)
-            }
-        }
-
         objective.getScore(player.name).score = score
+        updateScoreboardForAll()
     }
 
     /**
-     * Return current score of a player
-     * @param player The player you want to get the score of.
-     * @return The score
+     * Gets the current score of a player
+     * @param player Target player
+     * @return Current score
      */
     fun get(player: Player): Int = objective.getScore(player.name).score
 
     /**
-     * Reset the scoreboard and remove every objective
+     * Removes all objectives and cleans up
      */
-    fun delete() = scoreboard.objectives.forEach { it.unregister() }
+    fun delete() {
+        scoreboard.objectives.forEach { it.unregister() }
+        Bukkit.getOnlinePlayers().forEach {
+            it.scoreboard = Bukkit.getScoreboardManager().mainScoreboard
+        }
+    }
 
     /**
-     * @param player The player you want to assign the scoreboard to.
+     * Assigns the scoreboard to a player
+     * @param player Target player
      */
-    fun assignTo(player: Player) { player.scoreboard = scoreboard }
+    fun assignTo(player: Player) {
+        player.scoreboard = scoreboard
+        updateScoreboardForAll()
+    }
 
     /**
-     * @param player The one you want to remove the scoreboard from
+     * Removes the scoreboard from a player
+     * @param player Target player
      */
-    fun removeFrom(player: Player) {
-        player.scoreboard = Bukkit.getScoreboardManager().mainScoreboard
+    fun removeFrom(player: Player) { player.scoreboard = Bukkit.getScoreboardManager().mainScoreboard }
+
+    private fun updateScoreboardForAll() {
+        Bukkit.getOnlinePlayers().forEach { it.scoreboard = scoreboard }
     }
 }
