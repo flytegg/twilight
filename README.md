@@ -23,7 +23,7 @@ Maven
 <dependency>
     <groupId>gg.flyte</groupId>
     <artifactId>twilight</artifactId>
-    <version>1.1.20-SNAPSHOT</version>
+    <version>1.1.21-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -33,14 +33,14 @@ maven {
     url "https://repo.flyte.gg/snapshots"
 }
 
-implementation "gg.flyte:twilight:1.1.20-SNAPSHOT"
+implementation "gg.flyte:twilight:1.1.21-SNAPSHOT"
 ```
 
 Gradle (Kotlin DSL)
 ```kotlin
 maven("https://repo.flyte.gg/snapshots")
 
-implementation("gg.flyte:twilight:1.1.20-SNAPSHOT")
+implementation("gg.flyte:twilight:1.1.21-SNAPSHOT")
 ```
 
 Certain features of Twilight require configuration, which can be done via the Twilight class. To set up a Twilight class instance, you can use the `twilight` function as shown below:
