@@ -291,7 +291,7 @@ delay(20, TimeUnit.SECONDS) {
 
 > Currently, onComplete is incompatible with repeating tasks.
 >
-### Scoreboard System
+# Scoreboard System
 
 The Twilight Scoreboard system provides an easy-to-use solution for managing all the types of scoreboard you will probably ever need in your server.
 
@@ -299,7 +299,7 @@ It also provides a system to manage PlayerList (also known as TabList) and Prefi
 Twilight's scoreboard system uses MiniMessage to make everything easier to create without having to deal with thousands of components.
 No need to serialize or deserialize anything, just use the tags you like!
 
-# Usage Examples
+### Usage Examples
 
 **SIDEBAR CREATION**
 
