@@ -21,9 +21,9 @@ Maven
 </repository>
 
 <dependency>
-    <groupId>gg.flyte</groupId>
-    <artifactId>twilight</artifactId>
-    <version>1.1.18</version>
+<groupId>gg.flyte</groupId>
+<artifactId>twilight</artifactId>
+<version>1.1.18</version>
 </dependency>
 ```
 
@@ -180,7 +180,7 @@ event<ChatClickEvent> {
     if (data[0] != "openGUI") return@event
     when (data[1]) {
         "warps" -> GUIManager.openWarps(player)
-         ...
+            ...
     }
 }
 
@@ -264,7 +264,7 @@ repeat(5, 10, TimeUnit.SECONDS, true) {
 }
 ```
 
-> Is Twilight's `repeat` conflicting with Kotlin's `repeat`? As an alternative, you can use `repeatingTask`. 
+> Is Twilight's `repeat` conflicting with Kotlin's `repeat`? As an alternative, you can use `repeatingTask`.
 
 You can chain tasks together using `onComplete` to nicely nest sync/async executions. Here's an example:
 ```kotlin
@@ -290,81 +290,142 @@ delay(20, TimeUnit.SECONDS) {
 ```
 
 > Currently, onComplete is incompatible with repeating tasks.
+>
+### Scoreboard System
 
-### Scoreboard Creation
-Creating the various Scoreboard can be extremely boring and difficult.
-Twilight came to the rescue, you have a list of options you can choose from:
-- Sidebar
-- Below_Name 
-- PlayerList (Even thought it is not in the scoreboard package, a lot of people work with them together)
+The Twilight Scoreboard system provides an easy-to-use solution for managing all the types of scoreboard you will probably ever need in your server.
 
-# Siderbar Creation
+It also provides a system to manage PlayerList (also known as TabList) and Prefix/Suffix system.
+Twilight's scoreboard system uses MiniMessage to make everything easier to create without having to deal with thousands of components.
+No need to serialize or deserialize anything, just use the tags you like!
 
-Creating a Sidebar is really simple, you can either create them static or dynamic, let's start with the Dynamic one:
+# Usage Examples
+
+**SIDEBAR CREATION**
+
+Creating a sidebar is straightforward. You can display static content with just a few lines of code:
+
 ```kotlin
-val playerJoin = event<PlayerJoinEvent> {
-    // New instance of TwilightScoreboard
-    val scoreboard = TwilightScoreboard(javaPlugin)
-    scoreboard.apply {
-        // Title of the sidebar.
-        title("Twilight Scoreboard")
+// Keep track of all scoreboards with a Map
+private val scoreboards = mutableMapOf<Player, TwilightScoreboard>()
 
-        updateLines(
-            20, // Update interval in ticks (20 ticks = 1 second)
-            "-------------",
-            "Online Players: ${Bukkit.getOnlinePlayers().size}",
-            "Name: ${player.name}",
-            "-------------"
-        )
-        // Method to assign the scoreboard to a specific player.
-        assignTo(player)
-    }
-}
-```
-As you can see, it's fairly easy, you don't have to worry about teams, dummy etc..
-Let's continue to the Static one then:
-```kotlin
-val playerJoin = event<PlayerJoinEvent> {
-    // New instance of TwilightScoreboard
-    val scoreboard = TwilightScoreboard(javaPlugin)
+val join = event<PlayerJoinEvent> {
+    // Create a new instance of TwilightScoreboard when a player joins the server
+    val scoreboard = TwilightScoreboard(player)
+    
     scoreboard.apply {
-        // Title of the sidebar.
-        title("Twilight Scoreboard")
-
-        setAll(
-            "-------------",
-            "Online Players: ${Bukkit.getOnlinePlayers().size}",
-            "Name: ${player.name}",
-            "-------------"
+        // Set the title of the Sidebar
+        updateSidebarTitle("<blue><bold>TWILIGHT</bold></blue>")
+        
+        // Update all the sidebar lines
+        updateSidebarLines(
+            "",
+            "<white>Name:</white> <yellow>${player.name}</yellow>",
+            "<white>Level: </white> <yellow>${player.level}</yellow>",
+            "",
+            "<white>Deaths:</white> <yellow>${player.getStatistic(Statistic.DEATHS)}</yellow>",
+            "<white>Kills:</white> <yellow>${player.getStatistic(Statistic.PLAYER_KILLS)}</yellow>",
+            ""
         )
-        // Method to assign the scoreboard to a specific player.
-        assignTo(player)
     }
 }
 ```
 
-# Below Name Scoreboard
-Creating a Below Name scoreboard is even easier as you can see!
+If you want this to be Dynamic so the values will auto update for example, you would need to use the method `updateSidebarLines` in a BukkitRunnable.
+
+**BELOW NAME**
+
+The Below Name display is perfect for showing health, stats, or other player-specific information under their name.
+Let's create a Dynamic BelowName that shows the player health.
 
 ```kotlin
-private val belowName:TwilightBelowName = TwilightBelowName(testTwilight2)
-val playerJoin2 = event<PlayerJoinEvent> {
-    // Actual content of the BELOW_NAME scoreboard!
-    belowName.displayName("Health")
-    // Player you want to assign the scoreboard to
-    belowName.assignTo(player)
-    // Use this method to update the score when needed.
-    belowName.set(player, player.health.toInt())
+// Keep track of all scoreboards with a Map
+private val scoreboards = mutableMapOf<Player, TwilightScoreboard>()
+
+val join = event<PlayerJoinEvent> {
+    // Same as the sidebar, create an instance when a player joins
+    val scoreboard = TwilightScoreboard(player)
+    
+    scoreboard.apply {
+        // Set up below name display
+        belowName("<white>Health")
+        updateBelowNameScore(player, player.health.toInt())
+    }
+
+    // Update the scoreboard for all players so everyone sees the same health
+    plugin.server.onlinePlayers.forEach { onlinePlayer ->
+        scoreboard.updateBelowNameScore(onlinePlayer, onlinePlayer.health.toInt())
+        scoreboards[onlinePlayer]?.updateBelowNameScore(player, player.health.toInt())
+    }
 }
 
+// Update health on damage
 val damage = event<EntityDamageEvent> {
-    if (entity is Player) {
-        val player = entity as Player
-        belowName.set(player, player.health.toInt())
+    if (entity !is Player) return@event
+    val player = entity as Player
+    // Update for all players
+    plugin.server.onlinePlayers.forEach { onlinePlayer ->
+        scoreboards[onlinePlayer]?.updateBelowNameScore(player, player.health.toInt())
+    }
+}
+
+// Update health when it increases
+val regen = event<EntityRegainHealthEvent> {
+    if (entity !is Player) return@event
+    val player = entity as Player
+    // Update for all players
+    plugin.server.onlinePlayers.forEach { onlinePlayer ->
+        scoreboards[onlinePlayer]?.updateBelowNameScore(player, player.health.toInt())
     }
 }
 ```
 
+**Tab List (Player List Header/Footer)**
+
+Pretty straightforward, lets you customize the TabList of your server with just one method.
+Like the sidebar, this can be made dynamic by simply having a BukkitRunnable that updates the TabList lines every 20 ticks (1 second).
+
+```kotlin
+scoreboard.updateTabList(
+    header = {
+        """
+        <blue><bold>Welcome to the Server!</bold></blue>
+        <aqua>${player.name}</aqua>
+        <white>Enjoy your stay!</white>
+        """.trimIndent()
+    },
+    footer = {
+        """
+        <gray>Players online: ${plugin.server.onlinePlayers.size}</gray>
+        <yellow>play.server.com</yellow>
+        """.trimIndent()
+    }
+)
+```
+
+**Player Prefixes and Suffixes**
+
+Add custom prefixes or suffixes to players!
+*Note: You would need like the Below Name to update the prefix/suffix for everyone when you change it.*
+```kotlin
+// Apply a prefix to a player
+scoreboard.prefix(player, "<red><bold>[ADMIN]</bold></red> ")
+
+// Apply a suffix to a player
+scoreboard.suffix(player, " <gray>[AFK]</gray>")
+```
+
+**Suggestion**
+
+Not removing players from the Map when they quit can cause Memory Leaks, 
+so it's best to clean up everything when they quot to be safe!
+
+```kotlin
+val quit = event<PlayerQuitEvent> {
+    scoreboards[player]?.delete()
+    scoreboards.remove(player)
+}
+```
 
 ### GUI Builder
 Creating GUI's can be an incredibly long and tedious process, however, Twilight offers a clean and efficient way.
@@ -501,7 +562,7 @@ db.connect()
 ```
 
 #### QueryBuilder
-The QueryBuilder class will help you in creating everything from simple queries like SELECTs to even complex JOINs. 
+The QueryBuilder class will help you in creating everything from simple queries like SELECTs to even complex JOINs.
 
 All you need to start is an instance of `QueryBuilder`. Here's an example usage:
 ```kotlin
@@ -523,7 +584,7 @@ val deleteQuery = queryBuilder.delete().table("person").where("id = 1").build()
 If you would like to retrieve and store data as objects within your database there a some methods provided for this
 
 
-1 - Your object must implement SQLSerializable 
+1 - Your object must implement SQLSerializable
 
 2 - You must have a table that fits the structure of your object, you can create by calling `convertToSQLTable()` on your object, then execute the statement like so:
 ```kotlin
@@ -553,7 +614,7 @@ val result = result.executeQuery(selectQuery)
 Once you have run the query it will return a `Results` class, it can be used like so:
 ```kotlin
 result?.let { res ->
-  println("MyColumn Value: " + res["my_column"])
+    println("MyColumn Value: " + res["my_column"])
 }
 ```
 The results class contains a list of all the rows and columns returned by the database.
@@ -583,9 +644,9 @@ Similarly, if you have a name and want to get the UUID, you can call `uuidFromNa
 NameCacheService.uuidFromName("stxphen")
 ```
 
-Currently, the only way to configure your MongoDB "cache" for UUIDs and names, is to have an Environment variable called `NAME_CACHE_COLLECTION` with the value being what you want to call the collection. 
+Currently, the only way to configure your MongoDB "cache" for UUIDs and names, is to have an Environment variable called `NAME_CACHE_COLLECTION` with the value being what you want to call the collection.
 
-Don't want to use the Mongo cache? Disable `useMongoCache` in the settings. 
+Don't want to use the Mongo cache? Disable `useMongoCache` in the settings.
 
 # Redis
 Twilight has a Redis system that lets you set/get/delete string key value pairs, additionally, you can publish messages and listen to incoming messages on any channel you'd like.
@@ -661,9 +722,9 @@ Redis.set("cool-key", "super-secret-value")
 val future = Redis.get("cool-key") // Returns a Completable Future
 
 future.thenApplyAsync {
-    value -> println("The value is: $value") // Prints: "The value is: super-secret-value"
+        value -> println("The value is: $value") // Prints: "The value is: super-secret-value"
 }.exceptionally {
-    e -> println("An exception occurred: ${e.message}") // Handle the Exception
+        e -> println("An exception occurred: ${e.message}") // Handle the Exception
 }
 
 Thread.sleep(1000)
