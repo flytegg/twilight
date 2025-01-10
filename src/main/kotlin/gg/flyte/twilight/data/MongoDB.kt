@@ -91,7 +91,7 @@ class TwilightMongoCollection<T : MongoSerializable>(
     val idField = IdField(clazz)
     val documents: MongoCollection<Document> = MongoDB.database.getCollection(name, Document::class.java)
 
-    fun saveSync(serializable: MongoSerializable, replace: Boolean = true): UpdateResult = with(serializable.toDocument()) {
+    fun saveSync(serializable: MongoSerializable, replace: Boolean = true, allowNestingInUpdates: Boolean = true): UpdateResult = with(serializable.toDocument()) {
         if (replace) {
             documents.replaceOne(
                 eq(idField.name, this[idField.name]),
@@ -108,11 +108,11 @@ class TwilightMongoCollection<T : MongoSerializable>(
                         updates.add(Updates.set(key, value))
                     }
                     else -> {
-                        // For document fields, create updates with escaped keys
-                        value.entries.forEach { (childKey, childValue) ->
+                        // For document fields
+                        value.entries.forEach { (originalChildKey, childValue) ->
                             // Replace dots with / in the key to prevent MongoDB from creating nested objects from class paths
-                            val escapedKey = childKey.replace('.', '/')
-                            updates.add(Updates.set("$key.$escapedKey", childValue))
+                            val childKey = if (allowNestingInUpdates) originalChildKey else originalChildKey.replace('.', '/')
+                            updates.add(Updates.set("$key.$childKey", childValue))
                         }
                     }
                 }
