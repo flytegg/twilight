@@ -293,7 +293,7 @@ delay(20, TimeUnit.SECONDS) {
 >
 # Scoreboard System
 
-The Twilight Scoreboard system provides an easy-to-use solution for managing all the types of scoreboard you will probably ever need in your server.
+The Twilight Scoreboard system provides an easy-to-use solution for managing all the types of scoreboard you will probably ever need in your plugin.
 
 It also provides a system to manage PlayerList (also known as TabList) and Prefix/Suffix system.
 Twilight's scoreboard system uses MiniMessage to make everything easier to create without having to deal with thousands of components.
