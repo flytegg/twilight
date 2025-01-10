@@ -6,11 +6,13 @@ import org.bukkit.entity.Player
 import org.bukkit.scoreboard.DisplaySlot
 import org.bukkit.scoreboard.Objective
 import org.bukkit.scoreboard.Scoreboard
+import org.bukkit.scoreboard.Team
 
 class TwilightScoreboard(private val player: Player) {
     private var scoreboard: Scoreboard = Bukkit.getScoreboardManager().newScoreboard
     private var sidebarObjective: Objective? = null
     private var belowNameObjective: Objective? = null
+    private val teams = mutableMapOf<String, Team>()
 
     init {
         player.scoreboard = scoreboard
@@ -28,15 +30,20 @@ class TwilightScoreboard(private val player: Player) {
     fun updateSidebarLines(vararg lines: String) {
         if (sidebarObjective == null) return
 
-        scoreboard.entries.forEach(scoreboard::resetScores)
+        scoreboard.entries.forEach { entry ->
+            if (entry.startsWith(" ")) {
+                scoreboard.resetScores(entry)
+            }
+        }
 
         lines.forEachIndexed { index, line ->
             val score = lines.size - index
             val entry = " ".repeat(score)
 
-            val team = scoreboard.getTeam("line_$index") ?:
-            scoreboard.registerNewTeam("line_$index").apply {
-                addEntry(entry)
+            val team = teams.getOrPut("line_$index") {
+                scoreboard.getTeam("line_$index") ?: scoreboard.registerNewTeam("line_$index").apply {
+                    addEntry(entry)
+                }
             }
 
             team.prefix(line.toMini())
@@ -44,10 +51,10 @@ class TwilightScoreboard(private val player: Player) {
         }
     }
 
-    fun updateTabList(header: () -> List<String>, footer: () -> List<String>) {
+    fun updateTabList(header: () -> String, footer: () -> String) {
         player.sendPlayerListHeaderAndFooter(
-            header().joinToString("\n").toMini(),
-            footer().joinToString("\n").toMini()
+            header().toMini(),
+            footer().toMini()
         )
     }
 
@@ -63,27 +70,21 @@ class TwilightScoreboard(private val player: Player) {
     fun updateBelowNameScore(target: Player, score: Int) { belowNameObjective?.getScore(target.name)?.score = score }
 
     fun prefix(target: Player, prefix: String) {
-        val teamName = target.uniqueId.toString()
-        val team = scoreboard.getTeam(teamName) ?: scoreboard.registerNewTeam(teamName)
+        val teamName = "prefix_${target.uniqueId}"
+        val team = teams.getOrPut(teamName) {
+            scoreboard.getTeam(teamName) ?: scoreboard.registerNewTeam(teamName)
+        }
         team.prefix(prefix.toMini())
         team.addEntry(target.name)
     }
 
     fun suffix(target: Player, suffix: String) {
-        val teamName = target.uniqueId.toString()
-        val team = scoreboard.getTeam(teamName) ?: scoreboard.registerNewTeam(teamName)
+        val teamName = "prefix_${target.uniqueId}"
+        val team = teams.getOrPut(teamName) {
+            scoreboard.getTeam(teamName) ?: scoreboard.registerNewTeam(teamName)
+        }
         team.suffix(suffix.toMini())
         team.addEntry(target.name)
-    }
-
-    fun sidebarScore(line: Int): Int {
-        val entry = " ".repeat(line)
-        return sidebarObjective?.getScore(entry)?.score ?: 0
-    }
-
-    fun changeScore(line: Int, score: Int) {
-        val entry = " ".repeat(line)
-        sidebarObjective?.getScore(entry)?.score = score
     }
 
     fun player(): Player = player
@@ -92,5 +93,7 @@ class TwilightScoreboard(private val player: Player) {
         player.scoreboard = Bukkit.getScoreboardManager().mainScoreboard
         sidebarObjective?.unregister()
         belowNameObjective?.unregister()
+        teams.values.forEach { it.unregister() }
+        teams.clear()
     }
 }
