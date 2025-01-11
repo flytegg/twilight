@@ -418,7 +418,7 @@ scoreboard.suffix(player, " <gray>[AFK]</gray>")
 **Suggestion**
 
 Not removing players from the Map when they quit can cause Memory Leaks, 
-so it's best to clean up everything when they quot to be safe!
+so it's best to clean up everything when they quit to be safe!
 
 ```kotlin
 val quit = event<PlayerQuitEvent> {
