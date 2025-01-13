@@ -328,6 +328,7 @@ val join = event<PlayerJoinEvent> {
             ""
         )
     }
+    scoreboards[player] = scoreboard
 }
 ```
 
@@ -357,6 +358,7 @@ val join = event<PlayerJoinEvent> {
         scoreboard.updateBelowNameScore(onlinePlayer, onlinePlayer.health.toInt())
         scoreboards[onlinePlayer]?.updateBelowNameScore(player, player.health.toInt())
     }
+    scoreboards[player] = scoreboard
 }
 
 // Update health on damage
