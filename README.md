@@ -180,7 +180,7 @@ event<ChatClickEvent> {
     if (data[0] != "openGUI") return@event
     when (data[1]) {
         "warps" -> GUIManager.openWarps(player)
-            ...
+         // {...}
     }
 }
 
