@@ -291,15 +291,15 @@ delay(20, TimeUnit.SECONDS) {
 
 > Currently, onComplete is incompatible with repeating tasks.
 >
-# Scoreboard System
+### Scoreboard System
 
 The Twilight Scoreboard system provides an easy-to-use solution for managing all the types of scoreboard you will probably ever need in your plugin.
 
 It also provides a system to manage PlayerList (also known as TabList) and Prefix/Suffix system.
-Twilight's scoreboard system uses MiniMessage to make everything easier to create without having to deal with thousands of components.
-No need to serialize or deserialize anything, just use the tags you like!
+Twilight's scoreboard system uses Kyori Adventure Components to make everything easier to create without having to deal with thousands of manual component configurations.
+No need to serialize or deserialize anything, just use the component builders!
 
-### Usage Examples
+# Usage Examples
 
 **SIDEBAR CREATION**
 
@@ -315,17 +315,29 @@ val join = event<PlayerJoinEvent> {
     
     scoreboard.apply {
         // Set the title of the Sidebar
-        updateSidebarTitle("<blue><bold>TWILIGHT</bold></blue>")
+        updateSidebarTitle(Component.text("TWILIGHT", NamedTextColor.BLUE, TextDecoration.BOLD))
         
         // Update all the sidebar lines
         updateSidebarLines(
-            "",
-            "<white>Name:</white> <yellow>${player.name}</yellow>",
-            "<white>Level: </white> <yellow>${player.level}</yellow>",
-            "",
-            "<white>Deaths:</white> <yellow>${player.getStatistic(Statistic.DEATHS)}</yellow>",
-            "<white>Kills:</white> <yellow>${player.getStatistic(Statistic.PLAYER_KILLS)}</yellow>",
-            ""
+            Component.text(""),
+            Component.text()
+                .append(Component.text("Name: ", NamedTextColor.WHITE))
+                .append(Component.text(player.name, NamedTextColor.YELLOW))
+                .build(),
+            Component.text()
+                .append(Component.text("Level: ", NamedTextColor.WHITE))
+                .append(Component.text(player.level.toString(), NamedTextColor.YELLOW))
+                .build(),
+            Component.text(""),
+            Component.text()
+                .append(Component.text("Deaths: ", NamedTextColor.WHITE))
+                .append(Component.text(player.getStatistic(Statistic.DEATHS).toString(), NamedTextColor.YELLOW))
+                .build(),
+            Component.text()
+                .append(Component.text("Kills: ", NamedTextColor.WHITE))
+                .append(Component.text(player.getStatistic(Statistic.PLAYER_KILLS).toString(), NamedTextColor.YELLOW))
+                .build(),
+            Component.text("")
         )
     }
     scoreboards[player] = scoreboard
@@ -349,7 +361,7 @@ val join = event<PlayerJoinEvent> {
     
     scoreboard.apply {
         // Set up below name display
-        belowName("<white>Health")
+        belowName(Component.text("Health", NamedTextColor.WHITE))
         updateBelowNameScore(player, player.health.toInt())
     }
 
@@ -390,17 +402,20 @@ Like the sidebar, this can be made dynamic by simply having a BukkitRunnable tha
 ```kotlin
 scoreboard.updateTabList(
     header = {
-        """
-        <blue><bold>Welcome to the Server!</bold></blue>
-        <aqua>${player.name}</aqua>
-        <white>Enjoy your stay!</white>
-        """.trimIndent()
+        Component.text()
+            .append(Component.text("Welcome to the Server!", NamedTextColor.BLUE, TextDecoration.BOLD))
+            .appendNewline()
+            .append(Component.text(player.name, NamedTextColor.AQUA))
+            .appendNewline()
+            .append(Component.text("Enjoy your stay!", NamedTextColor.WHITE))
+            .build()
     },
     footer = {
-        """
-        <gray>Players online: ${plugin.server.onlinePlayers.size}</gray>
-        <yellow>play.server.com</yellow>
-        """.trimIndent()
+        Component.text()
+            .append(Component.text("Players online: ${plugin.server.onlinePlayers.size}", NamedTextColor.GRAY))
+            .appendNewline()
+            .append(Component.text("play.server.com", NamedTextColor.YELLOW))
+            .build()
     }
 )
 ```
@@ -411,15 +426,15 @@ Add custom prefixes or suffixes to players!
 *Note: You would need like the Below Name to update the prefix/suffix for everyone when you change it.*
 ```kotlin
 // Apply a prefix to a player
-scoreboard.prefix(player, "<red><bold>[ADMIN]</bold></red> ")
+scoreboard.prefix(player, Component.text("[ADMIN]", NamedTextColor.RED, TextDecoration.BOLD))
 
 // Apply a suffix to a player
-scoreboard.suffix(player, " <gray>[AFK]</gray>")
+scoreboard.suffix(player, Component.text("[AFK]", NamedTextColor.GRAY))
 ```
 
 **Suggestion**
 
-Not removing players from the Map when they quit can cause Memory Leaks, 
+Not removing players from the Map when they quit can cause Memory Leaks,
 so it's best to clean up everything when they quit to be safe!
 
 ```kotlin
