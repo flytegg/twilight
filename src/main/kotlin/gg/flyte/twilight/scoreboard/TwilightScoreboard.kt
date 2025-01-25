@@ -1,6 +1,6 @@
 package gg.flyte.twilight.scoreboard
 
-import gg.flyte.twilight.string.toMini
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.scoreboard.DisplaySlot
@@ -18,16 +18,16 @@ class TwilightScoreboard(private val player: Player) {
         player.scoreboard = scoreboard
     }
 
-    fun updateSidebarTitle(title: String) {
+    fun updateSidebarTitle(title: Component) {
         if (sidebarObjective == null) {
-            sidebarObjective = scoreboard.registerNewObjective("sidebar", "dummy", title.toMini())
+            sidebarObjective = scoreboard.registerNewObjective("sidebar", "dummy", title)
             sidebarObjective?.displaySlot = DisplaySlot.SIDEBAR
         } else {
-            sidebarObjective?.displayName(title.toMini())
+            sidebarObjective?.displayName(title)
         }
     }
 
-    fun updateSidebarLines(vararg lines: String) {
+    fun updateSidebarLines(vararg lines: Component) {
         if (sidebarObjective == null) return
 
         scoreboard.entries.forEach { entry ->
@@ -46,44 +46,44 @@ class TwilightScoreboard(private val player: Player) {
                 }
             }
 
-            team.prefix(line.toMini())
+            team.prefix(line)
             sidebarObjective?.getScore(entry)?.score = score
         }
     }
 
-    fun updateTabList(header: () -> String, footer: () -> String) {
+    fun updateTabList(header: () -> Component, footer: () -> Component) {
         player.sendPlayerListHeaderAndFooter(
-            header().toMini(),
-            footer().toMini()
+            header(),
+            footer()
         )
     }
 
-    fun belowName(title: String) {
+    fun belowName(title: Component) {
         if (belowNameObjective == null) {
-            belowNameObjective = scoreboard.registerNewObjective("belowname", "dummy", title.toMini())
+            belowNameObjective = scoreboard.registerNewObjective("belowname", "dummy", title)
             belowNameObjective?.displaySlot = DisplaySlot.BELOW_NAME
         } else {
-            belowNameObjective?.displayName(title.toMini())
+            belowNameObjective?.displayName(title)
         }
     }
 
     fun updateBelowNameScore(target: Player, score: Int) { belowNameObjective?.getScore(target.name)?.score = score }
 
-    fun prefix(target: Player, prefix: String) {
+    fun prefix(target: Player, prefix: Component) {
         val teamName = "prefix_${target.uniqueId}"
         val team = teams.getOrPut(teamName) {
             scoreboard.getTeam(teamName) ?: scoreboard.registerNewTeam(teamName)
         }
-        team.prefix(prefix.toMini())
+        team.prefix(prefix)
         team.addEntry(target.name)
     }
 
-    fun suffix(target: Player, suffix: String) {
+    fun suffix(target: Player, suffix: Component) {
         val teamName = "prefix_${target.uniqueId}"
         val team = teams.getOrPut(teamName) {
             scoreboard.getTeam(teamName) ?: scoreboard.registerNewTeam(teamName)
         }
-        team.suffix(suffix.toMini())
+        team.suffix(suffix)
         team.addEntry(target.name)
     }
 
