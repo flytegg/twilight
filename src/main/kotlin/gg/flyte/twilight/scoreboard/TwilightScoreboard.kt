@@ -108,8 +108,9 @@ class TwilightScoreboard(private val player: Player) {
     }
 
     /**
-     * Adds a prefix to a specific player's name.
-     * Allows per-player prefix, that's why the target argument is required!
+     * Sets a prefix for a target player.
+     * *Note*: Only the player tied to this scoreboard will be able
+     * to see the prefix.
      *
      * @param target The player whose name will have a prefix
      * @param prefix The text component to display before the player's name
@@ -125,7 +126,8 @@ class TwilightScoreboard(private val player: Player) {
 
     /**
      * Adds a suffix to a specific player's name.
-     * Allows per-player suffix, that's why the target argument is required!
+     * *Note*: Only the player tied to this scoreboard will be able
+     * to see the suffix.
      *
      * @param target The player whose name will have a suffix
      * @param suffix The text component to display after the player's name
