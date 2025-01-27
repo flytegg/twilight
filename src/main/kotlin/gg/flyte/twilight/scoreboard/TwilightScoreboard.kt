@@ -109,7 +109,7 @@ class TwilightScoreboard(private val player: Player) {
 
     /**
      * Adds a suffix to a specific player's name.
-     * *Note*: Only the player tied to the specific scoreboard instance will be able
+     * *Note*: Only the player tied to the specific TwilightScoreboard instance will be able
      * to see the prefix.
      *
      * @param target The player whose name will have a prefix
@@ -126,7 +126,7 @@ class TwilightScoreboard(private val player: Player) {
 
     /**
      * Adds a suffix to a specific player's name.
-     * *Note*: Only the player tied to the specific scoreboard instance will be able
+     * *Note*: Only the player tied to the specific TwilightScoreboard instance will be able
      * to see the suffix.
      *
      * @param target The player whose name will have a suffix
