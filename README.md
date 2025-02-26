@@ -10,7 +10,35 @@ For support, questions or to chat with the team, come join the Discord:
 
 [![Discord Banner](https://discordapp.com/api/guilds/835561528299880518/widget.png?style=banner2)](https://discord.gg/flyte)
 
-## Setup
+# Table of Contents
+
+- [Extension Functions](#extension-functions)
+- [Events](#events)
+  - [Custom Events](#custom-events)
+  - [Additional Events](#additional-events)
+  - [Custom ChatClickEvent](#custom-chatclickevent)
+- [Scheduler](#scheduler)
+- [Scoreboard](#scoreboard)
+  - [Sidebars](#sidebars)
+  - [Below Name Display](#below-name-display)
+  - [Tab List (Player List Header/Footer)](#tab-list-player-list-headerfooter)
+  - [Player Prefixes and Suffixes](#player-prefixes-and-suffixes)
+- [GUI Builder](#gui-builder)
+- [Databases](#databases)
+  - [MongoDB](#mongodb)
+  - [SQL (MySQL, Postgres)](#sql-mysql-postgres)
+- [Ternary Operator](#ternary-operator)
+- [UUID ⟷ Name](#uuid--name)
+- [Redis](#redis)
+  - [String Key-Value Pairs](#string-key-value-pairs)
+  - [Publishing Messages](#publishing-messages)
+  - [Redis Listeners (PubSub)](#redis-listeners-pubsub)
+- [Files Extensions](#files-extensions)
+- [Symbols](#symbols)
+- [Libraries](#libraries)
+  - [GSON](#gson)
+  
+# Setup
 
 Twilight should be bundled within your plugin. Add the following repository and dependency to your build tool:
 
@@ -84,15 +112,15 @@ Throughout your project you can use `Environment.get("VARIABLE")` to retrieve a 
 
 Other features that can be configured in the Twilight class builder will have their own sections later in the README.
 
-## Features
+# Features
 
-### Extension Functions
+## Extension Functions
 
 Twilight takes advantage of Kotlin's extension functions to add additional functions to various classes used within the API. Many of these are
 convenience functions, and some add complete new functionality. To see all the functions added, view
 them [inside the code](https://github.com/flytegg/twilight/tree/master/src/main/kotlin/gg/flyte/twilight/extension).
 
-### Events
+## Events
 
 We have a neat way to handle code for events, which register by themselves, so you don't have to!
 
@@ -218,7 +246,7 @@ event<ChatClickEvent> {
 
 ```
 
-### Scheduler
+## Scheduler
 
 Bukkit's built-in scheduler is tedious at best, so Twilight takes advantage of beautiful Kotlin syntax to make it easier to write, as well as adding a
 custom TimeUnit to save you calculating ticks.
@@ -331,14 +359,14 @@ delay(20, TimeUnit.SECONDS) {
 > Currently, onComplete is incompatible with repeating tasks.
 >
 
-### Scoreboard System
+## Scoreboard
 
 Twilight provides an easy-to-use Scoreboard system that allows you to create and manage scoreboards with ease, including
 Sidebars, Prefixes/Suffixes, and Below Name displays.
 
 The implementation also includes methods to manage the PlayerList (also known as TabList).
 
-**Sidebars**
+### Sidebars
 
 You can display static content/components with just a few lines of code.
 
@@ -384,7 +412,7 @@ val join = event<PlayerJoinEvent> {
 To display dynamic values (data that changes throughout runtime), the method `updateSidebarLines` will need to be called every time the data changes.
 To make this easier, you can use a `BukkitRunnable` to update the scoreboard at your preferred interval.
 
-**Below Name Display**
+### Below Name Display
 
 You can utilise the Below Name scoreboard functionality to show anything you'd like (health, stats, or other player-specific information) under their
 name.
@@ -433,7 +461,7 @@ val regen = event<EntityRegainHealthEvent> {
 }
 ```
 
-**Tab List (Player List Header/Footer)**
+### Tab List (Player List Header/Footer)
 
 Twilight also provides a way to customize the TabList of your server. Like the sidebar, this can be made dynamic by simply having a BukkitRunnable
 that updates the TabList lines every 20 ticks (1 second).
@@ -459,7 +487,7 @@ scoreboard.updateTabList(
 )
 ```
 
-**Player Prefixes and Suffixes**
+### Player Prefixes and Suffixes
 
 Add custom prefixes or suffixes to players!
 
@@ -473,8 +501,6 @@ scoreboard.prefix(player, Component.text("[ADMIN]", NamedTextColor.RED, TextDeco
 scoreboard.suffix(player, Component.text("[AFK]", NamedTextColor.GRAY))
 ```
 
-**Suggestion**
-
 It's suggested to remove the player from the Map when they quit, to prevent memory leaks.
 
 ```kotlin
@@ -484,7 +510,7 @@ val quit = event<PlayerQuitEvent> {
 }
 ```
 
-### GUI Builder
+## GUI Builder
 
 Creating GUI's can be an incredibly long and tedious process, however, Twilight offers a clean and efficient way.
 
@@ -711,7 +737,7 @@ result?.let { res ->
 The results class contains a list of all the rows and columns returned by the database.
 You can access any of the columns values the same way you would with a map.
 
-### Ternary Operator
+## Ternary Operator
 
 There is a basic ternary operator implementation added which can be used like so:
 
@@ -722,7 +748,7 @@ println(test then "yes" or "no")
 
 > This doesn't yet work for evaluating functions either side of the ternary.
 
-### UUID ⟷ Name
+## UUID ⟷ Name
 
 Twilight can do the heavy lifting and query the Mojang API to find the UUID from name or name from UUID of a player, particularly useful for networks.
 Twilight will cache responses in an attempt to not break the rate limit imposed by Mojang.
@@ -749,12 +775,12 @@ the value being what you want to call the collection.
 
 Don't want to use the Mongo cache? Disable `useMongoCache` in the settings.
 
-# Redis
+## Redis
 
 Twilight has a Redis system that lets you set/get/delete string key value pairs, additionally, you can publish messages and listen to incoming
 messages on any channel you'd like.
 
-#### Environment variables
+### Environment variables
 
 You can use the following Environment variables for your Redis Server:
 
@@ -890,9 +916,9 @@ val listener = Redis.addListener("cool-channel") {
 }
 ```
 
-### Files Extensions
+## Files Extensions
 
-#### File.hash()
+### File.hash()
 
 You can easily get the hash of a file using this method. The parameter `algorithm` is used to define which should be used for the hash, the default is
 SHA-256.
@@ -904,7 +930,7 @@ This is particularly useful when used in parallel with our other open-source
 library, [resource-pack-deploy](https://github.com/flytegg/resource-pack-deploy), so you can get the hash of the latest resource pack file, and use it
 to reset a client's cached version of your resource pack if there are any differences.
 
-### Symbols
+## Symbols
 
 Twilight offers a collection of widely used symbols within the `Symbols` object.
 
@@ -920,7 +946,7 @@ These include, but are not limited to:
 - ⛀ (COIN)
 - ⛁ (COINS)
 
-### Libraries
+## Libraries
 
 Twilight is bundled with some useful libraries, some include:
 
@@ -929,9 +955,9 @@ Twilight is bundled with some useful libraries, some include:
 - Mongo Sync Driver
 - GSON
 
-#### GSON
+### GSON
 
-We're aiming to provide some standard GSON Type Adapters for ease of use. Currently, we have adapters for the following:
+We provide some standard GSON Type Adapters for ease of use. Currently, we have adapters for the following:
 
 - Location
 
