@@ -32,7 +32,7 @@ fun Player.playSound(sound: Sound) {
  */
 fun Player.sendActionBar(
     message: String,
-    duration: Int = 40,
+    duration: Long = 40,
     timeUnit: TimeUnit = TimeUnit.TICKS,
     infinite: Boolean = false
 ): TwilightRunnable = sendActionBar(message.toComponent(), duration, timeUnit, infinite)
@@ -44,7 +44,7 @@ fun Player.sendActionBar(
  */
 fun Player.sendActionBar(
     message: Component,
-    duration: Int = 40,
+    duration: Long = 40,
     timeUnit: TimeUnit = TimeUnit.TICKS,
     infinite: Boolean = false
 ): TwilightRunnable {
