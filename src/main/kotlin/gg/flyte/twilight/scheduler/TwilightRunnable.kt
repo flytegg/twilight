@@ -37,11 +37,11 @@ class TwilightRunnable(
      * @return The new TwilightRunnable
      */
     fun onComplete(
-        delay: Int = 0,
+        delay: Long = 0,
         unit: TimeUnit = TimeUnit.TICKS,
         action: TwilightRunnable.() -> Unit
     ): TwilightRunnable {
-        return chainRunnable(action, async, unit.toTicks(delay.toLong()))
+        return chainRunnable(action, async, unit.toTicks(delay))
     }
 
     /**
@@ -52,11 +52,11 @@ class TwilightRunnable(
      * @return The new TwilightRunnable
      */
     fun onCompleteSync(
-        delay: Int = 0,
+        delay: Long = 0,
         unit: TimeUnit = TimeUnit.TICKS,
         action: TwilightRunnable.() -> Unit
     ): TwilightRunnable {
-        return chainRunnable(action, false, unit.toTicks(delay.toLong()))
+        return chainRunnable(action, false, unit.toTicks(delay))
     }
 
     /**
@@ -67,11 +67,11 @@ class TwilightRunnable(
      * @return The new TwilightRunnable
      */
     fun onCompleteAsync(
-        delay: Int = 0,
+        delay: Long = 0,
         unit: TimeUnit = TimeUnit.TICKS,
         action: TwilightRunnable.() -> Unit
     ): TwilightRunnable {
-        return chainRunnable(action, true, unit.toTicks(delay.toLong()))
+        return chainRunnable(action, true, unit.toTicks(delay))
     }
 
     /**
@@ -104,7 +104,7 @@ class TwilightRunnable(
      * @param delay Additional delay to be added in ticks
      * @return The BukkitTask
      */
-    fun schedule(delay: Int = 0): BukkitTask {
+    fun schedule(delay: Long = 0): BukkitTask {
         val totalDelay = this.delay + delay
         return if (async) {
             if (totalDelay > 0) this.runTaskLaterAsynchronously(Twilight.plugin, totalDelay)
