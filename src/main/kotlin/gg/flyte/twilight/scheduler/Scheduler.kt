@@ -119,7 +119,7 @@ fun repeat(
  * @see repeat
  */
 fun repeat(periodTicks: Int = 1, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
-    return repeat(periodTicks, periodTicks, TimeUnit.TICKS, false, runnable)
+    return repeat(0, periodTicks, TimeUnit.TICKS, false, runnable)
 }
 
 /**
@@ -134,7 +134,7 @@ fun repeat(periodTicks: Int = 1, runnable: BukkitRunnable.() -> Unit): TwilightR
  * @see repeat
  */
 fun repeat(periodTicks: Int = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
-    return repeat(periodTicks, periodTicks, TimeUnit.TICKS, async, runnable)
+    return repeat(0, periodTicks, TimeUnit.TICKS, async, runnable)
 }
 
 /**
@@ -148,7 +148,7 @@ fun repeat(periodTicks: Int = 1, async: Boolean, runnable: BukkitRunnable.() -> 
  * @see repeat
  */
 fun repeat(period: Int, unit: TimeUnit, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
-    return repeat(period, period, unit, false, runnable)
+    return repeat(0, period, unit, false, runnable)
 }
 
 /**
@@ -164,7 +164,7 @@ fun repeat(period: Int, unit: TimeUnit, runnable: BukkitRunnable.() -> Unit): Tw
  * @see repeat
  */
 fun repeat(period: Int, unit: TimeUnit, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
-    return repeat(period, period, unit, async, runnable)
+    return repeat(0, period, unit, async, runnable)
 }
 
 /**
@@ -244,7 +244,7 @@ fun repeatingTask(
  * @see repeatingTask
  */
 fun repeatingTask(periodTicks: Int = 1, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
-    return repeatingTask(periodTicks, periodTicks, TimeUnit.TICKS, false, runnable)
+    return repeatingTask(0, periodTicks, TimeUnit.TICKS, false, runnable)
 }
 
 /**
@@ -259,7 +259,7 @@ fun repeatingTask(periodTicks: Int = 1, runnable: BukkitRunnable.() -> Unit): Tw
  * @see repeatingTask
  */
 fun repeatingTask(periodTicks: Int = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
-    return repeatingTask(periodTicks, periodTicks, TimeUnit.TICKS, async, runnable)
+    return repeatingTask(0, periodTicks, TimeUnit.TICKS, async, runnable)
 }
 
 /**
@@ -273,7 +273,7 @@ fun repeatingTask(periodTicks: Int = 1, async: Boolean, runnable: BukkitRunnable
  * @see repeatingTask
  */
 fun repeatingTask(period: Int, unit: TimeUnit, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
-    return repeatingTask(period, period, unit, false, runnable)
+    return repeatingTask(0, period, unit, false, runnable)
 }
 
 /**
@@ -289,7 +289,7 @@ fun repeatingTask(period: Int, unit: TimeUnit, runnable: BukkitRunnable.() -> Un
  * @see repeatingTask
  */
 fun repeatingTask(period: Int, unit: TimeUnit, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
-    return repeatingTask(period, period, unit, async, runnable)
+    return repeatingTask(0, period, unit, async, runnable)
 }
 
 /**
