@@ -24,11 +24,11 @@ fun Component.asString(): String {
 }
 
 /*
-Converts Strings to Adventure Component
-
-The approach initially attempts to parse with Minimessage, and if that fails
-It falls back to Legacy Serialiser for both Ampersand and Section.
- */
+* Converts Strings to Adventure Component
+*
+* The approach initially attempts to parse with Minimessage, and if that fails
+* It falls back to Legacy Serialiser for both Ampersand and Section.
+*/
 
 fun String.toComponent(): Component {
     return runCatching {
