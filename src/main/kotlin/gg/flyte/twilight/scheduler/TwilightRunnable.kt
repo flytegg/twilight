@@ -1,6 +1,7 @@
 package gg.flyte.twilight.scheduler
 
 import gg.flyte.twilight.Twilight
+import gg.flyte.twilight.extension.requireWholeAndPositive
 import gg.flyte.twilight.time.TimeUnit
 import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.scheduler.BukkitTask
@@ -16,9 +17,10 @@ import org.bukkit.scheduler.BukkitTask
 class TwilightRunnable(
     private val task: TwilightRunnable.() -> Unit,
     val async: Boolean,
-    private val delay: Long = 0
+    private val delay: Number = 0
 ) : BukkitRunnable() {
 
+    private val validatedDelay: Long = delay.requireWholeAndPositive()
     private var nextRunnable: TwilightRunnable? = null
 
     // Executes main task and schedules the next runnable if one exists
@@ -37,11 +39,12 @@ class TwilightRunnable(
      * @return The new TwilightRunnable
      */
     fun onComplete(
-        delay: Long = 0,
+        delay: Number = 0,
         unit: TimeUnit = TimeUnit.TICKS,
         action: TwilightRunnable.() -> Unit
     ): TwilightRunnable {
-        return chainRunnable(action, async, unit.toTicks(delay))
+        val validatedDelay = delay.requireWholeAndPositive()
+        return chainRunnable(action, async, unit.toTicks(validatedDelay))
     }
 
     /**
@@ -52,11 +55,12 @@ class TwilightRunnable(
      * @return The new TwilightRunnable
      */
     fun onCompleteSync(
-        delay: Long = 0,
+        delay: Number = 0,
         unit: TimeUnit = TimeUnit.TICKS,
         action: TwilightRunnable.() -> Unit
     ): TwilightRunnable {
-        return chainRunnable(action, false, unit.toTicks(delay))
+        val validatedDelay = delay.requireWholeAndPositive()
+        return chainRunnable(action, false, unit.toTicks(validatedDelay))
     }
 
     /**
@@ -67,11 +71,12 @@ class TwilightRunnable(
      * @return The new TwilightRunnable
      */
     fun onCompleteAsync(
-        delay: Long = 0,
+        delay: Number = 0,
         unit: TimeUnit = TimeUnit.TICKS,
         action: TwilightRunnable.() -> Unit
     ): TwilightRunnable {
-        return chainRunnable(action, true, unit.toTicks(delay))
+        val validatedDelay = delay.requireWholeAndPositive()
+        return chainRunnable(action, true, unit.toTicks(validatedDelay))
     }
 
     /**
@@ -81,8 +86,9 @@ class TwilightRunnable(
      * @param delay The delay before the new task should execute in ticks
      * @return The new TwilightRunnable
      */
-    private fun chainRunnable(action: TwilightRunnable.() -> Unit, async: Boolean, delay: Long = 0): TwilightRunnable {
-        val newRunnable = TwilightRunnable(action, async, delay)
+    private fun chainRunnable(action: TwilightRunnable.() -> Unit, async: Boolean, delay: Number = 0): TwilightRunnable {
+        val validatedDelay = delay.requireWholeAndPositive()
+        val newRunnable = TwilightRunnable(action, async, validatedDelay)
         if (nextRunnable == null) {
             nextRunnable = newRunnable
         } else {
@@ -104,8 +110,9 @@ class TwilightRunnable(
      * @param delay Additional delay to be added in ticks
      * @return The BukkitTask
      */
-    fun schedule(delay: Long = 0): BukkitTask {
-        val totalDelay = this.delay + delay
+    fun schedule(delay: Number = 0): BukkitTask {
+        val validatedAdditionalDelay = delay.requireWholeAndPositive()
+        val totalDelay = this.validatedDelay + validatedAdditionalDelay
         return if (async) {
             if (totalDelay > 0) this.runTaskLaterAsynchronously(Twilight.plugin, totalDelay)
             else this.runTaskAsynchronously(Twilight.plugin)
