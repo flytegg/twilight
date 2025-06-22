@@ -13,6 +13,7 @@ fun main() {
     asyncTaskLaterTest()
     syncTaskTimerTest()
     asyncTaskTimerTest()
+    numberValidationTest()
 }
 
 fun syncTaskTest() {
@@ -87,4 +88,57 @@ fun asyncTaskTimerTest() {
     }
 }
 
+/**
+ * Tests that the scheduler methods accept different Number types and validate that they are whole and positive.
+ */
+fun numberValidationTest() {
+    println("\n--- Number Validation Tests ---")
 
+    // Test with different Number types (should work with whole, positive numbers)
+    try {
+        delay(5) { println("Integer delay works") }
+        println("✅ Integer delay test passed")
+    } catch (e: Exception) {
+        println("❌ Integer delay test failed: ${e.message}")
+    }
+
+    try {
+        delay(5.0) { println("Double delay works") }
+        println("✅ Double delay test passed")
+    } catch (e: Exception) {
+        println("❌ Double delay test failed: ${e.message}")
+    }
+
+    try {
+        delay(5.0f) { println("Float delay works") }
+        println("✅ Float delay test passed")
+    } catch (e: Exception) {
+        println("❌ Float delay test failed: ${e.message}")
+    }
+
+    // Test with non-whole numbers (should fail)
+    try {
+        delay(5.5) { println("This should not execute") }
+        println("❌ Non-whole number test failed: accepted 5.5")
+    } catch (e: IllegalArgumentException) {
+        println("✅ Non-whole number test passed: ${e.message}")
+    }
+
+    // Test with negative numbers (should fail)
+    try {
+        delay(-5) { println("This should not execute") }
+        println("❌ Negative number test failed: accepted -5")
+    } catch (e: IllegalArgumentException) {
+        println("✅ Negative number test passed: ${e.message}")
+    }
+
+    // Test with zero (should fail as it's not positive)
+    try {
+        delay(0) { println("This should not execute") }
+        println("❌ Zero test failed: accepted 0")
+    } catch (e: IllegalArgumentException) {
+        println("✅ Zero test passed: ${e.message}")
+    }
+
+    println("--- Number Validation Tests Complete ---\n")
+}

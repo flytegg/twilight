@@ -4,6 +4,7 @@ package gg.flyte.twilight.scheduler
 //import com.okkero.skedule.SynchronizationContext
 //import com.okkero.skedule.schedule
 import gg.flyte.twilight.Twilight
+import gg.flyte.twilight.extension.requireWholeAndPositive
 import gg.flyte.twilight.time.TimeUnit
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -37,12 +38,13 @@ fun async(runnable: TwilightRunnable.() -> Unit): TwilightRunnable {
  * @return The TwilightRunnable representing the scheduled task.
  */
 fun delay(
-    value: Long,
+    value: Number,
     unit: TimeUnit = TimeUnit.TICKS,
     async: Boolean = false,
     runnable: TwilightRunnable.() -> Unit
 ): TwilightRunnable {
-    return TwilightRunnable(runnable, async, unit.toTicks(value)).apply { schedule() }
+    val validatedValue = value.requireWholeAndPositive()
+    return TwilightRunnable(runnable, async, unit.toTicks(validatedValue)).apply { schedule() }
 }
 
 /**
@@ -54,7 +56,7 @@ fun delay(
  * @return The TwilightRunnable representing the scheduled task.
  * @see delay
  */
-fun delay(ticks: Long = 1, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
+fun delay(ticks: Number = 1, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
     return delay(ticks, TimeUnit.TICKS, false, runnable)
 }
 
@@ -69,7 +71,7 @@ fun delay(ticks: Long = 1, runnable: BukkitRunnable.() -> Unit): TwilightRunnabl
  * @return The TwilightRunnable representing the scheduled task.
  * @see delay
  */
-fun delay(ticks: Long = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
+fun delay(ticks: Number = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
     return delay(ticks, TimeUnit.TICKS, async, runnable)
 }
 
@@ -84,26 +86,28 @@ fun delay(ticks: Long = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit):
  * @return The BukkitTask representing the scheduled task.
  */
 fun repeat(
-    delay: Long,
-    period: Long,
+    delay: Number,
+    period: Number,
     unit: TimeUnit = TimeUnit.TICKS,
     async: Boolean = false,
     runnable: BukkitRunnable.() -> Unit
 ): TwilightRunnable {
+    val validatedDelay = delay.requireWholeAndPositive()
+    val validatedPeriod = period.requireWholeAndPositive()
     return if (async) {
         TwilightRunnable(runnable, true, 0).also {
             it.runTaskTimerAsynchronously(
                 Twilight.plugin,
-                unit.toTicks(delay),
-                unit.toTicks(period)
+                unit.toTicks(validatedDelay),
+                unit.toTicks(validatedPeriod)
             )
         }
     } else {
         TwilightRunnable(runnable, false, 0).also {
             it.runTaskTimer(
                 Twilight.plugin,
-                unit.toTicks(delay),
-                unit.toTicks(period)
+                unit.toTicks(validatedDelay),
+                unit.toTicks(validatedPeriod)
             )
         }
     }
@@ -118,7 +122,7 @@ fun repeat(
  * @return The BukkitTask representing the scheduled task.
  * @see repeat
  */
-fun repeat(periodTicks: Long = 1, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
+fun repeat(periodTicks: Number = 1, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
     return repeat(0, periodTicks, TimeUnit.TICKS, false, runnable)
 }
 
@@ -133,7 +137,7 @@ fun repeat(periodTicks: Long = 1, runnable: BukkitRunnable.() -> Unit): Twilight
  * @return The BukkitTask representing the scheduled task.
  * @see repeat
  */
-fun repeat(periodTicks: Long = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
+fun repeat(periodTicks: Number = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
     return repeat(0, periodTicks, TimeUnit.TICKS, async, runnable)
 }
 
@@ -147,7 +151,7 @@ fun repeat(periodTicks: Long = 1, async: Boolean, runnable: BukkitRunnable.() ->
  * @return The BukkitTask representing the scheduled task.
  * @see repeat
  */
-fun repeat(period: Long, unit: TimeUnit, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
+fun repeat(period: Number, unit: TimeUnit, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
     return repeat(0, period, unit, false, runnable)
 }
 
@@ -163,7 +167,7 @@ fun repeat(period: Long, unit: TimeUnit, runnable: BukkitRunnable.() -> Unit): T
  * @return The BukkitTask representing the scheduled task.
  * @see repeat
  */
-fun repeat(period: Long, unit: TimeUnit, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
+fun repeat(period: Number, unit: TimeUnit, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
     return repeat(0, period, unit, async, runnable)
 }
 
@@ -179,7 +183,7 @@ fun repeat(period: Long, unit: TimeUnit, async: Boolean, runnable: BukkitRunnabl
  * @return The BukkitTask representing the scheduled task.
  * @see repeat
  */
-fun repeat(delayTicks: Long, periodTicks: Long, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
+fun repeat(delayTicks: Number, periodTicks: Number, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
     return repeat(delayTicks, periodTicks, TimeUnit.TICKS, async, runnable)
 }
 
@@ -194,7 +198,7 @@ fun repeat(delayTicks: Long, periodTicks: Long, async: Boolean, runnable: Bukkit
  * @return The BukkitTask representing the scheduled task.
  * @see repeat
  */
-fun repeat(delay: Long, period: Long, unit: TimeUnit, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
+fun repeat(delay: Number, period: Number, unit: TimeUnit, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
     return repeat(delay, period, unit, false, runnable)
 }
 
@@ -209,26 +213,28 @@ fun repeat(delay: Long, period: Long, unit: TimeUnit, runnable: BukkitRunnable.(
  * @return The BukkitTask representing the scheduled task.
  */
 fun repeatingTask(
-    delay: Long,
-    period: Long,
+    delay: Number,
+    period: Number,
     unit: TimeUnit = TimeUnit.TICKS,
     async: Boolean = false,
     runnable: BukkitRunnable.() -> Unit
 ): TwilightRunnable {
+    val validatedDelay = delay.requireWholeAndPositive()
+    val validatedPeriod = period.requireWholeAndPositive()
     return if (async) {
         TwilightRunnable(runnable, true, 0).also {
             it.runTaskTimerAsynchronously(
                 Twilight.plugin,
-                unit.toTicks(delay),
-                unit.toTicks(period)
+                unit.toTicks(validatedDelay),
+                unit.toTicks(validatedPeriod)
             )
         }
     } else {
         TwilightRunnable(runnable, false, 0).also {
             it.runTaskTimer(
                 Twilight.plugin,
-                unit.toTicks(delay),
-                unit.toTicks(period)
+                unit.toTicks(validatedDelay),
+                unit.toTicks(validatedPeriod)
             )
         }
     }
@@ -243,7 +249,7 @@ fun repeatingTask(
  * @return The BukkitTask representing the scheduled task.
  * @see repeatingTask
  */
-fun repeatingTask(periodTicks: Long = 1, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
+fun repeatingTask(periodTicks: Number = 1, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
     return repeatingTask(0, periodTicks, TimeUnit.TICKS, false, runnable)
 }
 
@@ -258,7 +264,7 @@ fun repeatingTask(periodTicks: Long = 1, runnable: BukkitRunnable.() -> Unit): T
  * @return The BukkitTask representing the scheduled task.
  * @see repeatingTask
  */
-fun repeatingTask(periodTicks: Long = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
+fun repeatingTask(periodTicks: Number = 1, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
     return repeatingTask(0, periodTicks, TimeUnit.TICKS, async, runnable)
 }
 
@@ -272,7 +278,7 @@ fun repeatingTask(periodTicks: Long = 1, async: Boolean, runnable: BukkitRunnabl
  * @return The BukkitTask representing the scheduled task.
  * @see repeatingTask
  */
-fun repeatingTask(period: Long, unit: TimeUnit, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
+fun repeatingTask(period: Number, unit: TimeUnit, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
     return repeatingTask(0, period, unit, false, runnable)
 }
 
@@ -288,7 +294,7 @@ fun repeatingTask(period: Long, unit: TimeUnit, runnable: BukkitRunnable.() -> U
  * @return The BukkitTask representing the scheduled task.
  * @see repeatingTask
  */
-fun repeatingTask(period: Long, unit: TimeUnit, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
+fun repeatingTask(period: Number, unit: TimeUnit, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
     return repeatingTask(0, period, unit, async, runnable)
 }
 
@@ -304,7 +310,7 @@ fun repeatingTask(period: Long, unit: TimeUnit, async: Boolean, runnable: Bukkit
  * @return The BukkitTask representing the scheduled task.
  * @see repeatingTask
  */
-fun repeatingTask(delayTicks: Long, periodTicks: Long, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
+fun repeatingTask(delayTicks: Number, periodTicks: Number, async: Boolean, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
     return repeatingTask(delayTicks, periodTicks, TimeUnit.TICKS, async, runnable)
 }
 
@@ -319,7 +325,7 @@ fun repeatingTask(delayTicks: Long, periodTicks: Long, async: Boolean, runnable:
  * @return The BukkitTask representing the scheduled task.
  * @see repeatingTask
  */
-fun repeatingTask(delay: Long, period: Long, unit: TimeUnit, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
+fun repeatingTask(delay: Number, period: Number, unit: TimeUnit, runnable: BukkitRunnable.() -> Unit): TwilightRunnable {
     return repeatingTask(delay, period, unit, false, runnable)
 }
 
