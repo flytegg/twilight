@@ -156,9 +156,9 @@ class TwilightMongoCollection<T : MongoSerializable>(
 }
 
 interface MongoSerializable {
-    fun saveSync(replace: Boolean = true): UpdateResult = MongoDB.collection(this::class).saveSync(this, replace)
+    fun saveSync(replace: Boolean = true, allowNestingInUpdates: Boolean = true): UpdateResult = MongoDB.collection(this::class).saveSync(this, replace, allowNestingInUpdates)
 
-    fun save(replace: Boolean = true): CompletableFuture<UpdateResult> = MongoDB.collection(this::class).save(this, replace)
+    fun save(replace: Boolean = true, allowNestingInUpdates: Boolean = true): CompletableFuture<UpdateResult> = MongoDB.collection(this::class).save(this, replace, allowNestingInUpdates)
 
     fun deleteSync(): DeleteResult = with(MongoDB.collection(this::class)) {
         deleteSync(eq(idField.name, idField.value(this@MongoSerializable)))
