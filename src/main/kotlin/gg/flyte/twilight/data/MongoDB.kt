@@ -126,8 +126,8 @@ class TwilightMongoCollection<T : MongoSerializable>(
         }
     }
 
-    fun save(serializable: MongoSerializable, replace: Boolean = true): CompletableFuture<UpdateResult> =
-        CompletableFuture.supplyAsync({ saveSync(serializable, replace) }, executor)
+    fun save(serializable: MongoSerializable, replace: Boolean = true, allowNestingInUpdates: Boolean = true): CompletableFuture<UpdateResult> =
+        CompletableFuture.supplyAsync({ saveSync(serializable, replace, allowNestingInUpdates) }, executor)
 
     fun findSync(filter: Bson? = null): MongoIterable<T> =
         (if (filter == null) documents.find() else documents.find(filter)).map {
