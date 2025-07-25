@@ -171,6 +171,7 @@ var CASE_DELIMITER_REGEX = Regex("(?<!^)(?=[A-Z])|[_\\-\\s]+")
 enum class Case {
     CAMEL,
     SNAKE,
+    KEBAB,
     PASCAL,
 }
 
@@ -198,6 +199,8 @@ fun String.formatCase(case: Case): String = CASE_DELIMITER_REGEX.split(this)
             }.joinToString("")
 
             Case.SNAKE -> joinToString("_")
+
+            Case.KEBAB -> joinToString("-")
 
             Case.PASCAL -> joinToString("") { it.capitalizeFirstLetter() }
         }
