@@ -5,6 +5,7 @@ import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.ItemStack
 
@@ -26,6 +27,7 @@ class GUI(val title: Component, val size: Int, val type: InventoryType, val cont
 
     private val keySlot = mutableMapOf<Char, MutableList<Int>>()
     private val slotAction = mutableMapOf<Int, InventoryClickEvent.() -> Unit>()
+    private val onClose = mutableListOf<InventoryCloseEvent.() -> Unit>()
 
     lateinit var viewer: Player
 
@@ -33,6 +35,12 @@ class GUI(val title: Component, val size: Int, val type: InventoryType, val cont
         if (inventory == this@GUI.inventory) slotAction[-1]?.invoke(this)
         if (clickedInventory != this@GUI.inventory) return@event
         slotAction[slot]?.invoke(this)
+    }
+
+    private val closeEvent = event<InventoryCloseEvent> {
+        if (inventory != this@GUI.inventory) return@event
+        onClose.forEach { it.invoke(this) }
+        remove()
     }
 
     fun pattern(vararg pattern: String) {
@@ -46,6 +54,13 @@ class GUI(val title: Component, val size: Int, val type: InventoryType, val cont
      */
     fun onClick(action: InventoryClickEvent.() -> Unit) {
         slotAction[-1] = action
+    }
+
+    /**
+     * Set the action to be executed when the inventory is closed
+     */
+    fun onClose(action: InventoryCloseEvent.() -> Unit) {
+        onClose.add(action)
     }
 
     @JvmName("setSlot")
@@ -74,6 +89,7 @@ class GUI(val title: Component, val size: Int, val type: InventoryType, val cont
         slotAction.clear()
         inventory.clear()
         clickEvent.unregister()
+        closeEvent.unregister()
     }
 
     companion object {
